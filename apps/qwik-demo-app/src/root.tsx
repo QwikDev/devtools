@@ -5,6 +5,7 @@ import {
   ServiceWorkerRegister,
 } from '@builder.io/qwik-city';
 import { RouterHead } from './components/router-head/router-head';
+import { DevTools } from 'qwikdev/devtools';
 
 export default component$(() => {
   /**
@@ -13,6 +14,8 @@ export default component$(() => {
    *
    * Don't remove the `<head>` and `<body>` elements.
    */
+
+  useStyles$('body { margin: 0 }')
 
   return (
     <QwikCityProvider>
@@ -23,6 +26,7 @@ export default component$(() => {
       </head>
       <body lang="en">
         <RouterOutlet />
+        <DevTools />
         <ServiceWorkerRegister />
       </body>
     </QwikCityProvider>

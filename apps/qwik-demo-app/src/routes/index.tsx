@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik';
-import { DevTools } from 'qwikdev/devtools';
 
 export default component$(() => {
-	return <DevTools />;
+	return (
+	<div style="height: 1200px; width: 100%; background-color: black"></div>);
 });
