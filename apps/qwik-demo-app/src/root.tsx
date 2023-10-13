@@ -5,7 +5,7 @@ import {
   ServiceWorkerRegister,
 } from '@builder.io/qwik-city';
 import { RouterHead } from './components/router-head/router-head';
-import { DevTools } from 'qwikdev/devtools';
+import { DevTools } from '@qwikdev/devtools-internal';
 
 export default component$(() => {
   /**

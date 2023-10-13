@@ -53,7 +53,7 @@ export const loadComponentGraph = () => {
     // Add our current el to its parent's `children` array
     parentEl.children = [...(parentEl.children || []), el];
   });
-  console.log(root)
+  console.log(root);
 };
 
 export const getID = (stuff: string) => {

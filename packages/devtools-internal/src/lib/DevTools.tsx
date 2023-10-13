@@ -59,7 +59,7 @@ display: flex; justify-content: center;"
         }}
       >
         <div style="margin: 5px 10px 0 0">
-        <QwikIcon width={18} height={18} />
+          <QwikIcon width={18} height={18} />
         </div>
 
         <div

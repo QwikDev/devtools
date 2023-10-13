@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "qwikdev/devtools": ["packages/devtools/src/index.ts"]
+      "@qwikdev/devtools-internal": ["packages/devtools-internal/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
