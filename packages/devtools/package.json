@@ -1,0 +1,24 @@
+{
+  "name": "@qwikdev/devtools",
+  "version": "0.0.0",
+  "description": "Qwik DevTools for an amazing Developer Experience",
+  "type": "module",
+  "main": "./index.qwik.cjs",
+  "qwik": "./index.qwik.mjs",
+  "types": "./packages/devtools/index.d.ts",
+  "module": "./index.qwik.mjs",
+  "exports": {
+    ".": {
+      "import": "./index.qwik.mjs",
+      "require": "./index.qwik.cjs"
+    }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "private": false,
+  "dependencies": {
+    "@builder.io/qwik": "1.2.13"
+  },
+  "peerDependencies": {}
+}
