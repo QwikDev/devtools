@@ -15,7 +15,7 @@ export default component$(() => {
    * Don't remove the `<head>` and `<body>` elements.
    */
 
-  useStyles$('body { margin: 0 }')
+  useStyles$('body { margin: 0 }');
 
   return (
     <QwikCityProvider>
