@@ -1,13 +1,29 @@
-import { component$ } from '@builder.io/qwik';
+import {
+  component$,
+  createContextId,
+  useContext,
+  useContextProvider,
+  useStore,
+} from '@builder.io/qwik';
+import { Panel } from './Panel';
+import { QwikIcon } from './QwikIcon';
+
+interface DevToolsStore {
+  open: boolean;
+}
+
+export const DevToolsContext = createContextId<DevToolsStore>('DevToolsStore');
 
 export const DevTools = component$(() => {
+  const devToolsStore = useStore<DevToolsStore>({ open: false });
+  useContextProvider(DevToolsContext, devToolsStore);
   return (
     <div
       style="position: fixed;
-  z-index: 99999;
+  z-index: 999999;
   top: 24px;
   left: 50%;
-  color: red;"
+display: flex; justify-content: center;"
     >
       <div
         style="
@@ -37,17 +53,24 @@ export const DevTools = component$(() => {
  touch-action: none;
  max-width: 150px;
  transition: all 0.6s ease, max-width 0.6s ease, padding 0.5s ease, transform 0.4s ease, opacity 0.2s ease;
- transform: translate(-50%, -50%);"
+ transform: translate(-50%, -50%);padding: 15px"
+        onClick$={() => {
+          devToolsStore.open = !devToolsStore.open;
+        }}
       >
-        <img style="padding: 6px" src="/public/logo/qwik-logo.svg" alt="Logo Qwik" />
-
-        <div style="
-            border-left: 1px solid rgba(136, 136, 136, 0.2);
-            width: 1px;
-            height: 10px;">
+        <div style="margin: 5px 10px 0 0">
+        <QwikIcon width={18} height={18} />
         </div>
 
-        <div style="
+        <div
+          style="
+            border-left: 1px solid rgba(136, 136, 136, 0.2);
+            width: 1px;
+            height: 10px;"
+        ></div>
+
+        <div
+          style="
             tab-size: 4;
             font-family: Arial, Helvetica, sans-serif;
             pointer-events: auto;
@@ -64,8 +87,11 @@ export const DevTools = component$(() => {
             gap: 3px;
             justify-items: center;
             align-items: center;
-            transition: opacity 0.4s ease;">
-          1.2 <span style="
+            transition: opacity 0.4s ease;"
+        >
+          1.2{' '}
+          <span
+            style="
                   tab-size: 4;
                   font-family: Arial, Helvetica, sans-serif;
                   pointer-events: auto;
@@ -77,9 +103,13 @@ export const DevTools = component$(() => {
                   box-sizing: border-box;
                   font-size: 0.8em;
                   line-height: 0.6em;
-                  opacity: 0.5;">s</span>
+                  opacity: 0.5;"
+          >
+            s
+          </span>
         </div>
       </div>
+      {devToolsStore.open && <Panel />}
     </div>
   );
 });
