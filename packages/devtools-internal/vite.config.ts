@@ -36,7 +36,7 @@ export default defineConfig({
     lib: {
       entry: './src/index.ts',
       // Could also be a dictionary or array of multiple entry points.
-      name: 'devtools',
+      name: 'devtools-internal',
       fileName: (format) => `index.qwik.${format === 'es' ? 'mjs' : 'cjs'}`,
       // fileName: 'index',
       // Change this to the formats you want to support.
@@ -56,7 +56,7 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     coverage: {
-      reportsDirectory: '../../coverage/packages/devtools',
+      reportsDirectory: '../../coverage/packages/devtools-internal',
     },
   },
 });
