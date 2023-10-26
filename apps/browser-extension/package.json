@@ -1,6 +1,3 @@
 {
-  "name": "browser-extension",
-  "scripts": {
-    "create:manifest": "node ./scripts/createManifest.mjs"
-  }
+  "name": "browser-extension"
 }

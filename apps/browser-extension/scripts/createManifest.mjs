@@ -24,7 +24,6 @@ const outputPath = path.join(
   'dist',
   'apps',
   'browser-extension',
-  'client',
   'manifest.json'
 );
 
