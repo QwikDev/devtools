@@ -9,15 +9,33 @@ const manifestData = {
   name: 'Qwik DevTools',
   short_name: 'Qwik DevTools',
   description: 'Qwik DevTools',
+  icons: {
+    16: './icons/qwik-logo.png',
+    48: './icons/qwik-logo.png',
+    128: './icons/qwik-logo.png',
+  },
   action: {
-    default_icon: 'qwik-logo.png',
-    icons: {
-      16: 'qwik-logo.png',
-      48: 'qwik-logo.png',
-      128: 'qwik-logo.png',
-    },
+    default_icon: { 
+      16: './icons/qwik-logo-disabled.png',
+      48: './icons/qwik-logo-disabled.png',
+      128: './icons/qwik-logo-disabled.png',
+  },
+    "default_popup": "./popups/disabled.html"
   },
   devtools_page: 'devtools.html',
+
+  content_scripts: [
+    {
+      matches: [
+        "<all_urls>"
+      ],
+      js: [
+        "shared.js"
+      ],
+      run_at: "document_start"
+    }
+  ]
+  
 };
 
 const __filename = fileURLToPath(import.meta.url);
