@@ -35,7 +35,7 @@
     "create.manifest": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/createManifest.mjs",
+        "command": "node ./scripts/postBuild.mjs",
         "cwd": "apps/browser-extension"
       }
     }
