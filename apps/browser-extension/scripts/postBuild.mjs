@@ -15,27 +15,22 @@ const manifestData = {
     128: './icons/qwik-logo.png',
   },
   action: {
-    default_icon: { 
+    default_icon: {
       16: './icons/qwik-logo-disabled.png',
       48: './icons/qwik-logo-disabled.png',
       128: './icons/qwik-logo-disabled.png',
-  },
-    "default_popup": "./popups/disabled.html"
+    },
+    default_popup: './popups/disabled.html',
   },
   devtools_page: 'devtools.html',
 
   content_scripts: [
     {
-      matches: [
-        "<all_urls>"
-      ],
-      js: [
-        "shared.js"
-      ],
-      run_at: "document_start"
-    }
-  ]
-  
+      matches: ['<all_urls>'],
+      js: ['shared.js'],
+      run_at: 'document_start',
+    },
+  ],
 };
 
 const __filename = fileURLToPath(import.meta.url);
