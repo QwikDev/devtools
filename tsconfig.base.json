@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@qwikdev/chrome-extension": ["packages/chrome-extension/src/index.ts"],
       "@qwikdev/devtools-internal": ["packages/devtools-internal/src/index.ts"]
     }
   },

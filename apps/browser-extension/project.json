@@ -1,0 +1,50 @@
+{
+  "name": "browser-extension",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/browser-extension/src",
+  "targets": {
+    "build": {
+      "executor": "qwik-nx:build",
+      "options": {
+        "runSequence": ["browser-extension:build.client", "browser-extension:build.ssr", "browser-extension:create.manifest"],
+        "outputPath": "dist/apps/browser-extension"
+      },
+      "configurations": {
+        "preview": {},
+        "production": {}
+      }
+    },
+
+
+    "dev": {
+      "executor": "@nx/vite:dev-server",
+      "options": {
+        "buildTarget": "browser-extension:build.client",
+        "mode": "ssr"
+      }
+    },
+    "build.client": {
+      "executor": "@nx/vite:build",
+      "options": {
+        "outputPath": "dist/apps/browser-extension",
+        "configFile": "apps/browser-extension/vite.config.ts"
+      }
+    },
+    "build.ssr": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite build -c adapters/static/vite.config.ts",
+        "cwd": "apps/browser-extension"
+      }
+    },
+    "create.manifest": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run create:manifest",
+        "cwd": "apps/browser-extension"
+      }
+    }
+  },
+  "tags": []
+}
