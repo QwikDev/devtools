@@ -9,7 +9,7 @@
       "options": {
         "runSequence": [
           "browser-extension:build.client",
-          "browser-extension:create.manifest"
+          "browser-extension:post.build"
         ],
         "outputPath": "dist/apps/browser-extension"
       },
@@ -32,10 +32,10 @@
         "cwd": "apps/browser-extension"
       }
     },
-    "create.manifest": {
+    "post.build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/postBuild.mjs",
+        "command": "tsc --project ./build/scripts/tsconfig.json --outDir ../../dist/apps/browser-extension && tsx ./build/postBuild.ts",
         "cwd": "apps/browser-extension"
       }
     }
