@@ -1,3 +1,4 @@
+import { loadComponentGraph } from './utils';
 import { runQwikJsonDebug, qwikJsonDebug } from './vendor/index';
 
 const sendIsQwikAppMessage = () => {
@@ -8,10 +9,12 @@ const sendIsQwikAppMessage = () => {
 window.addEventListener('onload', (event) => {
   console.log('event', event);
   sendIsQwikAppMessage();
-  extractQwikJson();
 });
 
-const extractQwikJson = async () => {
-  const qwikJson = runQwikJsonDebug(window, document, qwikJsonDebug);
-  console.log('qwikJson', qwikJson);
-};
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  sendIsQwikAppMessage();
+  console.log(runQwikJsonDebug(document, qwikJsonDebug));
+  console.log('loadComponentGraph', loadComponentGraph());
+});
+

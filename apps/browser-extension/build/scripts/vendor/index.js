@@ -1,4 +1,4 @@
-export function runQwikJsonDebug(window2, document2, debug) {
+export function runQwikJsonDebug(document2, debug) {
   const parseQwikJSON = () => {
     var _a2;
     const el = document2.querySelector('script[type="qwik/json"]');
@@ -320,7 +320,7 @@ export function qwikJsonDebug(document2, qwikJson, derivedFns) {
     if (isElement2(node2)) return node2.getAttribute('q:id');
     else if (isComment2(node2)) {
       const text = node2.nodeValue || '';
-      if (text.startsWith('t=')) return text.substring(3);
+      if (text.startsWith('t=')) return text.substring(2);
       else if (text.startsWith('qv ')) {
         const parts = text.split(' ');
         for (let i = 0; i < parts.length; i++) {
