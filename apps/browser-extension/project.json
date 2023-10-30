@@ -35,8 +35,8 @@
     "post.build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --project ./build/scripts/tsconfig.json --outDir ../../dist/apps/browser-extension && tsx ./build/postBuild.ts",
-        "cwd": "apps/browser-extension"
+        "command": "vite build && tsx ../postBuild.ts",
+        "cwd": "apps/browser-extension/build/scripts"
       }
     }
   },
