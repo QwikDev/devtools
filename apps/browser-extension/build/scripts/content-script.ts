@@ -5,11 +5,7 @@ const sendIsQwikAppMessage = () => {
   chrome.runtime.sendMessage({ type: 'EVENT_IS_QWIK_APP', isQwikApp });
 };
 
-document.addEventListener('DOMContentLoaded', (event) => {
-  if (window.location.href.includes('chrome://')) {
-    return;
-  }
-
+window.addEventListener('onload', (event) => {
   console.log('event', event);
   sendIsQwikAppMessage();
   extractQwikJson();

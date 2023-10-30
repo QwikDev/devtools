@@ -31,7 +31,16 @@ const checkIsQwikApp = () => {
   });
 };
 
+chrome.tabs.onCreated.addListener(() => {
+  setIcon(false);
+  checkIsQwikApp();
+});
+
 chrome.tabs.onActivated.addListener(() => {
+  checkIsQwikApp();
+});
+
+chrome.tabs.onUpdated.addListener(() => {
   setIcon(false);
   checkIsQwikApp();
 });
