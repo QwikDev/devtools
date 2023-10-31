@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik';
-import { QwikIcon } from './components/QwikIcon';
+import { QwikIcon } from './QwikIcon';
 
 export const Header = component$(() => {
   return (
