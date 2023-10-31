@@ -28,7 +28,7 @@
     "build.client": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc && vite build",
+        "command": "vite build -- --minify false",
         "cwd": "apps/browser-extension"
       }
     },

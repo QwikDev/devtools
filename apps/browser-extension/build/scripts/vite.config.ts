@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   cacheDir: '../../../../node_modules/.vite/apps/browser-extension',
   build: {
+    minify: false,
     outDir: '../../../../dist/apps/browser-extension',
     rollupOptions: {
       input: {
