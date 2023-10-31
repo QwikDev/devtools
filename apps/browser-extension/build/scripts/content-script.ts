@@ -12,8 +12,7 @@ window.addEventListener('onload', (event) => {
 });
 
 
-document.addEventListener('DOMContentLoaded', (event) => {
-  sendIsQwikAppMessage();
+document.addEventListener('DOMContentLoaded', () => {
   console.log(runQwikJsonDebug(document, qwikJsonDebug));
   console.log('loadComponentGraph', loadComponentGraph());
 });
