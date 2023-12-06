@@ -104,7 +104,7 @@
 }
 
 .h-owner-path-height {
-  height: 1.125rem;
+  height: 1.5rem;
 }
 
 .min-h-owner-path-height {
@@ -118,12 +118,12 @@
 }
 
 .tag_brackets:before {
-  content: '<';
+  content: '<!--qv q:id=';
   color: var(--disabled__color);
 }
 
 .tag_brackets:after {
-  content: '>';
+  content: ' -->';
   color: var(--disabled__color);
 }
 

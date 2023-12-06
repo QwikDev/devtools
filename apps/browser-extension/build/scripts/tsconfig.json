@@ -4,5 +4,5 @@
     "types": ["chrome"],
     "module": "CommonJS"
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "../../src/utils/utils.ts"]
 }

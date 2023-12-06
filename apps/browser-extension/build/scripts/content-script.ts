@@ -1,19 +1,9 @@
-import { loadComponentGraph } from './utils';
-import { runQwikJsonDebug, qwikJsonDebug } from './vendor/index';
-
-const sendIsQwikAppMessage = () => {
-  const isQwikApp = !!document.querySelector('#qwikloader');
-  chrome.runtime.sendMessage({ type: 'EVENT_IS_QWIK_APP', isQwikApp });
-};
-
 window.addEventListener('onload', (event) => {
   console.log('event', event);
-  sendIsQwikAppMessage();
+  chrome.runtime.sendMessage({ type: 'EVENT_IS_QWIK_APP' });
 });
 
-
-document.addEventListener('DOMContentLoaded', () => {
-  console.log(runQwikJsonDebug(document, qwikJsonDebug));
-  console.log('loadComponentGraph', loadComponentGraph());
+chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
+  console.log("something happening from the extension", request);
+  sendResponse({outerHTML: document.documentElement.outerHTML, success: true});
 });
-

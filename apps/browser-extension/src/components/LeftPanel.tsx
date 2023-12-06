@@ -1,6 +1,11 @@
 import { component$ } from '@builder.io/qwik';
+import { componentGraph } from '../app';
+import { LeftPanelElement } from './LeftPanelElement';
 
-export const LeftPanel = component$(() => {
+type Props = {
+  componentGraph: typeof componentGraph;
+};
+export const LeftPanel = component$<Props>(({ componentGraph }) => {
   return (
     <div class="relative z-1 overflow-hidden">
       <div
@@ -90,771 +95,18 @@ transition-colors group b-x b-solid b-panel-2 grow relative overflow-hidden"
           <div class="absolute inset-0 z-1 pointer-events-none"></div>
           <div class="relative min-w-full min-h-full w-max h-max overflow-hidden">
             <div
-              class="box-content"
-              style="padding: 1.125rem 0px; height: calc(42.75rem);"
+              class="box-content h-full py-4"
+              style="padding: 1.125rem 0px;"
             >
               <div style="transform: translateY(calc(0rem));">
                 <div style="transition: margin-left 300ms ease 0s; margin-left: calc(0rem);">
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(0.5rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <svg class="w-3 h-3 mr-1 -mb-2px text-disabled">
-                            <use href="#sdt_icon_Root"></use>
-                          </svg>
-                          <span class="text-.8em select-none text-disabled">
-                            Root
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(0.5rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <svg class="w-3 h-3 mr-1 -mb-2px text-disabled">
-                            <use href="#sdt_icon_Root"></use>
-                          </svg>
-                          <span class="text-.8em select-none text-disabled">
-                            Root
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(1.375rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">Main</span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(2.25rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            ThemeProvider
-                          </span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(3.125rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <svg class="w-3 h-3 mr-1 -mb-2px text-disabled">
-                            <use href="#sdt_icon_Context"></use>
-                          </svg>
-                          <span class="text-.8em select-none text-disabled">
-                            Context
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">App</span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0.45;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem; opacity: 1;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            Button
-                          </span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            Button
-                          </span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">Show</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            unknown
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(6.625rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">Bold</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            ErrorBoundary
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">Show</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            DynamicSpreadParent
-                          </span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            DynamicSpreadChild
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            Article
-                          </span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            Suspense
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(6.625rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <svg class="w-3 h-3 mr-1 -mb-2px text-disabled">
-                            <use href="#sdt_icon_Context"></use>
-                          </svg>
-                          <span class="text-.8em select-none text-disabled">
-                            Context
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(7.5rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">
-                            PassChildren
-                          </span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">Todos</span>
-                        </span>
-                      </div>
-                      <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
-                        HMR
-                      </div>
-                    </div>
-                  </div>
-                  <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
-                    <div
-                      class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
-                      style="opacity: 0;"
-                    ></div>
-                    <div
-                      class="relative -z-2 ml-3.5"
-                      style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
-                    ></div>
-                    <div class="relative flex items-center gap-x-2 min-w-36">
-                      <button
-                        class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
-        before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
-        before:bg-white dark:before:bg-gray-800 before:transition-background-color
-        hover:before:bg-panel-2"
-                        aria-selected="false"
-                        style="left: -1.125rem;"
-                      >
-                        <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
-                          <use href="#sdt_icon_Triangle"></use>
-                        </svg>
-                      </button>
-                      <div class="relative z-1">
-                        <div
-                          class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                          style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
-                        ></div>
-                        <span class="flex items-center font-mono text-base">
-                          <span class="tag_brackets text-component">Show</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                  {Object.values(componentGraph).map((element) => (
+                    <LeftPanelElement
+                      key={element.id}
+                      level={1}
+                      element={element}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -959,3 +211,690 @@ transition-colors group b-x b-solid b-panel-2 grow relative overflow-hidden"
     </div>
   );
 });
+
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(0.5rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <svg class="w-3 h-3 mr-1 -mb-2px text-disabled">
+//         <use href="#sdt_icon_Root"></use>
+//       </svg>
+//       <span class="text-.8em select-none text-disabled">
+//         Root
+//       </span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(0.5rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <svg class="w-3 h-3 mr-1 -mb-2px text-disabled">
+//         <use href="#sdt_icon_Root"></use>
+//       </svg>
+//       <span class="text-.8em select-none text-disabled">
+//         Root
+//       </span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(3.125rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <svg class="w-3 h-3 mr-1 -mb-2px text-disabled">
+//         <use href="#sdt_icon_Context"></use>
+//       </svg>
+//       <span class="text-.8em select-none text-disabled">
+//         Context
+//       </span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">App</span>
+//     </span>
+//   </div>
+//   <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
+//     HMR
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0.45;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem; opacity: 1;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         Button
+//       </span>
+//     </span>
+//   </div>
+//   <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
+//     HMR
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         Button
+//       </span>
+//     </span>
+//   </div>
+//   <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
+//     HMR
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">Show</span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         unknown
+//       </span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(6.625rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">Bold</span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         ErrorBoundary
+//       </span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">Show</span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         DynamicSpreadParent
+//       </span>
+//     </span>
+//   </div>
+//   <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
+//     HMR
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         DynamicSpreadChild
+//       </span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         Article
+//       </span>
+//     </span>
+//   </div>
+//   <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
+//     HMR
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         Suspense
+//       </span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(6.625rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <svg class="w-3 h-3 mr-1 -mb-2px text-disabled">
+//         <use href="#sdt_icon_Context"></use>
+//       </svg>
+//       <span class="text-.8em select-none text-disabled">
+//         Context
+//       </span>
+//     </span>
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(7.5rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">
+//         PassChildren
+//       </span>
+//     </span>
+//   </div>
+//   <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
+//     HMR
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(4.875rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">Todos</span>
+//     </span>
+//   </div>
+//   <div class="inline-block p-x-1 bg-cyan-600 bg-opacity-20 rounded text-cyan-600 uppercase font-700 text-2.5 select-none">
+//     HMR
+//   </div>
+// </div>
+// </div>
+// <div class="h-owner-path-height relative flex items-center p-r-4 cursor-pointer">
+// <div
+//   class="absolute -z-1 inset-y-0 inset-x-1 rounded bg-highlight-bg b b-solid b-highlight-border transition-opacity duration-100"
+//   style="opacity: 0;"
+// ></div>
+// <div
+//   class="relative -z-2 ml-3.5"
+//   style="height: calc(1.125rem + 0.95px); background: repeating-linear-gradient(to right, transparent, transparent calc(0.875rem - 0.95px), var(--panel__3) calc(0.875rem - 0.95px), var(--panel__3) 0.875rem); -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), black 12rem); width: calc(5.75rem);"
+// ></div>
+// <div class="relative flex items-center gap-x-2 min-w-36">
+//   <button
+//     class="h-4.5 w-4.5 shrink center-child absolute -left-6 opacity-0 selected:opacity-100
+// before:content-empty before:absolute before:-z-2 before:inset-.5 before:rounded-full
+// before:bg-white dark:before:bg-gray-800 before:transition-background-color
+// hover:before:bg-panel-2"
+//     aria-selected="false"
+//     style="left: -1.125rem;"
+//   >
+//     <svg class="w-2 h-2 text-panel-5 transition rotate-180 opacity-50">
+//       <use href="#sdt_icon_Triangle"></use>
+//     </svg>
+//   </button>
+//   <div class="relative z-1">
+//     <div
+//       class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
+//       style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
+//     ></div>
+//     <span class="flex items-center font-mono text-base">
+//       <span class="tag_brackets text-component">Show</span>
+//     </span>
+//   </div>
+// </div>
+// </div>
