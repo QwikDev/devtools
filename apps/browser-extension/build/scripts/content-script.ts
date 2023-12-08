@@ -4,6 +4,6 @@ window.addEventListener('onload', (event) => {
 });
 
 chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
-  console.log("something happening from the extension", request);
+  // console.log("message", request);
   sendResponse({outerHTML: document.documentElement.outerHTML, success: true});
 });

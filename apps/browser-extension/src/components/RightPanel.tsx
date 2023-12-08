@@ -8,7 +8,7 @@ export const RightPanel = component$(() => {
     <div class="relative z-1 overflow-hidden">
       <div
         class="h-full grid"
-        style="grid-template-columns: 100%; grid-template-rows: 3rem 0.5fr;"
+        style="grid-template-columns: 100%; grid-template-rows: 3rem 1fr 0.5rem;"
       >
         <header class="relative py-4 flex items-center justify-center">
           <div class="content-empty absolute z-1 inset-x-0 top-full h-0.6px bg-panel-border"></div>
@@ -39,22 +39,10 @@ export const RightPanel = component$(() => {
                       return (
                         <li
                           key={i}
-                          class="relative z-1 flex flex-wrap items-start p-l-2ch font-mono leading-inspector_row"
+                          class="relative z-1 flex flex-wrap items-start p-l-2ch font-mono leading-inspector_row pb-2"
                         >
-                          <div class="absolute mt-.25 -inset-y-.25 -inset-x-1 b b-solid b-dom rounded opacity-0"></div>
-                          <div class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity b b-solid b-highlight-border opacity-0"></div>
-                          <div class="absolute z-2 top-0 right-2 h-inspector_row flex justify-end items-center transition-opacity opacity-0">
-                            <button
-                              class="center-child"
-                              title="Open in Graph panel"
-                            >
-                              <svg class="h-4 w-4">
-                                <use href="#sdt_icon_Graph"></use>
-                              </svg>
-                            </button>
-                          </div>
                           <div class="flex items-center">
-                            <div class='h-inspector_row min-w-5ch mr-2ch select-none font-mono text-dom after:content-[":"] after:color-disabled'>
+                            <div class='min-w-5ch mr-2ch select-none font-mono text-dom after:content-[":"] after:color-disabled'>
                               <div class="relative z-1 inline-block">
                                 <div
                                   class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
@@ -64,55 +52,10 @@ export const RightPanel = component$(() => {
                               </div>
                             </div>
                           </div>
-                          <span class="value_element_container h-inspector_row font-500 text-dom">
+                          <span class="value_element_container font-500 text-dom" style="width: 300px">
                             <div class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"></div>
                             {(prop as any).__value || ''}
                             {Object.keys(prop as any).includes('fn') ? 'foo' : ''}
-                          </span>
-                        </li>
-                      );
-                    })}
-                </ul>
-              </div>
-              <div>
-                <h2 class="text-disabled mb-1 capitalize">Refs</h2>
-                <ul>
-                  {store.qwikJson.refs[store.selectedComponent]?.listeners &&
-                    Object.entries(
-                      store.qwikJson.refs[store.selectedComponent].listeners
-                    ).map(([key, prop], i) => {
-                      console.log(key, prop);
-                      return (
-                        <li
-                          key={i}
-                          class="relative z-1 flex flex-wrap items-start p-l-2ch font-mono leading-inspector_row"
-                        >
-                          <div class="absolute mt-.25 -inset-y-.25 -inset-x-1 b b-solid b-dom rounded opacity-0"></div>
-                          <div class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity b b-solid b-highlight-border opacity-0"></div>
-                          <div class="absolute z-2 top-0 right-2 h-inspector_row flex justify-end items-center transition-opacity opacity-0">
-                            <button
-                              class="center-child"
-                              title="Open in Graph panel"
-                            >
-                              <svg class="h-4 w-4">
-                                <use href="#sdt_icon_Graph"></use>
-                              </svg>
-                            </button>
-                          </div>
-                          <div class="flex items-center">
-                            <div class='h-inspector_row min-w-5ch mr-2ch select-none font-mono text-dom after:content-[":"] after:color-disabled'>
-                              <div class="relative z-1 inline-block">
-                                <div
-                                  class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
-                                  style="--highlight_color_var: #f59e0b; --highlight_opacity_var: 0;"
-                                ></div>
-                                {key}
-                              </div>
-                            </div>
-                          </div>
-                          <span class="value_element_container h-inspector_row font-500 text-dom">
-                            <div class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"></div>
-                            {(prop as any).event || ''}
                           </span>
                         </li>
                       );

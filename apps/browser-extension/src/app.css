@@ -1,3 +1,12 @@
+/**
+ * Tailwind CSS imports
+ * View the full documentation at https://tailwindcss.com
+ */
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+ 
+
 .devtools-root {
   --panel__1: #f4f4f5;
   --panel__2: #e4e4e7;
@@ -741,8 +750,7 @@ input[type=text] {
   height: 1rem
 }
 
-.h-4\.5,
-.h-inspector_row {
+.h-4\.5 {
   height: 1.125rem
 }
 
@@ -780,10 +788,6 @@ input[type=text] {
 
 .min-h-full {
   min-height: 100%
-}
-
-.min-h-inspector_row {
-  min-height: 1.125rem
 }
 
 .min-w-36 {

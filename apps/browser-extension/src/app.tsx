@@ -496,7 +496,7 @@ export const App = component$(() => {
             <div class="overflow-hidden">
               <div
                 class="grid grid-auto-flow-col h-full w-full"
-                style="grid-template-columns: minmax(6rem, 50%) 1px minmax(10rem, 1fr);"
+                style="grid-template-columns: 40% 1px 1fr"
               >
                 <LeftPanel componentGraph={store.components} />
                 <div class="relative bg-panel-border">

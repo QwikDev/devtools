@@ -6,7 +6,7 @@ export const Header = component$(() => {
     <header class="p-2 flex items-center gap-x-2 bg-panel-bg b-b b-solid b-panel-border text-text">
       <div class="flex items-center gap-x-2">
         <QwikIcon width={20} height={20} />
-        <div class="text-xl">Qwik Developer Tools</div>
+        <div class="text-lg">Qwik Developer Tools</div>
       </div>
     </header>
   );
