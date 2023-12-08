@@ -1,4 +1,4 @@
-export const loadComponentGraph = () => {
+export const getComponentGraph = (document: Document) => {
   let node: Comment | null = null;
   const elements: { id: string; parentId: string | null; children?: any }[] =
     [];

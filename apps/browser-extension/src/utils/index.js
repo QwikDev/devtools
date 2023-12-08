@@ -1,4 +1,4 @@
-export function runQwikJsonDebug(document2, debug) {
+export const runQwikJsonDebug = (document2) => {
   const parseQwikJSON = () => {
     var _a2;
     const el = document2.querySelector('script[type="qwik/json"]');
@@ -7,11 +7,11 @@ export function runQwikJsonDebug(document2, debug) {
       ((_a2 = document2.querySelector('script[q\\:func="qwik/json"]')) == null
         ? void 0
         : _a2.qFuncs) || [];
-    return debug(document2, rawData, derivedFns);
+    return qwikJsonDebug(document2, rawData, derivedFns);
   };
   return parseQwikJSON();
 }
-export function qwikJsonDebug(document2, qwikJson, derivedFns) {
+const qwikJsonDebug = (document2, qwikJson, derivedFns) => {
   class Base {
     constructor(__id, __backRefs = []) {
       this.__id = __id;

@@ -9,7 +9,6 @@ export default defineConfig({
       input: {
         background: 'background.ts',
         'content-script': 'content-script.ts',
-        devtools: 'devtools.ts',
       },
       output: { entryFileNames: `[name].js` },
     },

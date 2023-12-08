@@ -16,9 +16,8 @@ const manifestData = {
     default_icon: {
       19: './icons/qwik-logo-disabled-19.png',
     },
-    default_popup: './popups/disabled.html',
+    default_popup: './index.html',
   },
-  devtools_page: 'devtools.html',
   host_permissions: ['http://*/*', 'https://*/*'],
   content_scripts: [
     {

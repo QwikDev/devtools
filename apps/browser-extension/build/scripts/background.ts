@@ -7,6 +7,7 @@ const setIcon = (isQwikApp: boolean) => {
 };
 
 const checkIsQwikApp = () => {
+  setIcon(false);
   chrome.tabs.query({ active: true }, (tabs) => {
     if (tabs[0]?.url.includes('chrome://')) {
       setIcon(false);
@@ -32,7 +33,6 @@ const checkIsQwikApp = () => {
 };
 
 chrome.tabs.onCreated.addListener(() => {
-  setIcon(false);
   checkIsQwikApp();
 });
 
@@ -41,15 +41,38 @@ chrome.tabs.onActivated.addListener(() => {
 });
 
 chrome.tabs.onUpdated.addListener(() => {
-  setIcon(false);
   checkIsQwikApp();
 });
 
 chrome.runtime.onMessage.addListener((message) => {
   switch (message.type) {
     case 'EVENT_IS_QWIK_APP': {
-      setIcon(message.isQwikApp);
+      checkIsQwikApp();
       break;
     }
   }
 });
+
+// let devToolsConnection;
+// chrome.runtime.onConnect.addListener(function (_devToolsConnection) {
+//   devToolsConnection = _devToolsConnection;
+//   // chrome.runtime.onMessage.addListener((message) => {
+//   //   switch (message.type) {
+//   //     case 'QWIK_COMPONENT_GRAPH': {
+//   //       devToolsConnection.postMessage('gioboa');
+//   //       break;
+//   //     }
+//   //   }
+//   // });
+// });
+
+// chrome.runtime.onConnect.addListener(function (devToolsConnection) {
+//   chrome.runtime.onMessage.addListener((message) => {
+//     switch (message.type) {
+//       case 'QWIK_COMPONENT_GRAPH': {
+//         devToolsConnection.postMessage('gioboa');
+//         break;
+//       }
+//     }
+//   });
+// });
