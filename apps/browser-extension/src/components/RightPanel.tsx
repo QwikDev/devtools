@@ -17,7 +17,7 @@ export const RightPanel = component$(() => {
               class="highlight_element absolute -z-1 inset-y-0 -inset-x-1 rounded transition-opacity"
               style="--highlight_color_var: #22d3ee; --highlight_opacity_var: 0;"
             ></div>
-            <span class="flex items-center font-mono text-lg">
+            <span class="flex items-center font-mono text-xl">
               <span class="tag_brackets text-component">
                 {store.selectedComponent}
               </span>
@@ -29,8 +29,8 @@ export const RightPanel = component$(() => {
           <div class="relative min-w-full min-h-full w-max h-max overflow-hidden">
             <div class="min-w-full w-fit p-4 p-b-14 flex flex-col gap-y-4">
               <div>
-                <h2 class="text-disabled mb-1 capitalize">Props</h2>
-                <ul>
+                <h2 class="text-disabled mb-1 capitalize text-lg">Props</h2>
+                <ul class="text-lg">
                   {store.qwikJson.ctx[store.selectedComponent]?.props &&
                     Object.entries(
                       store.qwikJson.ctx[store.selectedComponent].props

@@ -1,12 +1,3 @@
-/**
- * Tailwind CSS imports
- * View the full documentation at https://tailwindcss.com
- */
- @tailwind base;
- @tailwind components;
- @tailwind utilities;
- 
-
 .devtools-root {
   --panel__1: #f4f4f5;
   --panel__2: #e4e4e7;
@@ -1316,11 +1307,6 @@ input[type=text] {
 
 .text-base {
   font-size: .75rem;
-  line-height: 1
-}
-
-.text-lg {
-  font-size: .875rem;
   line-height: 1
 }
 

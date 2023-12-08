@@ -13,7 +13,7 @@ export const LeftPanel = component$<Props>(({ componentGraph }) => {
       >
         <div class="relative flex items-center justify-center">
           <div class="content-empty absolute z-1 inset-x-0 top-full h-0.6px bg-panel-border"></div>
-          <div class="text-lg fixed p-4">
+          <div class="text-xl fixed">
             Components
           </div>
         </div>
