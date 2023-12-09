@@ -1,17 +1,4 @@
-export const runQwikJsonDebug = (document2) => {
-  const parseQwikJSON = () => {
-    var _a2;
-    const el = document2.querySelector('script[type="qwik/json"]');
-    const rawData = JSON.parse(el.textContent);
-    const derivedFns =
-      ((_a2 = document2.querySelector('script[q\\:func="qwik/json"]')) == null
-        ? void 0
-        : _a2.qFuncs) || [];
-    return qwikJsonDebug(document2, rawData, derivedFns);
-  };
-  return parseQwikJSON();
-}
-const qwikJsonDebug = (document2, qwikJson, derivedFns) => {
+const qwikJsonDebug = (qwikJson, derivedFns) => {
   class Base {
     constructor(__id, __backRefs = []) {
       this.__id = __id;
@@ -111,7 +98,7 @@ const qwikJsonDebug = (document2, qwikJson, derivedFns) => {
     constructor(__id, fn, args) {
       super(__id);
       this.__id = __id;
-      this.fn = fn;
+      this.fn = (fn || '').toString();
       this.args = args;
     }
   }
@@ -286,9 +273,9 @@ const qwikJsonDebug = (document2, qwikJson, derivedFns) => {
           case 15:
             throw new Error(
               'Not Implemented: ' +
-                rawValue.charCodeAt(0).toString(16) +
-                ' ' +
-                JSON.stringify(rawValue)
+              rawValue.charCodeAt(0).toString(16) +
+              ' ' +
+              JSON.stringify(rawValue)
             );
           default:
             obj = new string_(idx, rawValue);
@@ -302,8 +289,8 @@ const qwikJsonDebug = (document2, qwikJson, derivedFns) => {
   }
   function getNodeMap() {
     const map = /* @__PURE__ */ new Map();
-    const walker = document2.createTreeWalker(
-      document2.firstElementChild,
+    const walker = document.createTreeWalker(
+      document.firstElementChild,
       NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT
     );
     for (
@@ -373,4 +360,18 @@ const qwikJsonDebug = (document2, qwikJson, derivedFns) => {
   function parseNumber(value) {
     return parseInt(value, 36);
   }
+}
+
+export const runQwikJsonDebug = () => {
+  const parseQwikJSON = () => {
+    var _a2;
+    const el = document.querySelector('script[type="qwik/json"]');
+    const rawData = JSON.parse(el.textContent);
+    const derivedFns =
+      ((_a2 = document.querySelector('script[q\\:func="qwik/json"]')) == null
+        ? void 0
+        : _a2.qFuncs) || [];
+    return qwikJsonDebug(rawData, derivedFns);
+  };
+  return parseQwikJSON();
 }

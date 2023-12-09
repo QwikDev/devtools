@@ -1,10 +1,11 @@
 import { component$ } from '@builder.io/qwik';
 import { LeftPanelElement } from './LeftPanelElement';
+import { DevTool } from '../app';
 
 type Props = {
-  componentGraph: any;
+  components: DevTool['components'];
 };
-export const LeftPanel = component$<Props>(({ componentGraph }) => {
+export const LeftPanel = component$<Props>(({ components }) => {
   return (
     <div class="relative z-1 overflow-hidden">
       <div
@@ -19,11 +20,11 @@ export const LeftPanel = component$<Props>(({ componentGraph }) => {
         </div>
         <div class="custom_scrollbar relative z-0 w-full h-full overflow-auto overflow-overlay overscroll-none">
           <div class="absolute inset-0 z-1 pointer-events-none"></div>
-          <div class="relative min-w-full min-h-full w-max h-max overflow-hidden">
+          <div class="relative min-w-full min-h-full w-max h-max overflow-hidden pb-[200px]">
             <div class="box-content h-full py-4" style="padding: 1.125rem 0px;">
               <div style="transform: translateY(calc(0rem));">
                 <div style="transition: margin-left 300ms ease 0s; margin-left: calc(0rem);">
-                  {Object.values(componentGraph).map((element: any) => (
+                  {components && Object.values(components).map((element) => (
                     <LeftPanelElement
                       key={element.id}
                       level={1}

@@ -1,9 +1,9 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { DevToolContext } from '../app';
+import { Component, DevToolContext } from '../app';
 
 type Props = {
   level: number;
-  element: any;
+  element: Component;
 };
 
 export const LeftPanelElement = component$<Props>(({ level, element }) => {
@@ -23,7 +23,7 @@ export const LeftPanelElement = component$<Props>(({ level, element }) => {
         <div
           class={{
             'relative flex items-center gap-x-2 cursor-pointer': true,
-            'bg-gray-300 dark:bg-gray-600': element.id === store.selectedComponent,
+            'bg-gray-300 dark:bg-gray-600': element.id === store.selectedComponent?.id,
           }}
         >
           <button
@@ -46,7 +46,7 @@ hover:before:bg-panel-2"
             <button
               class="flex items-center font-mono text-lg"
               onClick$={() => {
-                store.selectedComponent = element.id;
+                store.selectedComponent = element;
               }}
             >
               <span class="tag_brackets text-component">{element.id}</span>
@@ -54,7 +54,7 @@ hover:before:bg-panel-2"
           </div>
         </div>
       </div>
-      {(element.children || []).map((el: any) => (
+      {(element.children || []).map((el) => (
         <LeftPanelElement key={el.id} level={level + 1} element={el} />
       ))}
     </>

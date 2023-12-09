@@ -1,88 +1,81 @@
-export const getComponentGraph = (document: Document) => {
-  let node: Comment | null = null;
-  const elements: { id: string; parentId: string | null; children?: any }[] =
-    [];
-  const parents: string[] = [];
-  // Collect all virtual elements
-  const elementWalker = document.createTreeWalker(
-    document.body,
-    NodeFilter.SHOW_COMMENT
-  );
-  while ((node = elementWalker.nextNode() as Comment)) {
-    const data = node.data;
-    // if (container === 0) {
-    if (data.startsWith('qv ')) {
-      const id = getID(data); // TODO: remove
-      if (id) {
-        elements.push({ id, parentId: parents[parents.length - 1] || null });
-        parents.push(id);
-      }
-    } else if (data.startsWith('/qv')) {
-      parents.pop();
-    }
+import { runQwikJsonDebug } from ".";
+import { Component } from "../app";
 
-    // else if (data.startsWith('t=')) {
-    //   const id = data.slice(2);
-    //   const index = strToInt(id);
-    //   const textNode = getTextNode(node);
-    //   elements.set(index, textNode);
-    //   text.set(index, textNode.data);
-    // }
-    // }
-    // if (data === 'cq') {
-    //   container++;
-    // } else if (data === '/cq') {
-    //   container--;
-    // }
-  }
+export const getComponents = () => {
+	const qwikJson: any = runQwikJsonDebug();
+	let node: Comment | null = null;
+	const elements: Component[] = [];
+	const parents: Node[] = [];
+	const elementWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT);
+	while ((node = elementWalker.nextNode() as Comment)) {
+		if (isComment(node) && node.data.startsWith('/qv')) {
+			parents.pop();
+		} else {
+			const id = getId(node);
+			if (id) {
+				let props: { key: string, value: string }[] = [];
+				const qwikJsonCtx = qwikJson.ctx[id];
+				if (qwikJsonCtx?.props) {
+					props = Object.entries(qwikJsonCtx.props)
+						.filter(([key]) => key !== '__id' && key !== '__backRefs')
+						.map(([key, value]) => {
+							return {
+								key,
+								value: (value as any)?.fn || (value as any).__value || '--',
+							};
+						});
+				}
+				let refs: string[] = [];
+				const qwikJsonRefs = qwikJson.refs[id];
+				if (qwikJsonRefs?.refMap) {
+					refs = qwikJsonRefs.refMap.filter((p: {__value: string})=> !!p?.__value).map((p: {__value: string})=> p.__value);
+				}
+				elements.push({
+					id,
+					parentId: parents[parents.length - 1] ? getId(parents[parents.length - 1]) : null,
+					props,
+					refs,
+				});
+				if (isComment(node) && node.data.startsWith('qv ')) {
+					parents.push(node);
+				}
+			}
+		}
+	}
 
-  const idMapping = elements.reduce((acc: Record<number, number>, el, i) => {
-    acc[el.id] = i;
-    return acc;
-  }, {});
+	const idMapping = elements.reduce((acc: Record<string, number>, el, i) => {
+		acc[el.id] = i;
+		return acc;
+	}, {});
 
-  const root: Record<number, any> = {};
-  elements.forEach((el) => {
-    // Handle the root element
-    if (el.parentId === null) {
-      root[el.id] = el;
-      return;
-    }
-    // Use our mapping to locate the parent element in our data array
-    const parentEl = elements[idMapping[el.parentId]];
-    // Add our current el to its parent's `children` array
-    parentEl.children = [...(parentEl.children || []), el];
-  });
-  return root;
+	const root: Record<string, Component> = {};
+	elements.forEach((el) => {
+		if (el.parentId === null) {
+			root[el.id] = el;
+			return;
+		}
+		const parentEl = elements[idMapping[el.parentId]];
+		parentEl.children = [...(parentEl.children || []), el];
+	});
+	return root;
 };
 
-export const getID = (stuff: string) => {
-  let index = stuff.indexOf('q:id=');
-  if (index > 0) {
-    return stuff.slice(index + 5).split(' ')[0];
-  }
-  index = stuff.indexOf('q:s q:sref=');
-  if (index > 0) {
-    return 'ref='+stuff.slice(index + 11).split(' ')[0];
-  }
-  return null;
-};
+const getId = (node: Node) => {
+	if (isElement(node)) return (node as Element).getAttribute('q:id');
+	else if (isComment(node)) {
+		const text = node.nodeValue || '';
+		if (text.startsWith('t=')) return text.substring(2);
+		else if (text.startsWith('qv ')) {
+			const parts = text.split(' ');
+			for (let i = 0; i < parts.length; i++) {
+				const part = parts[i];
+				if (part.startsWith('q:id=')) return part.substring(5);
+				if (part.startsWith('q:sref=')) return part.substring(7);
+			}
+		}
+		return null;
+	} else throw new Error('Unexpected node type: ' + node.nodeType);
+}
 
-export const strToInt = (nu: string) => {
-  return parseInt(nu, 36);
-};
-
-const getTextNode = (mark: Comment) => {
-  const nextNode = mark.nextSibling!;
-  if (isText(nextNode)) {
-    return nextNode;
-  } else {
-    const textNode = mark.ownerDocument.createTextNode('');
-    mark.parentElement!.insertBefore(textNode, mark);
-    return textNode;
-  }
-};
-
-export const isText = (value: Node): value is Text => {
-  return value.nodeType === 3;
-};
+export const isElement = (node: Node) => node && typeof node == 'object' && node.nodeType === Node.ELEMENT_NODE
+export const isComment = (node: Node) => node && typeof node == 'object' && node.nodeType === Node.COMMENT_NODE
