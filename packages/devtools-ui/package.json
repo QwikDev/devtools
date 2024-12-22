@@ -22,6 +22,7 @@
     "build.lib": "vite build --mode lib",
     "build.types": "tsc --emitDeclarationOnly",
     "dev": "vite --mode ssr",
+    "dev:watch": "nodemon --watch src -e tsx,ts,css --exec 'npm run build.lib'",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "fmt": "prettier --write .",
     "fmt.check": "prettier --check .",
@@ -32,7 +33,8 @@
     "qwik": "qwik"
   },
   "dependencies": {
-    "@qwik/devtools-kit": "workspace:*"
+    "@qwik/devtools-kit": "workspace:*",
+    "@qwikest/icons": "^0.0.13"
   },
   "devDependencies": {
     "@qwik.dev/core": "2.0.0-alpha.3",
@@ -48,6 +50,7 @@
     "vite": "5.4.10",
     "vite-tsconfig-paths": "^4.2.1",
     "cpy-cli": "^5.0.0",
-    "vite-hot-client": "^0.2.4"
+    "vite-hot-client": "^0.2.4",
+    "nodemon": "^3.1.9"
   }
 }

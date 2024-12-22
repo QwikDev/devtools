@@ -45,6 +45,7 @@
     "source-map-js": "^1.2.1",
     "vite": "^6.0.3",
     "unbuild": "^3.0.1",
-    "tsup": "^8.3.5"
+    "tsup": "^8.3.5",
+    "@babel/parser": "^7.26.3"
   }
 }

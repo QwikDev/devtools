@@ -16,18 +16,6 @@ function QwikDevtools(): Plugin {
       const rpcFunctions = getServerFunctions({ server, config: _config });
 
       createServerRpc(rpcFunctions);
-      // devServer.ws.on('qwiktools:client-connected', () => {
-      // devServer.ws.on('qwiktools:client-connected', () => {
-      //   getRoutes();
-      //   devServer.ws.send('qwiktools:data', {
-      //     assets: getPublicDirFiles(config.publicDir),
-      //     qwik: getQwikPackages(config),
-      //     config: config,
-      //     routes: getRoutes(),
-      //     isDevEnv: config.env.DEV,
-      //     time: Date.now(),
-      //   });
-      // });
     },
   };
 }
