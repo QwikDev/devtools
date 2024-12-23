@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "target": "ES5",
-    "types": ["chrome"],
-    "module": "CommonJS"
-  },
-  "include": ["**/*.ts", "../../src/utils/utils.ts"]
-}

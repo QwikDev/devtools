@@ -26,6 +26,12 @@ build
 .cache
 .vscode
 .rollup.cache
-dist
 tsconfig.tsbuildinfo
 vite.config.mts
+*.spec.tsx
+*.spec.ts
+.netlify
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+server
