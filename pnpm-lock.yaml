@@ -109,6 +109,9 @@ importers:
       debug:
         specifier: ^4.4.0
         version: 4.4.0(supports-color@5.5.0)
+      dree:
+        specifier: ^5.1.5
+        version: 5.1.5
       rollup:
         specifier: ^4.28.1
         version: 4.28.1
