@@ -27,7 +27,7 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@qwik.dev/core": "2.0.0-alpha.3",
+    "@qwik.dev/core": "^2.0.0-alpha.4",
     "@qwik.dev/router": "2.0.0-alpha.3",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",

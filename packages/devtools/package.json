@@ -46,6 +46,7 @@
     "vite": "^6.0.3",
     "unbuild": "^3.0.1",
     "tsup": "^8.3.5",
-    "@babel/parser": "^7.26.3"
+    "@babel/parser": "^7.26.3",
+    "ast-types": "^0.14.2"
   }
 }

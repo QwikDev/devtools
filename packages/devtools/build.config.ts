@@ -2,7 +2,7 @@ import { defineBuildConfig } from 'unbuild';
 
 export default defineBuildConfig({
   entries: ['src/index'],
-  externals: ['vite'],
+  externals: ['vite', 'path', 'fs'],
   clean: true,
   declaration: 'compatible',
   failOnWarn: false,

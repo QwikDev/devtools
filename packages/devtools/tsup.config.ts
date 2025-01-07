@@ -5,6 +5,7 @@ export default defineConfig({
   target: 'es2020',
   clean: true,
   format: ['esm', 'cjs'],
+  external: ['vite', 'path', 'fs'],
   outExtension({ format }) {
     if (format === 'esm') {
       return {

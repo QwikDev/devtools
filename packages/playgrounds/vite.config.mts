@@ -40,7 +40,11 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
     plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikPluginDevtools()],
-    // This tells Vite which dependencies to pre-build in dev mode.
+    build: {
+      rollupOptions: {
+        external: ['path'],
+      },
+    },
     optimizeDeps: {
       // Put problematic deps that break bundling here, mostly those with binaries.
       // For example ['better-sqlite3'] if you use that in server functions.

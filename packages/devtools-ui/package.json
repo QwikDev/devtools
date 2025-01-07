@@ -32,8 +32,10 @@
     "test": "echo \"No test specified\" && exit 0",
     "qwik": "qwik"
   },
+  "peerDependencies": {
+    "@qwik.dev/router": "2.0.0-alpha.3"
+  },
   "dependencies": {
-    "@qwik/devtools-kit": "workspace:*",
     "@qwikest/icons": "^0.0.13"
   },
   "devDependencies": {
