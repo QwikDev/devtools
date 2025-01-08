@@ -1,6 +1,6 @@
 {
-  "name": "devtools",
-  "version": "1.0.0",
+  "name": "devtools-monorepo",
+  "version": "0.0.0",
   "license": "MIT",
   "scripts": {
     "build:devtools": "pnpm --filter @qwik.dev/devtools build",
