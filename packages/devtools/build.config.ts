@@ -1,6 +1,5 @@
 import { defineBuildConfig } from 'unbuild';
 
-<<<<<<< HEAD
 export default defineBuildConfig([
   {
     outDir: 'lib',
@@ -14,16 +13,3 @@ export default defineBuildConfig([
     },
   },
 ]);
-=======
-export default defineBuildConfig({
-  entries: ['src/index'],
-  externals: ['vite'],
-  clean: true,
-  declaration: 'compatible',
-  failOnWarn: false,
-  rollup: {
-    emitCJS: true,
-    inlineDependencies: true,
-  },
-});
->>>>>>> main

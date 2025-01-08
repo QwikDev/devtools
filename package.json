@@ -8,7 +8,6 @@
   },
   "private": false,
   "devDependencies": {
-<<<<<<< HEAD
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.10.1",
     "eslint": "^9.16.0",
@@ -17,14 +16,6 @@
     "typescript-eslint": "^8.18.0",
     "unbuild": "^3.0.1",
     "vite": "^6.0.3"
-=======
-    "vite": "^6.0.3",
-    "unbuild": "^3.0.1",
-    "typescript": "^5.7.2",
-    "@types/node": "^22.10.1",
-    "eslint": "^9.16.0",
-    "typescript-eslint": "^8.18.0"
->>>>>>> main
   },
   "keywords": [
     "qwik",
