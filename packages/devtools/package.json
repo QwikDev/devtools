@@ -1,28 +1,46 @@
 {
-  "name": "@qwik/plugin-devtools",
+  "name": "@qwik.dev/devtools",
   "version": "1.0.0",
-  "type": "commonjs",
-  "license": "MIT",
-  "author": "Nemanja Miljkovic",
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "description": "Create a Qwik library",
+  "main": "./src/devtools.tsx",
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+    "./ui": {
+      "import": "./src/devtools.tsx"
+    },
+    "./plugin": {
+      "import": "./lib/index.qwik.mjs"
     }
   },
-  "scripts": {
-    "dev": "tsup --watch",
-    "build": "unbuild",
-    "prepublishOnly": "npm run build"
-  },
+  "files": [
+    "src",
+    "lib",
+    "lib-types"
+  ],
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
+  },
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "build": "qwik build",
+    "build.lib": "vite build --mode lib",
+    "build.plugin": "unbuild",
+    "build.types": "tsc --emitDeclarationOnly",
+    "dev:ssr": "vite --mode ssr",
+    "dev": "nodemon --watch src -e tsx,ts,css --exec 'npm run build.lib'",
+    "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
+    "fmt": "prettier --write .",
+    "fmt.check": "prettier --check .",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "release": "np",
+    "start": "vite --open --mode ssr",
+    "test": "echo \"No test specified\" && exit 0",
+    "qwik": "qwik"
+  },
+  "peerDependencies": {
+    "@qwik.dev/core": "^2.0.0-alpha.4",
+    "@qwik.dev/router": "^2.0.0-alpha.4",
+    "vite": "^6.0.0"
   },
   "dependencies": {
     "image-meta": "^0.2.1",
@@ -30,23 +48,26 @@
     "perfect-debounce": "^1.0.0",
     "fast-glob": "^3.3.2",
     "superjson": "^2.2.2",
-    "@qwik/devtools-kit": "workspace:*",
-    "dree": "^5.1.5"
-  },
-  "peerDependencies": {
-    "vite": "^6.0.0"
+    "dree": "^5.1.5",
+    "@qwikest/icons": "^0.0.13",
+    "vite-hot-client": "^0.2.4"
   },
   "devDependencies": {
-    "@jridgewell/gen-mapping": "^0.3.5",
-    "@jridgewell/trace-mapping": "^0.3.25",
-    "debug": "^4.4.0",
-    "rollup": "^4.28.1",
-    "slash": "^5.1.0",
-    "source-map-js": "^1.2.1",
-    "vite": "^6.0.3",
-    "unbuild": "^3.0.1",
-    "tsup": "^8.3.5",
-    "@babel/parser": "^7.26.3",
-    "ast-types": "^0.14.2"
+    "@qwik.dev/core": "^2.0.0-alpha.4",
+    "@qwik.dev/router": "^2.0.0-alpha.4",
+    "@types/eslint": "8.56.10",
+    "@types/node": "20.14.11",
+    "@typescript-eslint/eslint-plugin": "7.16.1",
+    "@typescript-eslint/parser": "7.16.1",
+    "eslint": "8.57.0",
+    "eslint-plugin-qwik": "2.0.0-alpha.3",
+    "np": "^8.0.4",
+    "prettier": "3.3.3",
+    "typescript": "5.4.5",
+    "vite": "5.4.10",
+    "vite-tsconfig-paths": "^4.2.1",
+    "cpy-cli": "^5.0.0",
+    "vite-hot-client": "^0.2.4",
+    "nodemon": "^3.1.9"
   }
 }

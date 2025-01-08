@@ -6,7 +6,7 @@ import { qwikVite } from '@qwik.dev/core/optimizer';
 import { qwikRouter } from '@qwik.dev/router/vite';
 import { defineConfig, ResolvedConfig, type UserConfig, Plugin } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import qwikPluginDevtools from '@qwik/plugin-devtools';
+import { qwikDevtoolsPlugin } from '../devtools/lib/index.qwik.mjs';
 import pkg from './package.json';
 type PkgDep = Record<string, string>;
 const { dependencies = {}, devDependencies = {} } = pkg as any as {
@@ -39,7 +39,7 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  */
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
-    plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikPluginDevtools()],
+    plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikDevtoolsPlugin()],
     build: {
       rollupOptions: {
         external: ['path'],

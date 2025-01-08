@@ -1,5 +1,5 @@
 {
-  "name": "my-qwik-empty-starter",
+  "name": "playground",
   "description": "Blank project with routing included",
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
@@ -27,8 +27,9 @@
     "qwik": "qwik"
   },
   "devDependencies": {
+    "@qwik.dev/devtools": "workspace:*",
     "@qwik.dev/core": "^2.0.0-alpha.4",
-    "@qwik.dev/router": "2.0.0-alpha.3",
+    "@qwik.dev/router": "^2.0.0-alpha.3",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",
     "@typescript-eslint/eslint-plugin": "7.16.1",
@@ -39,8 +40,6 @@
     "typescript": "5.4.5",
     "vite": "5.4.10",
     "vite-tsconfig-paths": "^4.2.1",
-    "@qwik/plugin-devtools": "workspace:*",
-    "@qwik/devtools-ui": "workspace:*",
     "vite-hot-client": "^0.2.4",
     "birpc": "^0.2.19",
     "dree": "^5.1.5"

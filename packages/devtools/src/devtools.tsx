@@ -2,10 +2,10 @@ import {
   component$,
   useSignal,
   useStore,
-  useStyles$,
   useVisibleTask$,
   noSerialize,
   NoSerialize,
+  useStyles$,
 } from '@qwik.dev/core';
 import { tryCreateHotContext } from 'vite-hot-client';
 import {
@@ -22,10 +22,9 @@ import {
   type AssetInfo,
   type RoutesInfo,
   RouteType,
-} from '@qwik/devtools-kit';
-import styles from './devtools.css?inline';
+} from './kit';
 import { useLocation } from '@qwik.dev/router';
-
+import styles from './devtools.css?inline';
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
