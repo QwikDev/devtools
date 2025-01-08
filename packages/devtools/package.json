@@ -2,10 +2,12 @@
   "name": "@qwik.dev/devtools",
   "version": "0.0.1",
   "description": "Create a Qwik library",
-  "main": "./src/devtools.tsx",
+  "main": "./lib/index.qwik.cjs",
   "exports": {
     ".": {
-      "import": "./lib/index.qwik.mjs"
+      "types": "./lib-types/index.d.ts",
+      "import": "./lib/index.qwik.mjs",
+      "require": "./lib/index.qwik.cjs"
     }
   },
   "files": [
