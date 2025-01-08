@@ -29,3 +29,4 @@ build
 dist
 tsconfig.tsbuildinfo
 vite.config.mts
+build.config.ts

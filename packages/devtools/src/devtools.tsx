@@ -1,8 +1,11 @@
 import {
   component$,
   useSignal,
-  useStyles$,
+  useStore,
   useVisibleTask$,
+  noSerialize,
+  NoSerialize,
+  useStyles$,
 } from '@qwik.dev/core';
 import { tryCreateHotContext } from 'vite-hot-client';
 import {
@@ -19,33 +22,38 @@ import {
   type AssetInfo,
   type RoutesInfo,
   RouteType,
-} from '@qwik/devtools-kit';
+} from './kit';
+// import { useLocation } from '@qwik.dev/router';
 import styles from './devtools.css?inline';
-
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
   };
 }
 
+interface State {
+  isOpen: boolean;
+  activeTab: 'overview' | 'components' | 'routes' | 'state' | 'assets';
+  npmPackages: NpmInfo;
+  assets: AssetInfo[];
+  routes: NoSerialize<RoutesInfo[]>;
+}
+
 export const QwikDevtools = component$(() => {
   useStyles$(styles);
-  const isOpen = useSignal(false);
-  const activeTab = useSignal('overview');
-  const npmPackages = useSignal<NpmInfo>([]);
-  const assets = useSignal<AssetInfo[]>([]);
-  const routes = useSignal<RoutesInfo[]>([
-    {
-      relativePath: '',
-      name: 'index',
-      type: RouteType.DIRECTORY,
-      path: '',
-      isSymbolicLink: false,
-      children: undefined,
-    },
-  ]);
+  const state = useStore<State>({
+    isOpen: false,
+    activeTab: 'overview',
+    npmPackages: [],
+    assets: [],
+    routes: undefined,
+  });
   const panelRef = useSignal<HTMLDivElement>();
-  const location = useSignal<string>();
+  const location = {
+    url: {
+      pathname: '/',
+    },
+  };
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async ({ cleanup, track }) => {
@@ -59,21 +67,36 @@ export const QwikDevtools = component$(() => {
     createClientRpc(getClientRpcFunctions());
 
     track(() => {
-      if (isOpen.value) {
+      if (state.isOpen) {
         const rpc = getViteClientRpc();
         rpc.getAssetsFromPublicDir().then((data) => {
-          assets.value = data;
+          state.assets = data;
         });
         rpc.getRoutes().then((data: RoutesInfo) => {
-          const children = data.children || [];
-          routes.value = [
-            ...routes.value,
-            ...children.filter((child) => child.type === 'directory'),
+          const children: RoutesInfo[] = data.children || [];
+          const directories: RoutesInfo[] = children.filter(
+            (child) => child.type === 'directory',
+          );
+
+          const values: RoutesInfo[] = [
+            {
+              relativePath: '',
+              name: 'index',
+              type: RouteType.DIRECTORY,
+              path: '',
+              isSymbolicLink: false,
+              children: undefined,
+            },
+            ...directories,
           ];
+
+          console.log(values, noSerialize(values));
+
+          state.routes = noSerialize(values);
         });
 
         rpc.getQwikPackages().then((data: NpmInfo) => {
-          npmPackages.value = data;
+          state.npmPackages = data;
         });
       }
     });
@@ -81,22 +104,22 @@ export const QwikDevtools = component$(() => {
     // Add keyboard shortcut to toggle devtools
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === '`' && e.metaKey) {
-        isOpen.value = !isOpen.value;
+        state.isOpen = !state.isOpen;
       }
       // Add Escape key to close
-      if (e.key === 'Escape' && isOpen.value) {
-        isOpen.value = false;
+      if (e.key === 'Escape' && state.isOpen) {
+        state.isOpen = false;
       }
     };
 
     // Handle click outside
     const handleClickOutside = (e: MouseEvent) => {
       if (
-        isOpen.value &&
+        state.isOpen &&
         panelRef.value &&
         !panelRef.value.contains(e.target as Node)
       ) {
-        isOpen.value = false;
+        state.isOpen = false;
       }
     };
 
@@ -113,15 +136,15 @@ export const QwikDevtools = component$(() => {
     <div
       class={{
         'devtools-container': true,
-        'devtools-open': isOpen.value,
+        'devtools-open': state.isOpen,
       }}
     >
       <div
         class={{
           'devtools-toggle': true,
-          'is-open': isOpen.value,
+          'is-open': state.isOpen,
         }}
-        onClick$={() => (isOpen.value = !isOpen.value)}
+        onClick$={() => (state.isOpen = !state.isOpen)}
       >
         <img
           width={20}
@@ -132,33 +155,33 @@ export const QwikDevtools = component$(() => {
         />
       </div>
 
-      {isOpen.value && (
+      {state.isOpen && (
         <div ref={panelRef} class="devtools-panel">
           <div class="devtools-tabs">
             <button
-              class={{ 'tab-active': activeTab.value === 'overview' }}
-              onClick$={() => (activeTab.value = 'overview')}
+              class={{ 'tab-active': state.activeTab === 'overview' }}
+              onClick$={() => (state.activeTab = 'overview')}
               title="Overview"
             >
               <HiBoltOutline width={20} height={20} />
             </button>
             <button
-              class={{ 'tab-active': activeTab.value === 'components' }}
-              onClick$={() => (activeTab.value = 'components')}
+              class={{ 'tab-active': state.activeTab === 'components' }}
+              onClick$={() => (state.activeTab = 'components')}
               title="Components"
             >
               <HiCubeOutline width={20} height={20} />
             </button>
             <button
-              class={{ 'tab-active': activeTab.value === 'routes' }}
-              onClick$={() => (activeTab.value = 'routes')}
+              class={{ 'tab-active': state.activeTab === 'routes' }}
+              onClick$={() => (state.activeTab = 'routes')}
               title="Routes"
             >
               <LuFolderTree width={20} height={20} />
             </button>
             <button
-              class={{ 'tab-active': activeTab.value === 'state' }}
-              onClick$={() => (activeTab.value = 'state')}
+              class={{ 'tab-active': state.activeTab === 'state' }}
+              onClick$={() => (state.activeTab = 'state')}
               title="State"
             >
               <svg
@@ -176,15 +199,15 @@ export const QwikDevtools = component$(() => {
               </svg>
             </button>
             <button
-              class={{ 'tab-active': activeTab.value === 'assets' }}
-              onClick$={() => (activeTab.value = 'assets')}
+              class={{ 'tab-active': state.activeTab === 'assets' }}
+              onClick$={() => (state.activeTab = 'assets')}
               title="Assets"
             >
               <HiPhotoOutline width={20} height={20} />
             </button>
           </div>
           <div class="devtools-content">
-            {activeTab.value === 'overview' && (
+            {state.activeTab === 'overview' && (
               <div class="tab-content overview">
                 <div class="header-section">
                   <div class="title-container">
@@ -199,7 +222,7 @@ export const QwikDevtools = component$(() => {
                   </div>
                   <div class="version">
                     v
-                    {npmPackages.value.find(([name]) =>
+                    {state.npmPackages.find(([name]) =>
                       name.includes('core'),
                     )?.[1] || '0.0.0'}
                   </div>
@@ -210,7 +233,7 @@ export const QwikDevtools = component$(() => {
                       <LuFolderTree class="icon" />
                     </div>
                     <div class="metric-content">
-                      <div class="metric-value">{routes.value.length}</div>
+                      <div class="metric-value">{state.routes?.length}</div>
                       <div class="metric-label">pages</div>
                     </div>
                   </div>
@@ -220,7 +243,7 @@ export const QwikDevtools = component$(() => {
                       <HiCubeOutline class="icon" />
                     </div>
                     <div class="metric-content">
-                      <div class="metric-value">{assets.value.length}</div>
+                      <div class="metric-value">{state.assets.length}</div>
                       <div class="metric-label">components</div>
                     </div>
                   </div>
@@ -230,7 +253,7 @@ export const QwikDevtools = component$(() => {
                       <HiPhotoOutline class="icon" />
                     </div>
                     <div class="metric-content">
-                      <div class="metric-value">{assets.value.length || 0}</div>
+                      <div class="metric-value">{state.assets.length || 0}</div>
                       <div class="metric-label">assets</div>
                     </div>
                   </div>
@@ -239,7 +262,7 @@ export const QwikDevtools = component$(() => {
                 <div class="packages-section">
                   <h3>Installed Packages</h3>
                   <div class="packages-grid">
-                    {npmPackages.value.map(([name, version]) => (
+                    {state.npmPackages.map(([name, version]) => (
                       <div key={name} class="package-item">
                         <div class="package-name">{name}</div>
                         <div class="package-version">v{version}</div>
@@ -267,7 +290,7 @@ export const QwikDevtools = component$(() => {
                 </div>
               </div>
             )}
-            {activeTab.value === 'assets' && (
+            {state.activeTab === 'assets' && (
               <div class="tab-content assets">
                 <div class="header-section">
                   <h3>Public Assets</h3>
@@ -275,7 +298,7 @@ export const QwikDevtools = component$(() => {
                     <span class="stat-item">
                       Total Size:{' '}
                       {(
-                        assets.value?.reduce(
+                        state.assets?.reduce(
                           (acc, asset) => acc + asset.size,
                           0,
                         ) / 1024
@@ -283,12 +306,12 @@ export const QwikDevtools = component$(() => {
                       KB
                     </span>
                     <span class="stat-item">
-                      Count: {assets.value?.length || 0}
+                      Count: {state.assets?.length || 0}
                     </span>
                   </div>
                 </div>
                 <div class="assets-grid">
-                  {assets.value?.map((asset) => {
+                  {state.assets?.map((asset) => {
                     const isImage = asset.path.match(
                       /\.(jpg|jpeg|png|gif|svg|webp)$/i,
                     );
@@ -327,12 +350,12 @@ export const QwikDevtools = component$(() => {
                 </div>
               </div>
             )}
-            {activeTab.value === 'components' && (
+            {state.activeTab === 'components' && (
               <div class="tab-content">
                 <h3>Components</h3>
               </div>
             )}
-            {activeTab.value === 'routes' && (
+            {state.activeTab === 'routes' && (
               <div class="tab-content">
                 <h3>Application Routes</h3>
                 <div class="routes-table">
@@ -342,7 +365,7 @@ export const QwikDevtools = component$(() => {
                     <div class="col-route">Middleware</div>
                     <div class="col-route">Layout</div>
                   </div>
-                  {routes.value.map((route, i) => {
+                  {state.routes?.map((route, i) => {
                     const children = route.children || [];
                     const layout =
                       route.relativePath !== '' &&
@@ -354,15 +377,15 @@ export const QwikDevtools = component$(() => {
                         <div class="col-route">
                           <span
                             class={
-                              location.value ===
-                              (route.relativePath === '/'
-                                ? '/'
-                                : `${route.relativePath}/`)
+                              location.url.pathname ===
+                              `/${route.relativePath}/`
                                 ? 'active-route'
                                 : ''
                             }
                           >
-                            /{route.relativePath}
+                            {route.relativePath === ''
+                              ? '/'
+                              : `/${route.relativePath}/`}
                           </span>
                         </div>
                         <div class="col-route">{route.name}</div>

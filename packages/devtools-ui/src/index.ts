@@ -1,1 +1,0 @@
-export { QwikDevtools } from './devtools';

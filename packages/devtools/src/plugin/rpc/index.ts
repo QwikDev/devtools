@@ -1,4 +1,4 @@
-import { ServerFunctions } from '@qwik/devtools-kit';
+import { ServerFunctions } from '../../kit/types';
 import { getAssetsFunctions } from '../assets';
 import { ServerContext } from '../types';
 import { getRouteFunctions } from '../routes';

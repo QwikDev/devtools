@@ -1,18 +1,25 @@
 {
   "name": "devtools",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build:devtools": "pnpm --filter @qwik.dev/devtools build",
+    "playground": "pnpm --filter playground dev"
+  },
   "private": false,
   "devDependencies": {
-    "vite": "^6.0.3",
-    "unbuild": "^3.0.1",
-    "typescript": "^5.7.2",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.10.1",
     "eslint": "^9.16.0",
-    "typescript-eslint": "^8.18.0"
+    "fs-extra": "^11.2.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
+    "unbuild": "^3.0.1",
+    "vite": "^6.0.3"
   },
   "keywords": [
-    "qwik"
+    "qwik",
+    "devtools",
+    "plugin"
   ]
 }

@@ -1,5 +1,5 @@
 import { BirpcReturn } from 'birpc';
-import { Dree } from 'dree';
+import { type Dree } from 'dree';
 export { Type as RouteType } from 'dree';
 
 export interface ClientFunctions {

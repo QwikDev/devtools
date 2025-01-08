@@ -1,4 +1,4 @@
-import { RoutesInfo } from '@qwik/devtools-kit';
+import { RoutesInfo } from '../../kit/types';
 import { ServerContext } from '../types';
 import { scanAsync } from 'dree';
 

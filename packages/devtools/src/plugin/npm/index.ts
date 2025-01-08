@@ -1,6 +1,6 @@
 import { ServerContext } from '../types';
 import fsp from 'node:fs/promises';
-import { NpmInfo } from '@qwik/devtools-kit';
+import { NpmInfo } from '../../kit/types';
 
 export function getNpmFunctions({ config }: ServerContext) {
   return {

@@ -6,7 +6,7 @@ import { qwikVite } from '@qwik.dev/core/optimizer';
 import { qwikRouter } from '@qwik.dev/router/vite';
 import { defineConfig, ResolvedConfig, type UserConfig, Plugin } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import qwikPluginDevtools from '@qwik/plugin-devtools';
+import { qwikDevtoolsPlugin } from '@qwik.dev/devtools';
 import pkg from './package.json';
 type PkgDep = Record<string, string>;
 const { dependencies = {}, devDependencies = {} } = pkg as any as {
@@ -39,8 +39,12 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  */
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
-    plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikPluginDevtools()],
-    // This tells Vite which dependencies to pre-build in dev mode.
+    plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikDevtoolsPlugin()],
+    build: {
+      rollupOptions: {
+        external: ['path'],
+      },
+    },
     optimizeDeps: {
       // Put problematic deps that break bundling here, mostly those with binaries.
       // For example ['better-sqlite3'] if you use that in server functions.
