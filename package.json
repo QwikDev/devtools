@@ -3,17 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev:ui": "pnpm --filter devtools-ui dev",
-    "dev:kit": "pnpm --filter devtools-kit dev",
-    "dev:plugin": "pnpm --filter plugin-devtools dev",
-    "build:ui": "pnpm --filter devtools-ui build",
-    "build:kit": "pnpm --filter devtools-kit build",
-    "build:plugin": "pnpm --filter plugin-devtools build",
-    "playground": "pnpm --filter playground dev",
-    "dev": "pnpm --parallel dev",
-    "build": "pnpm build:kit && pnpm build:ui && pnpm build:plugin",
-    "build:dist": "tsx scripts/build.ts",
-    "publish": "cd dist && npm publish"
+    "build:devtools": "pnpm --filter @qwik.dev/devtools build",
+    "playground": "pnpm --filter playground dev"
   },
   "private": false,
   "devDependencies": {
