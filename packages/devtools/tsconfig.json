@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "compilerOptions": {
     "allowJs": true,
     "target": "ES2017",
@@ -21,3 +22,25 @@
   },
   "include": ["src"]
 }
+=======
+    "include": ["src"],
+    "exclude": ["**/*.spec.ts"],
+    "compilerOptions": {
+      "outDir": "dist",
+      "target": "ES2020",
+      "module": "ES2020",
+      "moduleResolution": "node",
+      "strict": true,
+      "declaration": true,
+      "sourceMap": true,
+      "noImplicitOverride": true,
+      "noUnusedLocals": true,
+      "esModuleInterop": true,
+      "baseUrl": ".",
+      "resolveJsonModule": true,
+      "paths": {
+        "@qwik/devtools-kit": ["../../packages/devtools-kit"]
+      }
+    }
+  }
+>>>>>>> main
