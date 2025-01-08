@@ -1,6 +1,6 @@
 {
   "name": "@qwik.dev/devtools",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Create a Qwik library",
   "main": "./src/devtools.tsx",
   "exports": {
