@@ -1,2 +1,2 @@
-// export { QwikDevtools } from './devtools';
+export { QwikDevtools } from './devtools';
 export { qwikDevtoolsPlugin } from './plugin';

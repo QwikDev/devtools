@@ -6,7 +6,7 @@ import { qwikVite } from '@qwik.dev/core/optimizer';
 import { qwikRouter } from '@qwik.dev/router/vite';
 import { defineConfig, ResolvedConfig, type UserConfig, Plugin } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { qwikDevtoolsPlugin } from '../devtools/lib/index.qwik.mjs';
+import { qwikDevtoolsPlugin } from '@qwik.dev/devtools';
 import pkg from './package.json';
 type PkgDep = Record<string, string>;
 const { dependencies = {}, devDependencies = {} } = pkg as any as {

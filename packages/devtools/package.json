@@ -4,10 +4,7 @@
   "description": "Create a Qwik library",
   "main": "./src/devtools.tsx",
   "exports": {
-    "./ui": {
-      "import": "./src/devtools.tsx"
-    },
-    "./plugin": {
+    ".": {
       "import": "./lib/index.qwik.mjs"
     }
   },

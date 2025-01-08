@@ -23,7 +23,7 @@ import {
   type RoutesInfo,
   RouteType,
 } from './kit';
-import { useLocation } from '@qwik.dev/router';
+// import { useLocation } from '@qwik.dev/router';
 import styles from './devtools.css?inline';
 function getClientRpcFunctions() {
   return {
@@ -49,7 +49,11 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
   const panelRef = useSignal<HTMLDivElement>();
-  const location = useLocation();
+  const location = {
+    url: {
+      pathname: '/',
+    },
+  };
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async ({ cleanup, track }) => {
