@@ -2,10 +2,10 @@ import { ResolvedConfig, type Plugin } from 'vite';
 import { getServerFunctions } from './rpc';
 import { createServerRpc, setViteServerContext } from '../kit';
 
-export function qwikDevtoolsPlugin(): Plugin {
+export function qwikDevtools(): Plugin {
   let _config: ResolvedConfig;
   return {
-    name: 'qwik-devtools',
+    name: 'vite-plugin-qwik-devtools',
     apply: 'serve',
     configResolved(viteConfig) {
       _config = viteConfig;
@@ -16,9 +16,9 @@ export function qwikDevtoolsPlugin(): Plugin {
         // Only transform the root component file
         if (id.endsWith('root.tsx')) {
           // Check if QwikDevtools import already exists
-          if (!code.includes('@qwik.dev/devtools')) {
+          if (!code.includes('@qwik.dev/devtools/component')) {
             // Add import for QwikDevtools using the correct package name
-            code = `import { QwikDevtools } from '@qwik.dev/devtools';\n${code}`;
+            code = `import { QwikDevtools } from '@qwik.dev/devtools/component';\n${code}`;
           }
 
           // Find the closing body tag and inject the QwikDevtools component before it

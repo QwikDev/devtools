@@ -1,2 +1,1 @@
-export { QwikDevtools } from './devtools';
-export { qwikDevtoolsPlugin } from './plugin';
+export { qwikDevtools } from './plugin';

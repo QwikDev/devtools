@@ -1,13 +1,14 @@
 {
   "name": "@qwik.dev/devtools",
   "version": "0.0.1",
-  "description": "Create a Qwik library",
-  "main": "./lib/index.qwik.cjs",
+  "description": "Qwik devtools package",
+  "main": "./lib/index.qwik.mjs",
   "exports": {
     ".": {
-      "types": "./lib-types/index.d.ts",
-      "import": "./lib/index.qwik.mjs",
-      "require": "./lib/index.qwik.cjs"
+      "import": "./lib/index.qwik.mjs"
+    },
+    "./component": {
+      "import": "./src/devtools.tsx"
     }
   },
   "files": [
@@ -23,7 +24,6 @@
   "scripts": {
     "build": "qwik build",
     "build.lib": "vite build --mode lib",
-    "build.plugin": "unbuild",
     "build.types": "tsc --emitDeclarationOnly",
     "dev:ssr": "vite --mode ssr",
     "dev": "nodemon --watch src -e tsx,ts,css --exec 'npm run build.lib'",
@@ -65,8 +65,6 @@
     "typescript": "5.4.5",
     "vite": "5.4.10",
     "vite-tsconfig-paths": "^4.2.1",
-    "cpy-cli": "^5.0.0",
-    "vite-hot-client": "^0.2.4",
-    "nodemon": "^3.1.9"
+    "cpy-cli": "^5.0.0"
   }
 }
