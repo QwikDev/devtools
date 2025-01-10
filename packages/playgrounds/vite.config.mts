@@ -6,7 +6,7 @@ import { qwikVite } from '@qwik.dev/core/optimizer';
 import { qwikRouter } from '@qwik.dev/router/vite';
 import { defineConfig, ResolvedConfig, type UserConfig, Plugin } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { qwikDevtoolsPlugin } from '@qwik.dev/devtools';
+import { qwikDevtools } from '@qwik.dev/devtools';
 import pkg from './package.json';
 type PkgDep = Record<string, string>;
 const { dependencies = {}, devDependencies = {} } = pkg as any as {
@@ -37,9 +37,10 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
 /**
  * Note that Vite normally starts from `index.html` but the qwikRouter plugin makes start at `src/entry.ssr.tsx` instead.
  */
+
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
-    plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikDevtoolsPlugin()],
+    plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikDevtools()],
     build: {
       rollupOptions: {
         external: ['path'],

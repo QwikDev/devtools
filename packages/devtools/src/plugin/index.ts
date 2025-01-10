@@ -2,7 +2,7 @@ import { ResolvedConfig, type Plugin } from 'vite';
 import { getServerFunctions } from './rpc';
 import { createServerRpc, setViteServerContext } from '../kit';
 
-export function qwikDevtoolsPlugin(): Plugin {
+export function qwikDevtools(): Plugin {
   let _config: ResolvedConfig;
   return {
     name: 'vite-plugin-qwik-devtools',
