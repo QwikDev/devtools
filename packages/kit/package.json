@@ -1,0 +1,39 @@
+{
+  "name": "@devtools/kit",
+  "version": "1.0.0",
+  "description": "Qwik devtools package",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "private": false,
+  "type": "module",
+  "scripts": {},
+  "dependencies": {
+    "superjson": "^2.2.2",
+    "birpc": "^0.2.19",
+    "dree": "^5.1.5"
+  },
+  "peerDependencies": {
+    "vite": "^6.0.7"
+  },
+  "devDependencies": {
+    "@types/eslint": "8.56.10",
+    "unbuild": "^3.2.0",
+    "@types/node": "20.14.11",
+    "@typescript-eslint/eslint-plugin": "7.16.1",
+    "@typescript-eslint/parser": "7.16.1",
+    "eslint": "8.57.0",
+    "eslint-plugin-qwik": "2.0.0-alpha.3",
+    "np": "^8.0.4",
+    "prettier": "3.3.3",
+    "typescript": "5.4.5",
+    "vite-tsconfig-paths": "^4.2.1",
+    "cpy-cli": "^5.0.0"
+  }
+}

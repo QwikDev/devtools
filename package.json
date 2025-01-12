@@ -1,10 +1,43 @@
 {
-  "name": "devtools",
-  "version": "1.0.0",
+  "name": "@qwik.dev/devtools",
+  "version": "0.0.4",
   "license": "MIT",
+  "main": "./dist/plugin/index.mjs",
+  "description": "Qwik devtools package",
+  "qwik": "./dist/component/index.qwik.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin/index.mjs",
+      "types": "./dist/plugin/index.d.ts"
+    },
+    "./component": {
+      "import": "./dist/component/index.qwik.mjs",
+      "require": "./dist/component/index.qwik.cjs",
+      "types": "./dist/component/lib-types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**"
+  ],
   "scripts": {
-    "build:devtools": "pnpm --filter @qwik.dev/devtools build",
-    "playground": "pnpm --filter playground dev"
+    "playground": "pnpm --filter playground dev",
+    "build:devtools": "tsx scripts/build-devtools.ts"
+  },
+  "peerDependencies": {
+    "vite": "^6.0.7",
+    "@qwik.dev/core": "^2.0.0-alpha.4",
+    "@qwik.dev/router": "^2.0.0-alpha.4"
+  },
+  "dependencies": {
+    "birpc": "^0.2.19",
+    "superjson": "^2.2.2",
+    "dree": "^5.1.5",
+    "@qwikest/icons": "^0.0.13",
+    "vite-hot-client": "^0.2.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "@types/node": "^22.10.5"
   },
   "private": false,
   "keywords": [

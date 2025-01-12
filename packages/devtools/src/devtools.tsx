@@ -22,9 +22,10 @@ import {
   type AssetInfo,
   type RoutesInfo,
   RouteType,
-} from './kit';
+} from '@devtools/kit';
 import styles from './devtools.css?inline';
-import { getCurrentLocation } from './utils/location';
+import { useLocation } from '@qwik.dev/router';
+
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -49,7 +50,7 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
   const panelRef = useSignal<HTMLDivElement>();
-  const location = getCurrentLocation();
+  const location = useLocation();
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async ({ cleanup, track }) => {
@@ -371,7 +372,10 @@ export const QwikDevtools = component$(() => {
                         <div class="col-route">
                           <span
                             class={
-                              location === `/${route.relativePath}`
+                              (location.url.pathname === '/' &&
+                                route.relativePath === '') ||
+                              location.url.pathname ===
+                                `/${route.relativePath}/`
                                 ? 'active-route'
                                 : ''
                             }

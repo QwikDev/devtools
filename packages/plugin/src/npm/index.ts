@@ -1,12 +1,12 @@
 import { ServerContext } from '../types';
 import fsp from 'node:fs/promises';
-import { NpmInfo } from '../../kit/types';
+import { NpmInfo } from '@devtools/kit';
 
 export function getNpmFunctions({ config }: ServerContext) {
   return {
     async getQwikPackages(): Promise<NpmInfo> {
-      const pathToPackageJson = config.configFileDependencies.find((file) =>
-        file.endsWith('package.json'),
+      const pathToPackageJson = config.configFileDependencies.find(
+        (file: string) => file.endsWith('package.json'),
       );
       if (!pathToPackageJson) return [];
 

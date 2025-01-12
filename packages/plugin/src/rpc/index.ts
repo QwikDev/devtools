@@ -1,4 +1,4 @@
-import { ServerFunctions } from '../../kit/types';
+import { ServerFunctions } from '@devtools/kit';
 import { getAssetsFunctions } from '../assets';
 import { ServerContext } from '../types';
 import { getRouteFunctions } from '../routes';
