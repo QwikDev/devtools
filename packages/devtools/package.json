@@ -6,9 +6,6 @@
   "exports": {
     ".": {
       "import": "./lib/index.qwik.mjs"
-    },
-    "./component": {
-      "import": "./src/devtools.tsx"
     }
   },
   "files": [
@@ -38,7 +35,6 @@
   },
   "peerDependencies": {
     "@qwik.dev/core": "^2.0.0-alpha.4",
-    "@qwik.dev/router": "^2.0.0-alpha.4",
     "vite": "^6.0.0"
   },
   "dependencies": {

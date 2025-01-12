@@ -16,9 +16,9 @@ export function qwikDevtools(): Plugin {
         // Only transform the root component file
         if (id.endsWith('root.tsx')) {
           // Check if QwikDevtools import already exists
-          if (!code.includes('@qwik.dev/devtools/component')) {
+          if (!code.includes('@qwik.dev/devtools')) {
             // Add import for QwikDevtools using the correct package name
-            code = `import { QwikDevtools } from '@qwik.dev/devtools/component';\n${code}`;
+            code = `import { QwikDevtools } from '@qwik.dev/devtools';\n${code}`;
           }
 
           // Find the closing body tag and inject the QwikDevtools component before it
