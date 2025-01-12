@@ -23,8 +23,8 @@ import {
   type RoutesInfo,
   RouteType,
 } from './kit';
-// import { useLocation } from '@qwik.dev/router';
 import styles from './devtools.css?inline';
+import { getCurrentLocation } from './utils/location';
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -49,11 +49,7 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
   const panelRef = useSignal<HTMLDivElement>();
-  const location = {
-    url: {
-      pathname: '/',
-    },
-  };
+  const location = getCurrentLocation();
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async ({ cleanup, track }) => {
@@ -89,8 +85,6 @@ export const QwikDevtools = component$(() => {
             },
             ...directories,
           ];
-
-          console.log(values, noSerialize(values));
 
           state.routes = noSerialize(values);
         });
@@ -377,8 +371,7 @@ export const QwikDevtools = component$(() => {
                         <div class="col-route">
                           <span
                             class={
-                              location.url.pathname ===
-                              `/${route.relativePath}/`
+                              location === `/${route.relativePath}`
                                 ? 'active-route'
                                 : ''
                             }

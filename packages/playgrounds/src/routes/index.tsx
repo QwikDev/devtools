@@ -1,5 +1,5 @@
-import type { DocumentHead } from "@qwik.dev/router";
-import { component$ } from "@qwik.dev/core";
+import { Link, type DocumentHead } from '@qwik.dev/router';
+import { component$ } from '@qwik.dev/core';
 
 export default component$(() => {
   return (
@@ -10,16 +10,22 @@ export default component$(() => {
         <br />
         Happy coding.
       </div>
+      <div>
+        <Link href="/about">About</Link>
+      </div>
+      <div>
+        <Link href="/blog">Blog</Link>
+      </div>
     </>
   );
 });
 
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: 'Welcome to Qwik',
   meta: [
     {
-      name: "description",
-      content: "Qwik site description",
+      name: 'description',
+      content: 'Qwik site description',
     },
   ],
 };

@@ -16,24 +16,6 @@ const { dependencies = {}, devDependencies = {} } = pkg as any as {
 };
 errorOnDuplicatesPkgDeps(devDependencies, dependencies);
 
-// function QwikDevtools(): Plugin {
-//   let _config: ResolvedConfig;
-//   return {
-//     name: 'qwik-devtools',
-//     apply: 'serve',
-//     configResolved(viteConfig) {
-//       _config = viteConfig;
-//     },
-//     async configureServer(server) {
-//       const routesDir = `${_config.root}/src/routes`;
-//       const routes = await scanAsync(routesDir, {
-//         extensions: ['tsx'],
-//       });
-//       console.log(routes);
-//     },
-//   };
-// }
-
 /**
  * Note that Vite normally starts from `index.html` but the qwikRouter plugin makes start at `src/entry.ssr.tsx` instead.
  */
