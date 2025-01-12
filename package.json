@@ -1,6 +1,6 @@
 {
   "name": "@qwik.dev/devtools",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "main": "./dist/plugin/index.mjs",
   "description": "Qwik devtools package",
@@ -25,7 +25,8 @@
   },
   "peerDependencies": {
     "vite": "^6.0.7",
-    "@qwik.dev/core": "^2.0.0-alpha.4"
+    "@qwik.dev/core": "^2.0.0-alpha.4",
+    "@qwik.dev/router": "^2.0.0-alpha.4"
   },
   "dependencies": {
     "birpc": "^0.2.19",
