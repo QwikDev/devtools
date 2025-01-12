@@ -13,9 +13,6 @@ importers:
       '@qwik.dev/core':
         specifier: ^2.0.0-alpha.4
         version: 2.0.0-alpha.4(prettier@3.3.3)(vite@5.4.10(@types/node@20.14.11))
-      '@qwik.dev/router':
-        specifier: ^2.0.0-alpha.4
-        version: 2.0.0-alpha.4(acorn@8.14.0)(rollup@4.30.1)(typescript@5.4.5)(vite@5.4.10(@types/node@20.14.11))
       '@qwikest/icons':
         specifier: ^0.0.13
         version: 0.0.13(@builder.io/qwik@1.11.0(vite@5.4.10(@types/node@20.14.11)))
