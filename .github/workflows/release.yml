@@ -28,9 +28,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: cd packages/devtools/ && pnpm run build
+        run: pnpm build
 
       - name: Publish to npm
-        run: cd packages/devtools/ && pnpm publish --access public
+        run: pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

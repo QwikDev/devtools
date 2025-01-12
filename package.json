@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "playground": "pnpm --filter playground dev",
-    "build:devtools": "tsx scripts/build-devtools.ts"
+    "build": "tsx scripts/build-devtools.ts"
   },
   "peerDependencies": {
     "vite": "^6.0.7",
