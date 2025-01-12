@@ -52,8 +52,6 @@
     "vite-hot-client": "^0.2.4"
   },
   "devDependencies": {
-    "@qwik.dev/core": "^2.0.0-alpha.4",
-    "@qwik.dev/router": "^2.0.0-alpha.4",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",
     "@typescript-eslint/eslint-plugin": "7.16.1",
