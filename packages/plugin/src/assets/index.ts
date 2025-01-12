@@ -2,7 +2,7 @@ import fsp from 'node:fs/promises';
 import fg from 'fast-glob';
 import { resolve, relative, join } from 'node:path/posix';
 import { ServerContext } from '../types';
-import { AssetType, AssetInfo } from '../../kit/types';
+import { AssetType, AssetInfo } from '@devtools/kit';
 
 // const defaultAllowedExtensions = [
 //   'png',

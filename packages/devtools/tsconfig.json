@@ -7,16 +7,16 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@qwik.dev/core",
     "strict": true,
-    "declaration": true,
     "declarationDir": "lib-types",
-    "resolveJsonModule": true,
     "moduleResolution": "Bundler",
+    "declaration": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "types": ["vite/client"],
     "paths": {
-      "@qwik/devtools-kit": ["../../packages/devtools-kit"]
+      "@devtools/kit": ["../kit/src/index.ts"]
     }
   },
   "include": ["src"]

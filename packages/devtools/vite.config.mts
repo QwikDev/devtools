@@ -25,8 +25,8 @@ export default defineConfig(() => {
         // externalize deps that shouldn't be bundled into the library
         external: [
           /^node:.*/,
-          ...excludeAll(dependencies),
           ...excludeAll(peerDependencies),
+          ...excludeAll(dependencies),
         ],
       },
     },

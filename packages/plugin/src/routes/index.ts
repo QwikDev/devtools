@@ -1,4 +1,4 @@
-import { RoutesInfo } from '../../kit/types';
+import { RoutesInfo } from '@devtools/kit';
 import { ServerContext } from '../types';
 import { scanAsync } from 'dree';
 

@@ -1,6 +1,6 @@
 {
-  "name": "@qwik.dev/devtools",
-  "version": "0.0.3",
+  "name": "@devtools/component",
+  "version": "1.0.0",
   "description": "Qwik devtools package",
   "main": "./lib/index.qwik.mjs",
   "exports": {
@@ -9,7 +9,6 @@
     }
   },
   "files": [
-    "src",
     "lib",
     "lib-types"
   ],
@@ -35,19 +34,15 @@
   },
   "peerDependencies": {
     "@qwik.dev/core": "^2.0.0-alpha.4",
-    "vite": "^6.0.0"
+    "@qwik.dev/router": "^2.0.0-alpha.4"
   },
-  "dependencies": {
-    "image-meta": "^0.2.1",
+  "devDependencies": {
+    "@devtools/kit": "workspace:*",
     "birpc": "^0.2.19",
-    "perfect-debounce": "^1.0.0",
-    "fast-glob": "^3.3.2",
     "superjson": "^2.2.2",
     "dree": "^5.1.5",
     "@qwikest/icons": "^0.0.13",
-    "vite-hot-client": "^0.2.4"
-  },
-  "devDependencies": {
+    "vite-hot-client": "^0.2.4",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",
     "@typescript-eslint/eslint-plugin": "7.16.1",
