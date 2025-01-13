@@ -8,15 +8,15 @@ Enhance your Qwik development experience with DevTools that provide real-time in
 
 > Qwik DevTools requires **Qwik v2.0.0-alpha.4 or higher**.
 
-```console copy
+```shell copy
 $ npm install @qwik.dev/devtools
 ```
 
-```console copy
+```shell copy
 $ pnpm add @qwik.dev/devtools
 ```
 
-```console copy
+```shell copy
 $ yarn add @qwik.dev/devtools
 ```
 
