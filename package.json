@@ -44,5 +44,13 @@
     "qwik",
     "devtools",
     "plugin"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QwikDev/devtools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/QwikDev/devtools/issues"
+  },
+  "homepage": "https://github.com/QwikDev/devtools#readme"
 }
