@@ -2,35 +2,36 @@
 
 ![Qwik DevTools](https://raw.github.com/QwikDev/devtools/main/assets/screenshot.png)
 
-Enhance your Qwik development experience with DevTools that provide real-time insights into your application's state, components, and performance.
+Enhance your Qwik development experience with DevTools that provide real-time insights into your application, dependencies, and setup.
 
 ## Installation
 
 > Qwik DevTools requires **Qwik v2.0.0-alpha.4 or higher**.
 
-```bash copy
-npm install @qwik.dev/devtools
+```console copy
+$ npm install @qwik.dev/devtools
 ```
 
-```bash copy
-pnpm add @qwik.dev/devtools
+```console copy
+$ pnpm add @qwik.dev/devtools
 ```
 
-```bash copy
-yarn add @qwik.dev/devtools
+```console copy
+$ yarn add @qwik.dev/devtools
 ```
 
 ## Setup
 
-Add the plugin to your `vite.config.ts`:
+Add the plugin to your `vite.config.(m)ts`:
 
 ```ts copy
-import { qwikDevtools } from '@qwik.dev/devtools/vite';
+import { qwikDevtools } from '@qwik.dev/devtools';
 
 export default defineConfig({
   plugins: [
-    qwikCity(),
+    qwikRouter(),
     qwikVite(),
+    tsconfigPaths(),
     qwikDevtools(), // 👈 Add the plugin here
   ],
 });
@@ -38,14 +39,14 @@ export default defineConfig({
 
 ## Features
 
-- 🔍 Component Explorer
-- ⚡️ Real-time State Management
-- 📊 Performance Metrics
+- 🔍 Route Explorer
+- ⚡️ Dependency Explorer
+- 📊 Asset Explorer
 - 🐞 Debug Tools
 
 ## Contribution Guide
 
-Please refer to the [Contribution Guide](./CONTRIBUTING.md).
+Please refer to the [Contribution Guide](./CONTRIBUTING.md). Sharing feedback and feature request with GitHub issues is welcome.
 
 ## Community
 
