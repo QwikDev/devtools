@@ -2,6 +2,8 @@
 
 ![Qwik DevTools](https://raw.github.com/QwikDev/devtools/main/assets/screenshot.png)
 
+Enhance your Qwik development experience with DevTools that provide real-time insights into your application's state, components, and performance.
+
 ## Installation
 
 > Qwik DevTools requires **Qwik v2.0.0-alpha.4 or higher**.
@@ -23,17 +25,23 @@ yarn add @qwik.dev/devtools
 Add the plugin to your `vite.config.ts`:
 
 ```ts copy
-import { qwikDevtools } from '@qwik.dev/devtools';
+import { qwikDevtools } from '@qwik.dev/devtools/vite';
 
 export default defineConfig({
   plugins: [
-    qwikRouter(),
+    qwikCity(),
     qwikVite(),
-    tsconfigPaths(),
     qwikDevtools(), // 👈 Add the plugin here
   ],
 });
 ```
+
+## Features
+
+- 🔍 Component Explorer
+- ⚡️ Real-time State Management
+- 📊 Performance Metrics
+- 🐞 Debug Tools
 
 ## Contribution Guide
 
@@ -41,15 +49,17 @@ Please refer to the [Contribution Guide](./CONTRIBUTING.md).
 
 ## Community
 
-- Ping us at [@QwikDev](https://twitter.com/QwikDev)
-- Join our [Discord](https://qwik.dev/chat) community
-- Join all the [other community groups](https://qwik.dev/ecosystem/#community)
+Join our vibrant community:
 
-## Related
+- 🐦 Follow [@QwikDev](https://twitter.com/QwikDev) on Twitter
+- 💬 Join our [Discord](https://qwik.dev/chat) community
+- 🌐 Check out [other community groups](https://qwik.dev/ecosystem/#community)
 
-- [Qwik Docs](https://qwik.dev/)
-- [Discord](https://qwik.dev/chat)
-- [Qwik GitHub](https://github.com/QwikDev/qwik)
-- [@QwikDev](https://twitter.com/QwikDev)
-- [Vite](https://vitejs.dev/)
+## Related Links
+
+- [📚 Qwik Documentation](https://qwik.dev/)
+- [💬 Discord Chat](https://qwik.dev/chat)
+- [⭐️ Qwik GitHub](https://github.com/QwikDev/qwik)
+- [🐦 @QwikDev](https://twitter.com/QwikDev)
+- [⚡️ Vite](https://vitejs.dev/)
 
