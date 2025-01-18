@@ -7,6 +7,24 @@ settings:
 importers:
 
   .:
+    devDependencies:
+      '@changesets/cli':
+        specifier: ^2.27.11
+        version: 2.27.11
+      '@changesets/get-github-info':
+        specifier: ^0.6.0
+        version: 0.6.0
+      '@changesets/types':
+        specifier: ^6.0.0
+        version: 6.0.0
+      '@types/node':
+        specifier: ^22.10.5
+        version: 22.10.5
+      tsx:
+        specifier: ^4.19.2
+        version: 4.19.2
+
+  packages/devtools:
     dependencies:
       '@qwik.dev/core':
         specifier: ^2.0.0-alpha.4
