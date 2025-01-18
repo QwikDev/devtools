@@ -21,7 +21,8 @@
   ],
   "scripts": {
     "playground": "pnpm --filter playground dev",
-    "build": "tsx scripts/build-devtools.ts"
+    "build": "tsx scripts/build-devtools.ts",
+    "change": "changeset"
   },
   "peerDependencies": {
     "vite": "^6.0.7",
@@ -37,7 +38,10 @@
   },
   "devDependencies": {
     "tsx": "^4.19.2",
-    "@types/node": "^22.10.5"
+    "@types/node": "^22.10.5",
+    "@changesets/cli": "^2.27.11",
+    "@changesets/get-github-info": "^0.6.0",
+    "@changesets/types": "^6.0.0"
   },
   "private": false,
   "keywords": [
