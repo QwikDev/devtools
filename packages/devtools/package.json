@@ -1,0 +1,55 @@
+{
+  "name": "@qwik.dev/devtools",
+  "version": "0.0.6",
+  "license": "MIT",
+  "main": "./dist/plugin/index.mjs",
+  "description": "Qwik devtools package",
+  "qwik": "./dist/ui/index.qwik.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin/index.mjs",
+      "types": "./dist/plugin/index.d.ts"
+    },
+    "./ui": {
+      "import": "./dist/ui/index.qwik.mjs",
+      "require": "./dist/ui/index.qwik.cjs",
+      "types": "./dist/ui/lib-types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**"
+  ],
+  "peerDependencies": {
+    "vite": "^6.0.7",
+    "@qwik.dev/core": "^2.0.0-alpha.4",
+    "@qwik.dev/router": "^2.0.0-alpha.4"
+  },
+  "dependencies": {
+    "birpc": "^0.2.19",
+    "superjson": "^2.2.2",
+    "dree": "^5.1.5",
+    "@qwikest/icons": "^0.0.13",
+    "vite-hot-client": "^0.2.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "@types/node": "^22.10.5",
+    "@changesets/cli": "^2.27.11",
+    "@changesets/get-github-info": "^0.6.0",
+    "@changesets/types": "^6.0.0"
+  },
+  "private": false,
+  "keywords": [
+    "qwik",
+    "devtools",
+    "plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QwikDev/devtools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/QwikDev/devtools/issues"
+  },
+  "homepage": "https://github.com/QwikDev/devtools#readme"
+}
