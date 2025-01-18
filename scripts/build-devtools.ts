@@ -3,9 +3,9 @@ import { join } from 'path';
 import { cpSync, mkdirSync, rmSync } from 'fs';
 
 const ROOT = process.cwd();
-const DEVTOOLS_PATH = join(ROOT, 'packages/devtools');
+const DEVTOOLS_PATH = join(ROOT, 'packages/ui');
 const PLUGIN_PATH = join(ROOT, 'packages/plugin');
-const DIST_PATH = join(ROOT, 'dist/component');
+const DIST_PATH = join(ROOT, 'dist/ui');
 
 // Clean previous builds
 console.log('Cleaning previous builds...');

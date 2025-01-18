@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@devtools/plugin": "workspace:*",
-    "@devtools/component": "workspace:*",
+    "@devtools/ui": "workspace:*",
     "@qwik.dev/core": "^2.0.0-alpha.4",
     "@qwik.dev/router": "^2.0.0-alpha.3",
     "@types/eslint": "8.56.10",

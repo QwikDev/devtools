@@ -1,5 +1,5 @@
 {
-  "name": "@devtools/component",
+  "name": "@devtools/ui",
   "version": "1.0.0",
   "description": "Qwik devtools package",
   "main": "./lib/index.qwik.mjs",
