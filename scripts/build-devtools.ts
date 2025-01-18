@@ -3,9 +3,9 @@ import { join } from 'path';
 import { cpSync, mkdirSync, rmSync } from 'fs';
 
 const ROOT = process.cwd();
-const DEVTOOLS_PATH = join(ROOT, 'packages/devtools');
+const DEVTOOLS_PATH = join(ROOT, 'packages/ui');
 const PLUGIN_PATH = join(ROOT, 'packages/plugin');
-const DIST_PATH = join(ROOT, 'dist/component');
+const DIST_PATH = join(ROOT, 'packages/devtools/dist');
 
 // Clean previous builds
 console.log('Cleaning previous builds...');
@@ -23,10 +23,10 @@ execSync('pnpm build', {
 
 // Copy lib and lib-types to dist
 console.log('Copying files to dist...');
-cpSync(join(DEVTOOLS_PATH, 'lib'), join(DIST_PATH), {
+cpSync(join(DEVTOOLS_PATH, 'lib'), join(DIST_PATH, 'ui'), {
   recursive: true,
 });
-cpSync(join(DEVTOOLS_PATH, 'lib-types'), join(DIST_PATH, 'lib-types'), {
+cpSync(join(DEVTOOLS_PATH, 'lib-types'), join(DIST_PATH, 'ui', 'lib-types'), {
   recursive: true,
 });
 

@@ -8,7 +8,7 @@ export default defineBuildConfig({
   failOnWarn: false,
   rollup: {
     output: {
-      dir: '../../dist/plugin',
+      dir: '../devtools/dist/plugin',
     },
     inlineDependencies: true,
     emitCJS: true,

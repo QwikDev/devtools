@@ -1,0 +1,59 @@
+{
+  "name": "@devtools/ui",
+  "version": "1.0.1",
+  "description": "Qwik devtools package",
+  "main": "./lib/index.qwik.mjs",
+  "exports": {
+    ".": {
+      "import": "./lib/index.qwik.mjs"
+    }
+  },
+  "files": [
+    "lib",
+    "lib-types"
+  ],
+  "engines": {
+    "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
+  },
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "build": "qwik build",
+    "build.lib": "vite build --mode lib",
+    "build.types": "tsc --emitDeclarationOnly",
+    "dev:ssr": "vite --mode ssr",
+    "dev": "nodemon --watch src -e tsx,ts,css --exec 'npm run build.lib'",
+    "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
+    "fmt": "prettier --write .",
+    "fmt.check": "prettier --check .",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "release": "np",
+    "start": "vite --open --mode ssr",
+    "test": "echo \"No test specified\" && exit 0",
+    "qwik": "qwik"
+  },
+  "peerDependencies": {
+    "@qwik.dev/core": "^2.0.0-alpha.4",
+    "@qwik.dev/router": "^2.0.0-alpha.4"
+  },
+  "devDependencies": {
+    "@devtools/kit": "workspace:*",
+    "birpc": "^0.2.19",
+    "superjson": "^2.2.2",
+    "dree": "^5.1.5",
+    "@qwikest/icons": "^0.0.13",
+    "vite-hot-client": "^0.2.4",
+    "@types/eslint": "8.56.10",
+    "@types/node": "20.14.11",
+    "@typescript-eslint/eslint-plugin": "7.16.1",
+    "@typescript-eslint/parser": "7.16.1",
+    "eslint": "8.57.0",
+    "eslint-plugin-qwik": "2.0.0-alpha.3",
+    "np": "^8.0.4",
+    "prettier": "3.3.3",
+    "typescript": "5.4.5",
+    "vite": "5.4.10",
+    "vite-tsconfig-paths": "^4.2.1",
+    "cpy-cli": "^5.0.0"
+  }
+}
