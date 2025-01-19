@@ -133,14 +133,15 @@ export const QwikDevtools = component$(() => {
   return (
     <div
       class={{
-        "devtools-container": true,
-        "devtools-open": state.isOpen,
+        "fixed bottom-0 right-0 z-[9999] font-sans": true,
       }}
     >
       <div
         class={{
-          "devtools-toggle": true,
-          "is-open": state.isOpen,
+          "fixed bottom-4 right-4 flex h-9 w-9 origin-center cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-zinc-900 backdrop-blur-md transition-all duration-300 ease-in-out":
+            true,
+          "rotate-90 border-emerald-500/50 bg-zinc-900/95 shadow-lg shadow-emerald-500/35":
+            state.isOpen,
         }}
         onClick$={() => (state.isOpen = !state.isOpen)}
       >
@@ -149,116 +150,131 @@ export const QwikDevtools = component$(() => {
           height={20}
           src="https://qwik.dev/logos/qwik-logo.svg"
           alt="Qwik Logo"
-          class="toggle-icon"
+          class="h-5 w-5 opacity-90 drop-shadow-md transition-all duration-300 ease-in-out hover:scale-110 hover:opacity-100"
         />
       </div>
 
       {state.isOpen && (
-        <div ref={panelRef} class="devtools-panel text-3xl">
-          <div class="devtools-tabs">
+        <div
+          ref={panelRef}
+          class="fixed bottom-0 right-0 flex h-[50vh] w-full translate-y-0 transform border-t border-white/10 bg-zinc-900 text-white shadow-lg backdrop-blur-lg transition-transform duration-300 ease-in-out md:w-3/5"
+        >
+          <div class="flex flex-col gap-2 border-r border-zinc-700 bg-zinc-900/95 p-3">
             <Tab state={state} id="overview" title="Overview">
-              <HiBoltOutline width={20} height={20} />
+              <HiBoltOutline class="h-5 w-5" />
             </Tab>
             <Tab state={state} id="components" title="Components">
-              <HiCubeOutline width={20} height={20} />
+              <HiCubeOutline class="h-5 w-5" />
             </Tab>
             <Tab state={state} id="routes" title="Routes">
-              <LuFolderTree width={20} height={20} />
+              <LuFolderTree class="h-5 w-5" />
             </Tab>
             <Tab state={state} id="assets" title="Assets">
-              <HiPhotoOutline width={20} height={20} />
+              <HiPhotoOutline class="h-5 w-5" />
             </Tab>
           </div>
-          <div class="devtools-content">
+
+          <div class="flex-1 overflow-y-auto p-4">
             {state.activeTab === "overview" && (
-              <div class="tab-content overview">
-                <div class="header-section">
-                  <div class="title-container">
+              <div class="space-y-6">
+                <div class="flex items-center justify-between border-b border-zinc-700 pb-4">
+                  <div class="flex items-center gap-3">
                     <img
                       width={32}
                       height={32}
                       src="https://qwik.dev/logos/qwik-logo.svg"
                       alt="Qwik Logo"
-                      class="qwik-logo"
+                      class="h-8 w-8"
                     />
-                    <h1>Qwik DevTools</h1>
+                    <h1 class="text-2xl font-semibold">Qwik DevTools</h1>
                   </div>
-                  <div class="version">
-                    v
-                    {state.npmPackages.find(([name]) =>
-                      name.includes("core"),
-                    )?.[1] || "0.0.0"}
-                  </div>
-                </div>
-                <div class="metrics-grid">
-                  <div class="metric-card">
-                    <div class="metric-icon">
-                      <LuFolderTree class="icon" />
-                    </div>
-                    <div class="metric-content">
-                      <div class="metric-value">{state.routes?.length}</div>
-                      <div class="metric-label">pages</div>
-                    </div>
-                  </div>
-
-                  <div class="metric-card">
-                    <div class="metric-icon">
-                      <HiCubeOutline class="icon" />
-                    </div>
-                    <div class="metric-content">
-                      <div class="metric-value">{state.assets.length}</div>
-                      <div class="metric-label">components</div>
-                    </div>
-                  </div>
-
-                  <div class="metric-card">
-                    <div class="metric-icon">
-                      <HiPhotoOutline class="icon" />
-                    </div>
-                    <div class="metric-content">
-                      <div class="metric-value">{state.assets.length || 0}</div>
-                      <div class="metric-label">assets</div>
-                    </div>
+                  <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-zinc-400">
+                    {state.npmPackages
+                      .find(([name]) => name.includes("core"))?.[1]
+                      .slice(1) || "0.0.0"}
                   </div>
                 </div>
 
-                <div class="packages-section">
-                  <h3>Installed Packages</h3>
-                  <div class="packages-grid">
+                <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+                  <div class="flex items-center gap-5 rounded-xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.05]">
+                    <div class="rounded-lg border border-white/10 bg-white/5 p-3.5">
+                      <LuFolderTree class="h-6 w-6 text-emerald-500" />
+                    </div>
+                    <div>
+                      <div class="text-3xl font-semibold">
+                        {state.routes?.length}
+                      </div>
+                      <div class="text-sm text-zinc-400">pages</div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-5 rounded-xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.05]">
+                    <div class="rounded-lg border border-white/10 bg-white/5 p-3.5">
+                      <HiCubeOutline class="h-6 w-6 text-emerald-500" />
+                    </div>
+                    <div>
+                      <div class="text-3xl font-semibold">
+                        {state.assets.length}
+                      </div>
+                      <div class="text-sm text-zinc-400">components</div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-5 rounded-xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.05]">
+                    <div class="rounded-lg border border-white/10 bg-white/5 p-3.5">
+                      <HiPhotoOutline class="h-6 w-6 text-emerald-500" />
+                    </div>
+                    <div>
+                      <div class="text-3xl font-semibold">
+                        {state.assets.length || 0}
+                      </div>
+                      <div class="text-sm text-zinc-400">assets</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-4 rounded-xl border border-white/10 bg-white/[0.03] p-5">
+                  <h3 class="text-lg font-semibold">Installed Packages</h3>
+                  <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                     {state.npmPackages.map(([name, version]) => (
-                      <div key={name} class="package-item">
-                        <div class="package-name">{name}</div>
-                        <div class="package-version">v{version}</div>
+                      <div
+                        key={name}
+                        class="flex items-center justify-between rounded-lg bg-white/5 p-3"
+                      >
+                        <div class="text-sm">{name}</div>
+                        <div class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-zinc-400">
+                          v{version}
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div class="performance-section">
-                  <h3>Performance</h3>
-                  <div class="performance-metrics">
-                    <div class="perf-item">
-                      <span>SSR to full load</span>
-                      <span class="perf-value">-</span>
+                <div class="space-y-4 rounded-xl border border-white/10 bg-white/[0.03] p-5">
+                  <h3 class="text-lg font-semibold">Performance</h3>
+                  <div class="space-y-3">
+                    <div class="flex justify-between border-b border-white/10 py-2">
+                      <span class="text-zinc-400">SSR to full load</span>
+                      <span class="font-medium">-</span>
                     </div>
-                    <div class="perf-item">
-                      <span>Page load</span>
-                      <span class="perf-value">-</span>
+                    <div class="flex justify-between border-b border-white/10 py-2">
+                      <span class="text-zinc-400">Page load</span>
+                      <span class="font-medium">-</span>
                     </div>
-                    <div class="perf-item">
-                      <span>Navigation</span>
-                      <span class="perf-value">-</span>
+                    <div class="flex justify-between py-2">
+                      <span class="text-zinc-400">Navigation</span>
+                      <span class="font-medium">-</span>
                     </div>
                   </div>
                 </div>
               </div>
             )}
             {state.activeTab === "assets" && (
-              <div class="tab-content assets">
-                <div class="header-section">
-                  <h3>Public Assets</h3>
-                  <div class="assets-stats">
-                    <span class="stat-item">
+              <div class="space-y-6">
+                <div class="flex items-center justify-between border-b border-zinc-700 pb-6">
+                  <h3 class="text-xl font-semibold">Public Assets</h3>
+                  <div class="flex gap-4 text-sm text-zinc-400">
+                    <span>
                       Total Size:{" "}
                       {(
                         state.assets?.reduce(
@@ -268,12 +284,11 @@ export const QwikDevtools = component$(() => {
                       ).toFixed(2)}{" "}
                       KB
                     </span>
-                    <span class="stat-item">
-                      Count: {state.assets?.length || 0}
-                    </span>
+                    <span>Count: {state.assets?.length || 0}</span>
                   </div>
                 </div>
-                <div class="assets-grid">
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {state.assets?.map((asset) => {
                     const isImage = asset.path.match(
                       /\.(jpg|jpeg|png|gif|svg|webp)$/i,
@@ -281,30 +296,36 @@ export const QwikDevtools = component$(() => {
                     const fileExt = asset.path.split(".").pop()?.toUpperCase();
 
                     return (
-                      <div class="asset-card" key={asset.filePath}>
+                      <div
+                        key={asset.filePath}
+                        class="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-200 hover:bg-white/[0.05]"
+                      >
                         {isImage ? (
-                          <div class="asset-preview">
+                          <div class="aspect-square overflow-hidden bg-black/20">
                             <img
                               width={176}
                               height={176}
                               src={asset.publicPath}
                               alt={asset.path}
+                              class="h-full w-full object-cover"
                             />
                           </div>
                         ) : (
-                          <div class="file-preview">
-                            <span class="file-ext">{fileExt}</span>
+                          <div class="flex aspect-square items-center justify-center bg-black/20">
+                            <span class="font-mono text-2xl text-zinc-400">
+                              {fileExt}
+                            </span>
                           </div>
                         )}
-                        <div class="asset-info">
-                          <div class="asset-path" title={asset.path}>
+                        <div class="space-y-2 p-4">
+                          <div class="truncate text-sm" title={asset.path}>
                             {asset.path.split("/").pop()}
                           </div>
-                          <div class="asset-meta">
-                            <span class="asset-size">
-                              {(asset.size / 1024).toFixed(2)} KB
+                          <div class="flex items-center justify-between text-xs text-zinc-400">
+                            <span>{(asset.size / 1024).toFixed(2)} KB</span>
+                            <span class="rounded-full bg-white/5 px-2 py-1">
+                              {fileExt}
                             </span>
-                            <span class="asset-type">{fileExt}</span>
                           </div>
                         </div>
                       </div>
@@ -314,19 +335,24 @@ export const QwikDevtools = component$(() => {
               </div>
             )}
             {state.activeTab === "components" && (
-              <div class="tab-content">
-                <h3>Components</h3>
+              <div class="space-y-6">
+                <h3 class="border-b border-zinc-700 pb-6 text-xl font-semibold">
+                  Components
+                </h3>
+                {/* Component content will go here */}
               </div>
             )}
             {state.activeTab === "routes" && (
-              <div class="tab-content">
-                <h3>Application Routes</h3>
-                <div class="routes-table">
-                  <div class="table-header">
-                    <div class="col-route">Route Path</div>
-                    <div class="col-route">Name</div>
-                    <div class="col-route">Middleware</div>
-                    <div class="col-route">Layout</div>
+              <div class="space-y-6">
+                <h3 class="border-b border-zinc-700 pb-6 text-xl font-semibold">
+                  Application Routes
+                </h3>
+                <div class="overflow-hidden rounded-xl border border-white/10">
+                  <div class="grid grid-cols-4 gap-4 bg-white/[0.03] p-4 text-sm font-medium">
+                    <div>Route Path</div>
+                    <div>Name</div>
+                    <div>Middleware</div>
+                    <div>Layout</div>
                   </div>
                   {state.routes?.map((route, i) => {
                     const children = route.children || [];
@@ -336,27 +362,34 @@ export const QwikDevtools = component$(() => {
                       children.find((child) => child.name.startsWith("layout"));
 
                     return (
-                      <div class="table-row" key={route.relativePath}>
-                        <div class="col-route">
+                      <div
+                        key={route.relativePath}
+                        class="grid grid-cols-4 gap-4 border-t border-white/10 p-4 text-sm hover:bg-white/[0.02]"
+                      >
+                        <div>
                           <span
-                            class={
-                              (location.url.pathname === "/" &&
-                                route.relativePath === "") ||
-                              location.url.pathname ===
-                                `/${route.relativePath}/`
-                                ? "active-route"
-                                : ""
-                            }
+                            class={{
+                              "text-emerald-400":
+                                (location.url.pathname === "/" &&
+                                  route.relativePath === "") ||
+                                location.url.pathname ===
+                                  `/${route.relativePath}/`,
+                            }}
                           >
                             {route.relativePath === ""
                               ? "/"
                               : `/${route.relativePath}/`}
                           </span>
                         </div>
-                        <div class="col-route">{route.name}</div>
-                        <div class="col-route">-</div>
-                        <div class="col-route">
-                          <span class={layout && i > 0 ? "custom-layout" : ""}>
+                        <div class="text-zinc-400">{route.name}</div>
+                        <div class="text-zinc-400">-</div>
+                        <div>
+                          <span
+                            class={{
+                              "text-emerald-400": layout && i > 0,
+                              "text-zinc-400": !layout || i === 0,
+                            }}
+                          >
                             {layout && i > 0
                               ? `${route.relativePath}/layout`
                               : "default"}
