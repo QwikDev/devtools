@@ -155,7 +155,7 @@ export const QwikDevtools = component$(() => {
             {state.activeTab === "packages" && (
               <TabContent>
                 <TabTitle title="Install an npm package" q:slot="title" />
-                <Packages state={state} q:slot="content" />
+                <Packages q:slot="content" />
               </TabContent>
             )}
             {state.activeTab === "routes" && (
