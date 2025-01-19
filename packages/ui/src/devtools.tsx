@@ -1,6 +1,5 @@
 import {
   component$,
-  useSignal,
   useStore,
   useVisibleTask$,
   noSerialize,
@@ -29,6 +28,9 @@ import { State } from "./types/state";
 import { Assets } from "./features/Assets/Assets";
 import { Routes } from "./features/Routes/Routes";
 import { TabTitle } from "./components/TabTitle/TabTitle";
+import { DevtoolsButton } from "./components/DevtoolsButton/DevtoolsButton";
+import { DevtoolsContainer } from "./components/DevtoolsContainer/DevtoolsContainer";
+import { DevtoolsPanel } from "./components/DevtoolsPanel/DevtoolsPanel";
 
 function getClientRpcFunctions() {
   return {
@@ -46,10 +48,9 @@ export const QwikDevtools = component$(() => {
     assets: [],
     routes: undefined,
   });
-  const panelRef = useSignal<HTMLDivElement>();
 
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(async ({ cleanup, track }) => {
+  useVisibleTask$(async ({ track }) => {
     const hot = await tryCreateHotContext(undefined, ["/"]);
 
     if (!hot) {
@@ -91,67 +92,14 @@ export const QwikDevtools = component$(() => {
         });
       }
     });
-
-    // Add keyboard shortcut to toggle devtools
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === "`" && e.metaKey) {
-        state.isOpen = !state.isOpen;
-      }
-      // Add Escape key to close
-      if (e.key === "Escape" && state.isOpen) {
-        state.isOpen = false;
-      }
-    };
-
-    // Handle click outside
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        state.isOpen &&
-        panelRef.value &&
-        !panelRef.value.contains(e.target as Node)
-      ) {
-        state.isOpen = false;
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyPress);
-    window.addEventListener("mousedown", handleClickOutside);
-
-    cleanup(() => {
-      window.removeEventListener("keydown", handleKeyPress);
-      window.removeEventListener("mousedown", handleClickOutside);
-    });
   });
 
   return (
-    <div
-      class={{
-        "fixed bottom-0 right-0 z-[9999] font-sans": true,
-      }}
-    >
-      <div
-        class={{
-          "fixed bottom-4 right-4 flex h-9 w-9 origin-center cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-zinc-900 backdrop-blur-md transition-all duration-300 ease-in-out":
-            true,
-          "rotate-90 border-emerald-500/50 bg-zinc-900/95 shadow-lg shadow-emerald-500/35":
-            state.isOpen,
-        }}
-        onClick$={() => (state.isOpen = !state.isOpen)}
-      >
-        <img
-          width={20}
-          height={20}
-          src="https://qwik.dev/logos/qwik-logo.svg"
-          alt="Qwik Logo"
-          class="h-5 w-5 opacity-90 drop-shadow-md transition-all duration-300 ease-in-out hover:scale-110 hover:opacity-100"
-        />
-      </div>
+    <DevtoolsContainer>
+      <DevtoolsButton state={state} />
 
       {state.isOpen && (
-        <div
-          ref={panelRef}
-          class="fixed bottom-8 right-6 flex h-[50vh] w-full translate-y-0 transform overflow-hidden rounded-lg border-2 border-white/10 bg-zinc-900 text-white backdrop-blur-lg transition-transform duration-300 ease-in-out md:w-3/5"
-        >
+        <DevtoolsPanel state={state}>
           <div class="flex flex-col gap-2 border-r border-zinc-700 bg-zinc-900/95 p-3">
             <Tab state={state} id="overview" title="Overview">
               <HiBoltOutline class="h-5 w-5" />
@@ -215,8 +163,8 @@ export const QwikDevtools = component$(() => {
               </TabContent>
             )}
           </div>
-        </div>
+        </DevtoolsPanel>
       )}
-    </div>
+    </DevtoolsContainer>
   );
 });
