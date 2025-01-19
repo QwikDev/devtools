@@ -3,13 +3,14 @@ import { join } from 'path';
 import { cpSync, mkdirSync, rmSync } from 'fs';
 
 const ROOT = process.cwd();
-const DEVTOOLS_PATH = join(ROOT, 'packages/ui');
+const UI_PATH = join(ROOT, 'packages/ui');
 const PLUGIN_PATH = join(ROOT, 'packages/plugin');
 const DIST_PATH = join(ROOT, 'packages/devtools/dist');
+const README_PATH = join(ROOT, 'README.md');
 
 // Clean previous builds
 console.log('Cleaning previous builds...');
-rmSync('dist', { recursive: true, force: true });
+rmSync(DIST_PATH, { recursive: true, force: true });
 
 // Ensure dist directory exists
 mkdirSync(DIST_PATH, { recursive: true });
@@ -17,16 +18,16 @@ mkdirSync(DIST_PATH, { recursive: true });
 // Build devtools ui
 console.log('Building devtools...');
 execSync('pnpm build', {
-  cwd: DEVTOOLS_PATH,
+  cwd: UI_PATH,
   stdio: 'inherit',
 });
 
 // Copy lib and lib-types to dist
 console.log('Copying files to dist...');
-cpSync(join(DEVTOOLS_PATH, 'lib'), join(DIST_PATH, 'ui'), {
+cpSync(join(UI_PATH, 'lib'), join(DIST_PATH, 'ui'), {
   recursive: true,
 });
-cpSync(join(DEVTOOLS_PATH, 'lib-types'), join(DIST_PATH, 'ui', 'lib-types'), {
+cpSync(join(UI_PATH, 'lib-types'), join(DIST_PATH, 'ui', 'lib-types'), {
   recursive: true,
 });
 
@@ -36,5 +37,9 @@ execSync('pnpm build', {
   cwd: PLUGIN_PATH,
   stdio: 'inherit',
 });
+
+// Copy README.md to dist
+console.log('Copying README.md to dist...');
+cpSync(README_PATH, join('packages/devtools', 'README.md'));
 
 console.log('Devtools build complete!');
