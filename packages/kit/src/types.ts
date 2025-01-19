@@ -11,6 +11,10 @@ export interface ServerFunctions {
   getAssetsFromPublicDir: () => Promise<AssetInfo[]>;
   getRoutes: () => any;
   getQwikPackages: () => Promise<[string, string][]>;
+  installPackage: (
+    packageName: string,
+    isDev?: boolean,
+  ) => Promise<{ success: boolean; error?: string }>;
 }
 
 export type ServerRpc = BirpcReturn<ClientFunctions, ServerFunctions>;

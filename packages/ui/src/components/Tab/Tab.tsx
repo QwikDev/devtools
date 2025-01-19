@@ -1,10 +1,9 @@
 import { component$, Slot } from "@qwik.dev/core";
+import { State, TabName } from "../../types/state";
 
 interface TabProps {
-  state: {
-    activeTab: string;
-  };
-  id: string;
+  state: State;
+  id: TabName;
   title: string;
 }
 

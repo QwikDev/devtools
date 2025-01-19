@@ -151,6 +151,9 @@ importers:
       eslint-plugin-qwik:
         specifier: 2.0.0-alpha.3
         version: 2.0.0-alpha.3(eslint@8.57.0)(typescript@5.4.5)
+      lodash.debounce:
+        specifier: ^4.0.8
+        version: 4.0.8
       prettier:
         specifier: 3.3.3
         version: 3.3.3
@@ -3033,6 +3036,9 @@ packages:
   locate-path@7.2.0:
     resolution: {integrity: sha512-gvVijfZvn7R+2qyPX8mAuKcFGDf6Nc61GdvGafQsHL0sBIxfKzA+usWn4GFC/bk+QdwPUD4kWFJLhElipq+0VA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  lodash.debounce@4.0.8:
+    resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
@@ -7827,6 +7833,8 @@ snapshots:
   locate-path@7.2.0:
     dependencies:
       p-locate: 6.0.0
+
+  lodash.debounce@4.0.8: {}
 
   lodash.isequal@4.5.0: {}
 

@@ -31,6 +31,7 @@ import { TabTitle } from "./components/TabTitle/TabTitle";
 import { DevtoolsButton } from "./components/DevtoolsButton/DevtoolsButton";
 import { DevtoolsContainer } from "./components/DevtoolsContainer/DevtoolsContainer";
 import { DevtoolsPanel } from "./components/DevtoolsPanel/DevtoolsPanel";
+import { Packages } from "./features/Packages/Packages";
 
 function getClientRpcFunctions() {
   return {
@@ -104,7 +105,7 @@ export const QwikDevtools = component$(() => {
             <Tab state={state} id="overview" title="Overview">
               <HiBoltOutline class="h-5 w-5" />
             </Tab>
-            <Tab state={state} id="components" title="Components">
+            <Tab state={state} id="packages" title="Packages">
               <HiCubeOutline class="h-5 w-5" />
             </Tab>
             <Tab state={state} id="routes" title="Routes">
@@ -151,9 +152,10 @@ export const QwikDevtools = component$(() => {
                 <Assets state={state} q:slot="content" />
               </TabContent>
             )}
-            {state.activeTab === "components" && (
+            {state.activeTab === "packages" && (
               <TabContent>
-                <TabTitle title="Components" q:slot="title" />
+                <TabTitle title="Install an npm package" q:slot="title" />
+                <Packages state={state} q:slot="content" />
               </TabContent>
             )}
             {state.activeTab === "routes" && (
