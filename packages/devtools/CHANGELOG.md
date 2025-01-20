@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.1.1
+
+### Patch Changes
+
+- Auto import fix
+
 ## 0.1.0
 
 ### Minor Changes
