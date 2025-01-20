@@ -1,6 +1,6 @@
 {
   "name": "@qwik.dev/devtools",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "license": "MIT",
   "main": "./dist/plugin/index.mjs",
   "description": "Qwik devtools package",
@@ -17,7 +17,8 @@
     }
   },
   "files": [
-    "dist/**"
+    "dist/**",
+    "README.md"
   ],
   "peerDependencies": {
     "vite": "^6.0.7",

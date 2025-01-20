@@ -1,30 +1,37 @@
 import {
   component$,
-  useSignal,
   useStore,
   useVisibleTask$,
   noSerialize,
-  NoSerialize,
   useStyles$,
-} from '@qwik.dev/core';
-import { tryCreateHotContext } from 'vite-hot-client';
+} from "@qwik.dev/core";
+import { tryCreateHotContext } from "vite-hot-client";
 import {
   HiBoltOutline,
   HiCubeOutline,
   HiPhotoOutline,
-} from '@qwikest/icons/heroicons';
-import { LuFolderTree } from '@qwikest/icons/lucide';
+} from "@qwikest/icons/heroicons";
+import { LuFolderTree } from "@qwikest/icons/lucide";
 import {
   createClientRpc,
   getViteClientRpc,
   setViteClientContext,
   type NpmInfo,
-  type AssetInfo,
   type RoutesInfo,
   RouteType,
-} from '@devtools/kit';
-import styles from './devtools.css?inline';
-import { useLocation } from '@qwik.dev/router';
+} from "@devtools/kit";
+import globalCss from "./global.css?inline";
+import { Tab } from "./components/Tab/Tab";
+import { TabContent } from "./components/TabContent/TabContent";
+import { Overview } from "./features/Overview/Overview";
+import { State } from "./types/state";
+import { Assets } from "./features/Assets/Assets";
+import { Routes } from "./features/Routes/Routes";
+import { TabTitle } from "./components/TabTitle/TabTitle";
+import { DevtoolsButton } from "./components/DevtoolsButton/DevtoolsButton";
+import { DevtoolsContainer } from "./components/DevtoolsContainer/DevtoolsContainer";
+import { DevtoolsPanel } from "./components/DevtoolsPanel/DevtoolsPanel";
+import { Packages } from "./features/Packages/Packages";
 
 function getClientRpcFunctions() {
   return {
@@ -32,32 +39,23 @@ function getClientRpcFunctions() {
   };
 }
 
-interface State {
-  isOpen: boolean;
-  activeTab: 'overview' | 'components' | 'routes' | 'state' | 'assets';
-  npmPackages: NpmInfo;
-  assets: AssetInfo[];
-  routes: NoSerialize<RoutesInfo[]>;
-}
-
 export const QwikDevtools = component$(() => {
-  useStyles$(styles);
+  useStyles$(globalCss);
+
   const state = useStore<State>({
     isOpen: false,
-    activeTab: 'overview',
+    activeTab: "overview",
     npmPackages: [],
     assets: [],
     routes: undefined,
   });
-  const panelRef = useSignal<HTMLDivElement>();
-  const location = useLocation();
 
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(async ({ cleanup, track }) => {
-    const hot = await tryCreateHotContext(undefined, ['/']);
+  useVisibleTask$(async ({ track }) => {
+    const hot = await tryCreateHotContext(undefined, ["/"]);
 
     if (!hot) {
-      throw new Error('Vite Hot Context not connected');
+      throw new Error("Vite Hot Context not connected");
     }
 
     setViteClientContext(hot);
@@ -72,15 +70,15 @@ export const QwikDevtools = component$(() => {
         rpc.getRoutes().then((data: RoutesInfo) => {
           const children: RoutesInfo[] = data.children || [];
           const directories: RoutesInfo[] = children.filter(
-            (child) => child.type === 'directory',
+            (child) => child.type === "directory",
           );
 
           const values: RoutesInfo[] = [
             {
-              relativePath: '',
-              name: 'index',
+              relativePath: "",
+              name: "index",
               type: RouteType.DIRECTORY,
-              path: '',
+              path: "",
               isSymbolicLink: false,
               children: undefined,
             },
@@ -95,314 +93,80 @@ export const QwikDevtools = component$(() => {
         });
       }
     });
-
-    // Add keyboard shortcut to toggle devtools
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === '`' && e.metaKey) {
-        state.isOpen = !state.isOpen;
-      }
-      // Add Escape key to close
-      if (e.key === 'Escape' && state.isOpen) {
-        state.isOpen = false;
-      }
-    };
-
-    // Handle click outside
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        state.isOpen &&
-        panelRef.value &&
-        !panelRef.value.contains(e.target as Node)
-      ) {
-        state.isOpen = false;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    window.addEventListener('mousedown', handleClickOutside);
-
-    cleanup(() => {
-      window.removeEventListener('keydown', handleKeyPress);
-      window.removeEventListener('mousedown', handleClickOutside);
-    });
   });
 
   return (
-    <div
-      class={{
-        'devtools-container': true,
-        'devtools-open': state.isOpen,
-      }}
-    >
-      <div
-        class={{
-          'devtools-toggle': true,
-          'is-open': state.isOpen,
-        }}
-        onClick$={() => (state.isOpen = !state.isOpen)}
-      >
-        <img
-          width={20}
-          height={20}
-          src="https://qwik.dev/logos/qwik-logo.svg"
-          alt="Qwik Logo"
-          class="toggle-icon"
-        />
-      </div>
+    <DevtoolsContainer>
+      <DevtoolsButton state={state} />
 
       {state.isOpen && (
-        <div ref={panelRef} class="devtools-panel">
-          <div class="devtools-tabs">
-            <button
-              class={{ 'tab-active': state.activeTab === 'overview' }}
-              onClick$={() => (state.activeTab = 'overview')}
-              title="Overview"
-            >
-              <HiBoltOutline width={20} height={20} />
-            </button>
-            <button
-              class={{ 'tab-active': state.activeTab === 'components' }}
-              onClick$={() => (state.activeTab = 'components')}
-              title="Components"
-            >
-              <HiCubeOutline width={20} height={20} />
-            </button>
-            <button
-              class={{ 'tab-active': state.activeTab === 'routes' }}
-              onClick$={() => (state.activeTab = 'routes')}
-              title="Routes"
-            >
-              <LuFolderTree width={20} height={20} />
-            </button>
-            <button
-              class={{ 'tab-active': state.activeTab === 'state' }}
-              onClick$={() => (state.activeTab = 'state')}
-              title="State"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7zm0 2a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5z"
-                  fill="currentColor"
-                />
-                <path d="M8 20v1h8v-1H8z" fill="currentColor" />
-              </svg>
-            </button>
-            <button
-              class={{ 'tab-active': state.activeTab === 'assets' }}
-              onClick$={() => (state.activeTab = 'assets')}
-              title="Assets"
-            >
-              <HiPhotoOutline width={20} height={20} />
-            </button>
+        <DevtoolsPanel state={state}>
+          <div class="flex flex-col gap-2 border-r border-zinc-700 bg-zinc-900/95 p-3">
+            <Tab state={state} id="overview" title="Overview">
+              <HiBoltOutline class="h-5 w-5" />
+            </Tab>
+            <Tab state={state} id="packages" title="Packages">
+              <HiCubeOutline class="h-5 w-5" />
+            </Tab>
+            <Tab state={state} id="routes" title="Routes">
+              <LuFolderTree class="h-5 w-5" />
+            </Tab>
+            <Tab state={state} id="assets" title="Assets">
+              <HiPhotoOutline class="h-5 w-5" />
+            </Tab>
           </div>
-          <div class="devtools-content">
-            {state.activeTab === 'overview' && (
-              <div class="tab-content overview">
-                <div class="header-section">
-                  <div class="title-container">
-                    <img
-                      width={32}
-                      height={32}
-                      src="https://qwik.dev/logos/qwik-logo.svg"
-                      alt="Qwik Logo"
-                      class="qwik-logo"
-                    />
-                    <h1>Qwik DevTools</h1>
-                  </div>
-                  <div class="version">
-                    v
-                    {state.npmPackages.find(([name]) =>
-                      name.includes('core'),
-                    )?.[1] || '0.0.0'}
-                  </div>
-                </div>
-                <div class="metrics-grid">
-                  <div class="metric-card">
-                    <div class="metric-icon">
-                      <LuFolderTree class="icon" />
-                    </div>
-                    <div class="metric-content">
-                      <div class="metric-value">{state.routes?.length}</div>
-                      <div class="metric-label">pages</div>
-                    </div>
-                  </div>
 
-                  <div class="metric-card">
-                    <div class="metric-icon">
-                      <HiCubeOutline class="icon" />
-                    </div>
-                    <div class="metric-content">
-                      <div class="metric-value">{state.assets.length}</div>
-                      <div class="metric-label">components</div>
-                    </div>
-                  </div>
-
-                  <div class="metric-card">
-                    <div class="metric-icon">
-                      <HiPhotoOutline class="icon" />
-                    </div>
-                    <div class="metric-content">
-                      <div class="metric-value">{state.assets.length || 0}</div>
-                      <div class="metric-label">assets</div>
-                    </div>
-                  </div>
+          <div class="custom-scrollbar flex-1 overflow-y-auto p-4">
+            {state.activeTab === "overview" && (
+              <TabContent>
+                <div class="flex items-center gap-3" q:slot="title">
+                  <img
+                    width={32}
+                    height={32}
+                    src="https://qwik.dev/logos/qwik-logo.svg"
+                    alt="Qwik Logo"
+                    class="h-8 w-8"
+                  />
+                  <h1 class="text-2xl font-semibold">Qwik DevTools</h1>
                 </div>
-
-                <div class="packages-section">
-                  <h3>Installed Packages</h3>
-                  <div class="packages-grid">
-                    {state.npmPackages.map(([name, version]) => (
-                      <div key={name} class="package-item">
-                        <div class="package-name">{name}</div>
-                        <div class="package-version">v{version}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div class="performance-section">
-                  <h3>Performance</h3>
-                  <div class="performance-metrics">
-                    <div class="perf-item">
-                      <span>SSR to full load</span>
-                      <span class="perf-value">-</span>
-                    </div>
-                    <div class="perf-item">
-                      <span>Page load</span>
-                      <span class="perf-value">-</span>
-                    </div>
-                    <div class="perf-item">
-                      <span>Navigation</span>
-                      <span class="perf-value">-</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <Overview state={state} q:slot="content" />
+              </TabContent>
             )}
-            {state.activeTab === 'assets' && (
-              <div class="tab-content assets">
-                <div class="header-section">
-                  <h3>Public Assets</h3>
-                  <div class="assets-stats">
-                    <span class="stat-item">
-                      Total Size:{' '}
-                      {(
-                        state.assets?.reduce(
-                          (acc, asset) => acc + asset.size,
-                          0,
-                        ) / 1024
-                      ).toFixed(2)}{' '}
-                      KB
-                    </span>
-                    <span class="stat-item">
-                      Count: {state.assets?.length || 0}
-                    </span>
-                  </div>
+            {state.activeTab === "assets" && (
+              <TabContent>
+                <TabTitle title="Public Assets" q:slot="title" />
+                <div class="flex gap-4 text-sm text-zinc-400">
+                  <span>
+                    Total Size:{" "}
+                    {(
+                      state.assets?.reduce(
+                        (acc, asset) => acc + asset.size,
+                        0,
+                      ) / 1024
+                    ).toFixed(2)}{" "}
+                    KB
+                  </span>
+                  <span>Count: {state.assets?.length || 0}</span>
                 </div>
-                <div class="assets-grid">
-                  {state.assets?.map((asset) => {
-                    const isImage = asset.path.match(
-                      /\.(jpg|jpeg|png|gif|svg|webp)$/i,
-                    );
-                    const fileExt = asset.path.split('.').pop()?.toUpperCase();
 
-                    return (
-                      <div class="asset-card" key={asset.filePath}>
-                        {isImage ? (
-                          <div class="asset-preview">
-                            <img
-                              width={176}
-                              height={176}
-                              src={asset.publicPath}
-                              alt={asset.path}
-                            />
-                          </div>
-                        ) : (
-                          <div class="file-preview">
-                            <span class="file-ext">{fileExt}</span>
-                          </div>
-                        )}
-                        <div class="asset-info">
-                          <div class="asset-path" title={asset.path}>
-                            {asset.path.split('/').pop()}
-                          </div>
-                          <div class="asset-meta">
-                            <span class="asset-size">
-                              {(asset.size / 1024).toFixed(2)} KB
-                            </span>
-                            <span class="asset-type">{fileExt}</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+                <Assets state={state} q:slot="content" />
+              </TabContent>
             )}
-            {state.activeTab === 'components' && (
-              <div class="tab-content">
-                <h3>Components</h3>
-              </div>
+            {state.activeTab === "packages" && (
+              <TabContent>
+                <TabTitle title="Install an npm package" q:slot="title" />
+                <Packages q:slot="content" />
+              </TabContent>
             )}
-            {state.activeTab === 'routes' && (
-              <div class="tab-content">
-                <h3>Application Routes</h3>
-                <div class="routes-table">
-                  <div class="table-header">
-                    <div class="col-route">Route Path</div>
-                    <div class="col-route">Name</div>
-                    <div class="col-route">Middleware</div>
-                    <div class="col-route">Layout</div>
-                  </div>
-                  {state.routes?.map((route, i) => {
-                    const children = route.children || [];
-                    const layout =
-                      route.relativePath !== '' &&
-                      route.type === 'directory' &&
-                      children.find((child) => child.name.startsWith('layout'));
-
-                    return (
-                      <div class="table-row" key={route.relativePath}>
-                        <div class="col-route">
-                          <span
-                            class={
-                              (location.url.pathname === '/' &&
-                                route.relativePath === '') ||
-                              location.url.pathname ===
-                                `/${route.relativePath}/`
-                                ? 'active-route'
-                                : ''
-                            }
-                          >
-                            {route.relativePath === ''
-                              ? '/'
-                              : `/${route.relativePath}/`}
-                          </span>
-                        </div>
-                        <div class="col-route">{route.name}</div>
-                        <div class="col-route">-</div>
-                        <div class="col-route">
-                          <span class={layout && i > 0 ? 'custom-layout' : ''}>
-                            {layout && i > 0
-                              ? `${route.relativePath}/layout`
-                              : 'default'}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+            {state.activeTab === "routes" && (
+              <TabContent>
+                <TabTitle title="Application Routes" q:slot="title" />
+                <Routes state={state} q:slot="content" />
+              </TabContent>
             )}
           </div>
-        </div>
+        </DevtoolsPanel>
       )}
-    </div>
+    </DevtoolsContainer>
   );
 });
