@@ -1,5 +1,11 @@
 # @devtools/plugin
 
+## 1.1.1
+
+### Patch Changes
+
+- Auto import fix
+
 ## 1.1.0
 
 ### Minor Changes
