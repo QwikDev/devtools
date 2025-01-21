@@ -38,6 +38,11 @@ execSync('pnpm build', {
   stdio: 'inherit',
 });
 
+console.log('Copying plugin files to dist...');
+cpSync(join(PLUGIN_PATH, 'dist'), join(DIST_PATH, 'plugin'), {
+  recursive: true,
+});
+
 // Copy README.md to dist
 console.log('Copying README.md to dist...');
 cpSync(README_PATH, join('packages/devtools', 'README.md'));
