@@ -13,12 +13,11 @@ export function qwikDevtools(): Plugin {
     transform: {
       order: 'pre',
       handler(code, id) {
-        const isDev = _config.env.DEV;
-
+        const mode = process.env.MODE;
         // Only transform the root component file
         if (id.endsWith('root.tsx')) {
-          const importPath = '@qwik.dev/devtools/ui';
-          // const importPath = '@devtools/ui';
+          const importPath =
+            mode === 'dev' ? '@devtools/ui' : '@qwik.dev/devtools/ui';
           // Check if QwikDevtools import already exists
           if (!code.includes(importPath)) {
             // Add import for QwikDevtools using the correct package name
