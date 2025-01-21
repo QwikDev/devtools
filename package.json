@@ -3,7 +3,8 @@
   "license": "MIT",
   "description": "Qwik devtools monorepo",
   "scripts": {
-    "playground": "pnpm --filter playground dev",
+    "dev": "pnpm --filter plugin build && MODE=dev pnpm --parallel dev",
+    "playground": "MODE=dev pnpm --filter playground dev",
     "build": "tsx scripts/build-devtools.ts",
     "change": "changeset",
     "release": "changeset version"

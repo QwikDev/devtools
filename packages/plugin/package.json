@@ -15,7 +15,7 @@
   "type": "module",
   "scripts": {
     "build": "unbuild",
-    "stub": "tsup --watch"
+    "dev": "tsup --watch"
   },
   "devDependencies": {
     "@devtools/kit": "workspace:*",
