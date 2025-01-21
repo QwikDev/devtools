@@ -54,4 +54,5 @@ export type NpmInfo = [string, string][];
 
 export interface Component {
   name: string;
+  file: string;
 }
