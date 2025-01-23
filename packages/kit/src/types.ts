@@ -9,6 +9,7 @@ export interface ClientFunctions {
 export interface ServerFunctions {
   healthCheck(): boolean;
   getAssetsFromPublicDir: () => Promise<AssetInfo[]>;
+  getComponents: () => Promise<Component[]>;
   getRoutes: () => any;
   getQwikPackages: () => Promise<[string, string][]>;
   installPackage: (
@@ -50,3 +51,8 @@ export interface ImageMeta {
 
 export type RoutesInfo = Dree;
 export type NpmInfo = [string, string][];
+
+export interface Component {
+  name: string;
+  file: string;
+}

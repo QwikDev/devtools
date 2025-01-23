@@ -47,6 +47,7 @@ export const QwikDevtools = component$(() => {
     activeTab: "overview",
     npmPackages: [],
     assets: [],
+    components: [],
     routes: undefined,
   });
 
@@ -66,6 +67,9 @@ export const QwikDevtools = component$(() => {
         const rpc = getViteClientRpc();
         rpc.getAssetsFromPublicDir().then((data) => {
           state.assets = data;
+        });
+        rpc.getComponents().then((data) => {
+          state.components = data;
         });
         rpc.getRoutes().then((data: RoutesInfo) => {
           const children: RoutesInfo[] = data.children || [];

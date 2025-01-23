@@ -26,7 +26,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
             <HiCubeOutline class="h-6 w-6 text-emerald-500" />
           </div>
           <div>
-            <div class="text-3xl font-semibold">{state.assets.length}</div>
+            <div class="text-3xl font-semibold">{state.components.length}</div>
             <div class="text-sm text-zinc-400">components</div>
           </div>
         </div>

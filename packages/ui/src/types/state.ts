@@ -1,4 +1,4 @@
-import { AssetInfo, NpmInfo, RoutesInfo } from "@devtools/kit";
+import { AssetInfo, NpmInfo, RoutesInfo, Component } from "@devtools/kit";
 import { NoSerialize } from "@qwik.dev/core";
 
 export type TabName = "overview" | "packages" | "routes" | "state" | "assets";
@@ -8,5 +8,6 @@ export interface State {
   activeTab: TabName;
   npmPackages: NpmInfo;
   assets: AssetInfo[];
+  components: Component[];
   routes: NoSerialize<RoutesInfo[]>;
 }

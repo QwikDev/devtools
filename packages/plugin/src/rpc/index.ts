@@ -3,11 +3,13 @@ import { getAssetsFunctions } from '../assets';
 import { ServerContext } from '../types';
 import { getRouteFunctions } from '../routes';
 import { getNpmFunctions } from '../npm';
+import { getComponentsFunctions } from '../components';
 
 export function getServerFunctions(ctx: ServerContext): ServerFunctions {
   return {
     healthCheck: () => true,
     ...getAssetsFunctions(ctx),
+    ...getComponentsFunctions(ctx),
     ...getRouteFunctions(ctx),
     ...getNpmFunctions(ctx),
   };
