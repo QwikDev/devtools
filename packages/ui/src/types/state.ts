@@ -1,7 +1,13 @@
 import { AssetInfo, NpmInfo, RoutesInfo, Component } from "@devtools/kit";
 import { NoSerialize } from "@qwik.dev/core";
 
-export type TabName = "overview" | "packages" | "routes" | "state" | "assets";
+export type TabName =
+  | "overview"
+  | "packages"
+  | "routes"
+  | "state"
+  | "assets"
+  | "components";
 
 export interface State {
   isOpen: boolean;
