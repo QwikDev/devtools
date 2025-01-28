@@ -1,17 +1,7 @@
-import {
-  $,
-  component$,
-  QRL,
-  useSignal,
-  useStore,
-  useStyles$,
-  useVisibleTask$,
-} from "@qwik.dev/core";
+import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
 import { QGreetings } from "./components/Tree";
 import reactTreeCss from "react-complex-tree/lib/style-modern.css?inline";
 import styles from "./styles.css?inline";
-
-// {"components/Button/Button.tsx":{"path":"components/Button/Button.tsx","state":{"store":{"value":{"count":0},"type":"store"}}}
 
 export interface ComponentStateStore {
   [key: string]: {
@@ -64,7 +54,7 @@ const ComponentsStore = component$(() => {
       >
         <option value="">Select component</option>
         {componentStore.map((key) => (
-          <option value={key} class="p-2">
+          <option key={key} value={key} class="p-2">
             {key}
           </option>
         ))}
@@ -87,7 +77,7 @@ const ComponentStoreUpdate = component$<{
       {Object.keys(value).map((key) => {
         if (value[key].type === "signal") {
           return (
-            <div class="flex flex-col">
+            <div class="flex flex-col" key={key}>
               <h2 class="text-lg font-bold">Signal: {key}</h2>
               <input
                 class="mt-2 rounded-md border bg-transparent p-2 font-mono"
@@ -100,10 +90,10 @@ const ComponentStoreUpdate = component$<{
 
         if (value[key].type === "store") {
           return (
-            <div class="flex flex-col">
+            <div class="flex flex-col" key={key}>
               <h2 class="text-lg font-bold">Store: {key}</h2>
               {Object.keys(value[key].value).map((storeKey) => (
-                <div class="flex flex-col">
+                <div class="flex flex-col" key={storeKey}>
                   <h3 class="text-md font-bold">Key: {storeKey}</h3>
                   <input
                     class="mt-2 rounded-md border bg-transparent p-2 font-mono"
