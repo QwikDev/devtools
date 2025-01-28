@@ -4,6 +4,18 @@ import fsp from 'node:fs/promises';
 import fg from 'fast-glob';
 
 export const getComponentsFunctions = ({ config }: ServerContext) => {
+  const getComponentName = (code: string) => {
+    const exportDefaultRegex = /export\s+default\s+component\$\(\s*.*\s*\);/;
+    if (exportDefaultRegex.test(code)) {
+      return 'default';
+    }
+
+    const namedExportRegex = /export\s+(const|let|var|function|class)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*component\$\(/;
+    const match = code.match(namedExportRegex);
+
+    return match ? match[2] : "default";
+  };
+
   const getComponents = async (): Promise<Component[]> => {
     const components: Component[] = [];
 
@@ -11,38 +23,29 @@ export const getComponentsFunctions = ({ config }: ServerContext) => {
       onlyFiles: true,
     });
 
-    for (const file of filesOnSrc) {
-      try {
-        const component = await fsp.readFile(file, 'utf-8');
-        const componentsOnSameFile = component.split('component$');
+    const componentsFiles = filesOnSrc.filter((file) => !file.includes('/src/routes/'));
 
-        for (const componentOnSameFile of componentsOnSameFile) {
-          // Is a page component
-          if (
-            file.includes('/src/routes/') &&
-            componentOnSameFile.includes('export default')
-          )
-            continue;
+    const componentsSourceCode = await Promise.all(componentsFiles.map(async file => {
+      const sourceCode= await fsp.readFile(file, 'utf-8');
 
-          const regex = /export\s+const\s+(\w+)\s*=/;
-          const name = componentOnSameFile.match(regex)?.[1];
-
-          console.log(name, file);
-
-          if (name) {
-            components.push({
-              name,
-              file,
-            });
-          }
-        }
-      } catch (e) {
-        console.error(e);
-        return components;
+      return {
+        file,
+        sourceCode,
       }
+    }));
+
+    for (const { sourceCode, file } of componentsSourceCode) {
+        if(!sourceCode.includes("component$")) continue;
+
+        const name= getComponentName(sourceCode);
+
+        components.push({
+          fileName: file.split("/").pop()!,
+          name,
+          file,
+        });
     }
 
-    console.log(components);
     return Promise.resolve(components);
   };
 
