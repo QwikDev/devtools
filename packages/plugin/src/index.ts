@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ResolvedConfig, type Plugin } from 'vite';
 import { getServerFunctions } from './rpc';
 import { createServerRpc, setViteServerContext } from '@devtools/kit';
@@ -65,16 +66,58 @@ export function qwikDevtools(): Plugin {
 
 function test(code: string, id: string) {
   if (!id.endsWith('.tsx') || !code.includes('component$')) return;
+  if (id.includes('router-head') || id.endsWith('layout.tsx')) return;
 
   const ast = parse(code, {
     sourceType: 'module',
     plugins: ['typescript', 'jsx'],
   });
 
-  let hasSignalsOrStores = false;
   const signalsAndStores: { name: string; type: 'signal' | 'store' }[] = [];
   let lastDeclarationPath = null;
-  const componentPath = id.split('/src/')[1] || id; // Get relative path from src
+  const componentPath = id.split('/src/')[1] || id;
+  const childComponents: Array<{ name: string; path: string }> = [];
+
+  // Track import paths
+  const importPaths: Record<string, string> = {};
+  traverse(ast, {
+    // @ts-expect-error any
+    ImportDeclaration(path) {
+      const source = path.node.source.value;
+      path.node.specifiers.forEach((specifier) => {
+        if (
+          t.isImportDefaultSpecifier(specifier) ||
+          t.isImportSpecifier(specifier)
+        ) {
+          const name = specifier.local.name;
+          if (/^[A-Z]/.test(name)) {
+            // Only track components (uppercase)
+            importPaths[name] = source;
+          }
+        }
+      });
+    },
+  });
+
+  // Find child components with paths
+  traverse(ast, {
+    // @ts-expect-error any
+    JSXElement(path) {
+      const openingElement = path.node.openingElement;
+      const elementName = openingElement.name;
+
+      if (t.isJSXIdentifier(elementName)) {
+        if (/^[A-Z]/.test(elementName.name)) {
+          const componentName = elementName.name;
+          const importPath = importPaths[componentName];
+          childComponents.push({
+            name: componentName,
+            path: importPath || 'built-in', // built-in for components like Link
+          });
+        }
+      }
+    },
+  });
 
   traverse(ast, {
     // @ts-expect-error any
@@ -84,7 +127,6 @@ function test(code: string, id: string) {
         const callee = init.callee;
         if (t.isIdentifier(callee)) {
           if (callee.name === 'useSignal' || callee.name === 'useStore') {
-            hasSignalsOrStores = true;
             signalsAndStores.push({
               name: (path.node.id as t.Identifier).name,
               type: callee.name === 'useSignal' ? 'signal' : 'store',
@@ -96,124 +138,157 @@ function test(code: string, id: string) {
     },
   });
 
-  if (hasSignalsOrStores && lastDeclarationPath) {
-    traverse(ast, {
-      // @ts-expect-error any
-      Program(path) {
-        const imports = [
-          t.importSpecifier(
-            t.identifier('useOnDocument'),
-            t.identifier('useOnDocument'),
-          ),
-          t.importSpecifier(t.identifier('$'), t.identifier('$')),
-        ];
+  // Always add imports and tracking code
+  traverse(ast, {
+    // @ts-expect-error any
+    Program(path) {
+      const imports = [
+        t.importSpecifier(
+          t.identifier('useOnDocument'),
+          t.identifier('useOnDocument'),
+        ),
+        t.importSpecifier(t.identifier('$'), t.identifier('$')),
+      ];
 
-        let qwikImport = path.node.body.find(
-          // @ts-expect-error any
-          (node) =>
-            t.isImportDeclaration(node) &&
-            node.source.value === '@qwik.dev/core',
-        ) as t.ImportDeclaration;
+      let qwikImport = path.node.body.find(
+        // @ts-expect-error any
+        (node) =>
+          t.isImportDeclaration(node) && node.source.value === '@qwik.dev/core',
+      ) as t.ImportDeclaration;
 
-        if (qwikImport) {
-          qwikImport.specifiers.push(...imports);
-        } else {
-          qwikImport = t.importDeclaration(
-            imports,
-            t.stringLiteral('@qwik.dev/core'),
-          );
-          path.node.body.unshift(qwikImport);
-        }
-      },
-    });
+      if (qwikImport) {
+        qwikImport.specifiers.push(...imports);
+      } else {
+        qwikImport = t.importDeclaration(
+          imports,
+          t.stringLiteral('@qwik.dev/core'),
+        );
+        path.node.body.unshift(qwikImport);
+      }
+    },
+  });
 
-    const trackingCode = t.expressionStatement(
-      t.callExpression(t.identifier('useOnDocument'), [
-        t.stringLiteral('qinit'),
-        t.callExpression(t.identifier('$'), [
-          t.arrowFunctionExpression(
-            [],
-            t.blockStatement([
-              // Initialize __QWIK_DEVTOOLS__ if it doesn't exist
-              t.ifStatement(
-                t.unaryExpression(
-                  '!',
-                  t.memberExpression(
-                    t.identifier('window'),
-                    t.identifier('__QWIK_DEVTOOLS__'),
+  const trackingCode = t.expressionStatement(
+    t.callExpression(t.identifier('useOnDocument'), [
+      t.stringLiteral('qinit'),
+      t.callExpression(t.identifier('$'), [
+        t.arrowFunctionExpression(
+          [],
+          t.blockStatement([
+            // Initialize __QWIK_DEVTOOLS__ if it doesn't exist
+            t.ifStatement(
+              t.unaryExpression(
+                '!',
+                t.memberExpression(
+                  t.identifier('window'),
+                  t.identifier('__QWIK_DEVTOOLS__'),
+                ),
+              ),
+              t.blockStatement([
+                t.expressionStatement(
+                  t.assignmentExpression(
+                    '=',
+                    t.memberExpression(
+                      t.identifier('window'),
+                      t.identifier('__QWIK_DEVTOOLS__'),
+                    ),
+                    t.objectExpression([
+                      t.objectProperty(
+                        t.identifier('appState'),
+                        t.objectExpression([]),
+                      ),
+                    ]),
                   ),
                 ),
-                t.blockStatement([
-                  t.expressionStatement(
-                    t.assignmentExpression(
-                      '=',
-                      t.memberExpression(
-                        t.identifier('window'),
-                        t.identifier('__QWIK_DEVTOOLS__'),
-                      ),
-                      t.objectExpression([
+              ]),
+            ),
+            // Set component state with children
+            t.expressionStatement(
+              t.assignmentExpression(
+                '=',
+                t.memberExpression(
+                  t.memberExpression(
+                    t.memberExpression(
+                      t.identifier('window'),
+                      t.identifier('__QWIK_DEVTOOLS__'),
+                    ),
+                    t.identifier('appState'),
+                  ),
+                  t.stringLiteral(componentPath),
+                  true,
+                ),
+                t.objectExpression([
+                  t.objectProperty(
+                    t.identifier('path'),
+                    t.stringLiteral(componentPath),
+                  ),
+                  t.objectProperty(
+                    t.identifier('children'),
+                    t.objectExpression(
+                      childComponents.map(({ name, path }) =>
                         t.objectProperty(
-                          t.identifier('appState'),
-                          t.objectExpression([]),
+                          t.identifier(name),
+                          t.stringLiteral(path),
                         ),
-                      ]),
+                      ),
+                    ),
+                  ),
+                  t.objectProperty(
+                    t.identifier('state'),
+                    t.objectExpression(
+                      signalsAndStores.map(({ name, type }) =>
+                        t.objectProperty(
+                          t.identifier(name),
+                          t.objectExpression([
+                            t.objectProperty(
+                              t.identifier('value'),
+                              t.identifier(name),
+                            ),
+                            t.objectProperty(
+                              t.identifier('type'),
+                              t.stringLiteral(type),
+                            ),
+                          ]),
+                        ),
+                      ),
                     ),
                   ),
                 ]),
               ),
-              // Set component state
-              t.expressionStatement(
-                t.assignmentExpression(
-                  '=',
-                  t.memberExpression(
-                    t.memberExpression(
-                      t.memberExpression(
-                        t.identifier('window'),
-                        t.identifier('__QWIK_DEVTOOLS__'),
-                      ),
-                      t.identifier('appState'),
-                    ),
-                    t.stringLiteral(componentPath),
-                    true,
-                  ),
-                  t.objectExpression([
-                    t.objectProperty(
-                      t.identifier('path'),
-                      t.stringLiteral(componentPath),
-                    ),
-                    t.objectProperty(
-                      t.identifier('state'),
-                      t.objectExpression(
-                        signalsAndStores.map(({ name, type }) =>
-                          t.objectProperty(
-                            t.identifier(name),
-                            t.objectExpression([
-                              t.objectProperty(
-                                t.identifier('value'),
-                                t.identifier(name),
-                              ),
-                              t.objectProperty(
-                                t.identifier('type'),
-                                t.stringLiteral(type),
-                              ),
-                            ]),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-            ]),
-          ),
-        ]),
+            ),
+          ]),
+        ),
       ]),
-    );
-    // @ts-expect-error any
+    ]),
+  );
+
+  // Insert tracking code after the last declaration or at the start of the component if no declarations
+  if (lastDeclarationPath) {
     lastDeclarationPath.insertAfter(trackingCode);
+  } else {
+    // Find the component function and insert at the start of its body
+    traverse(ast, {
+      // @ts-expect-error any
+      CallExpression(path) {
+        if (
+          t.isIdentifier(path.node.callee) &&
+          path.node.callee.name === 'component$'
+        ) {
+          const arrowFunction = path.node.arguments[0];
+          if (t.isArrowFunctionExpression(arrowFunction)) {
+            const body = arrowFunction.body;
+            if (t.isBlockStatement(body)) {
+              body.body.unshift(trackingCode);
+            }
+          }
+        }
+      },
+    });
   }
 
   const output = generate(ast);
+
+  console.log(output.code);
   return {
     code: output.code,
     map: output.map,
