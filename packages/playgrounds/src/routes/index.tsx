@@ -2,6 +2,7 @@ import { Link, type DocumentHead } from '@qwik.dev/router';
 import { component$, useSignal } from '@qwik.dev/core';
 import Button from '../components/Button/Button';
 import Text from '../components/Text/Text';
+
 export default component$(() => {
   const count = useSignal(0);
 
