@@ -1,0 +1,67 @@
+:root {
+    --rct-color-tree-bg: transparent;
+    --rct-item-height: 32px;
+    --rct-color-search-highlight-bg: rgba(59, 130, 246, 0.2);
+  
+    --rct-color-tree-focus-outline: transparent;
+    --rct-item-margin: 1px;
+    --rct-item-padding: 8px;
+    --rct-radius: 6px;
+    --rct-bar-offset: 6px;
+    --rct-bar-width: 2px;
+    --rct-bar-color: rgb(16, 185, 129);
+    --rct-focus-outline: #000000;
+  
+    --rct-color-focustree-item-selected-bg: #fff;
+    --rct-color-focustree-item-hover-bg: rgba(255, 255, 255, 0.03);
+    --rct-color-focustree-item-hover-text: #fff;
+    --rct-color-focustree-item-active-bg: rgba(255, 255, 255, 0.08);
+    --rct-color-focustree-item-active-text: #fff;
+  
+    --rct-arrow-size: 10px;
+    --rct-arrow-container-size: 16px;
+    --rct-arrow-padding: 6px;
+    --rct-color-arrow: rgb(16 185 129 / var(--tw-bg-opacity, 1));
+    --rct-cursor: pointer;
+  
+    --rct-search-width: 100%;
+    --rct-search-height: 32px;
+    --rct-search-padding: 8px;
+    --rct-search-border: rgba(255, 255, 255, 0.1);
+    --rct-search-border-bottom: rgb(16, 185, 129);
+    --rct-search-bg: rgba(255, 255, 255, 0.03);
+    --rct-search-text: #fff;
+    --rct-search-text-offset: calc(var(--rct-search-padding) * 2 + 16px);
+  }
+
+/* Add these additional styles to match devtools theme */
+.rct-tree-item-button {
+  color: rgb(16 185 129 / var(--tw-bg-opacity, 1)) !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.rct-tree-item-button:hover {
+  color: rgb(16 185 129 / var(--tw-bg-opacity, 1)) !important;
+}
+
+.rct-tree-item-button[aria-expanded="true"] {
+  color: #fff !important;
+}
+
+.rct-tree-item-title-container {
+  border-radius: var(--rct-radius) !important;
+}
+
+.rct-tree-search-input {
+  border: 1px solid var(--rct-search-border) !important;
+  border-radius: var(--rct-radius) !important;
+  margin-bottom: 12px !important;
+  font-size: 14px !important;
+}
+
+.rct-tree-search-input:focus {
+  border-color: rgb(16, 185, 129) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px rgb(16, 185, 129) !important;
+}

@@ -10,6 +10,7 @@ import {
   HiBoltOutline,
   HiCubeOutline,
   HiPhotoOutline,
+  HiCodeBracketMini,
 } from "@qwikest/icons/heroicons";
 import { LuFolderTree } from "@qwikest/icons/lucide";
 import {
@@ -32,6 +33,7 @@ import { DevtoolsButton } from "./components/DevtoolsButton/DevtoolsButton";
 import { DevtoolsContainer } from "./components/DevtoolsContainer/DevtoolsContainer";
 import { DevtoolsPanel } from "./components/DevtoolsPanel/DevtoolsPanel";
 import { Packages } from "./features/Packages/Packages";
+import { Components } from "./features/Components/Components";
 
 function getClientRpcFunctions() {
   return {
@@ -118,6 +120,9 @@ export const QwikDevtools = component$(() => {
             <Tab state={state} id="assets" title="Assets">
               <HiPhotoOutline class="h-5 w-5" />
             </Tab>
+            <Tab state={state} id="components" title="Components Tree">
+              <HiCodeBracketMini class="h-5 w-5" />
+            </Tab>
           </div>
 
           <div class="custom-scrollbar flex-1 overflow-y-auto p-4">
@@ -166,6 +171,12 @@ export const QwikDevtools = component$(() => {
               <TabContent>
                 <TabTitle title="Application Routes" q:slot="title" />
                 <Routes state={state} q:slot="content" />
+              </TabContent>
+            )}
+            {state.activeTab === "components" && (
+              <TabContent>
+                <TabTitle title="Components Tree" q:slot="title" />
+                <Components q:slot="content" />
               </TabContent>
             )}
           </div>
