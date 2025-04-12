@@ -1,4 +1,4 @@
-import { component$, Slot, useSignal, useTask$ } from "@qwik.dev/core";
+import { component$, Slot, useSignal, useTask$,isBrowser } from "@qwik.dev/core";
 import { State } from "../../types/state";
 
 interface DevtoolsPanelProps {
@@ -11,25 +11,25 @@ export const DevtoolsPanel = component$(({ state }: DevtoolsPanelProps) => {
   useTask$(({ cleanup }) => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === "`" && e.metaKey) {
-        state.isOpen = !state.isOpen;
+        state.isOpen.value = !state.isOpen.value;
       }
       // Add Escape key to close
-      if (e.key === "Escape" && state.isOpen) {
-        state.isOpen = false;
+      if (e.key === "Escape" && state.isOpen.value) {
+        state.isOpen.value = false;
       }
     };
 
     // Handle click outside
     const handleClickOutside = (e: MouseEvent) => {
       if (
-        state.isOpen &&
+        state.isOpen.value &&
         panelRef.value &&
         !panelRef.value.contains(e.target as Node)
       ) {
-        state.isOpen = false;
+        state.isOpen.value = false;
       }
     };
-
+    if (!isBrowser) return;
     window.addEventListener("keydown", handleKeyPress);
     window.addEventListener("mousedown", handleClickOutside);
 

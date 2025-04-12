@@ -4,6 +4,7 @@ import {
   useVisibleTask$,
   noSerialize,
   useStyles$,
+  useSignal
 } from "@qwik.dev/core";
 import { tryCreateHotContext } from "vite-hot-client";
 import {
@@ -45,7 +46,7 @@ export const QwikDevtools = component$(() => {
   useStyles$(globalCss);
 
   const state = useStore<State>({
-    isOpen: false,
+    isOpen: useSignal(false),
     activeTab: "overview",
     npmPackages: [],
     assets: [],
@@ -65,7 +66,7 @@ export const QwikDevtools = component$(() => {
     createClientRpc(getClientRpcFunctions());
 
     track(() => {
-      if (state.isOpen) {
+      if (state.isOpen.value) {
         const rpc = getViteClientRpc();
         rpc.getAssetsFromPublicDir().then((data) => {
           state.assets = data;
@@ -105,7 +106,7 @@ export const QwikDevtools = component$(() => {
     <DevtoolsContainer>
       <DevtoolsButton state={state} />
 
-      {state.isOpen && (
+      {state.isOpen.value && (
         <DevtoolsPanel state={state}>
           <div class="flex flex-col gap-2 border-r border-zinc-700 bg-zinc-900/95 p-3">
             <Tab state={state} id="overview" title="Overview">
