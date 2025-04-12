@@ -24,9 +24,9 @@ export const DevtoolsPanel = component$(({ state }: DevtoolsPanelProps) => {
       if (
         state.isOpen.value &&
         panelRef.value &&
-        !panelRef.value.contains(e.target as Node)
+        !panelRef.value.parentElement?.contains(e.target as Node)
       ) {
-        state.isOpen.value = false;
+        state.isOpen.value = !state.isOpen.value;
       }
     };
     if (!isBrowser) return;
