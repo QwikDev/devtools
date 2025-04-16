@@ -37,7 +37,8 @@
     "@types/node": "^22.10.5",
     "@changesets/cli": "^2.27.11",
     "@changesets/get-github-info": "^0.6.0",
-    "@changesets/types": "^6.0.0"
+    "@changesets/types": "^6.0.0",
+    "vite-plugin-inspect":"^11.0.0"
   },
   "private": false,
   "keywords": [
