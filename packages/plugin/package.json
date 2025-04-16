@@ -8,6 +8,7 @@
       "import": "./dist/index.mjs"
     }
   },
+  "types": "./dist/index.d.ts",
   "files": [
     "src"
   ],
@@ -15,33 +16,34 @@
   "type": "module",
   "scripts": {
     "build": "unbuild",
-    "dev": "tsup --watch"
+    "dev": "unbuild --watch"
   },
   "dependencies": {
+    "@babel/generator": "^7.26.5",
     "@babel/parser": "^7.26.7",
-    "@babel/traverse": "^7.26.7",
-    "@babel/generator": "^7.26.5"
+    "@babel/traverse": "^7.26.7"
   },
   "devDependencies": {
+    "@babel/types": "^7.26.7",
     "@devtools/kit": "workspace:*",
-    "dree": "^5.1.5",
-    "fast-glob": "^3.3.2",
-    "image-meta": "^0.2.1",
-    "birpc": "^0.2.19",
-    "vite": "^6.0.7",
-    "unbuild": "^3.2.0",
-    "tsup": "^8.3.5",
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__traverse": "^7.20.6",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",
     "@typescript-eslint/eslint-plugin": "7.16.1",
     "@typescript-eslint/parser": "7.16.1",
+    "birpc": "^0.2.19",
+    "cpy-cli": "^5.0.0",
+    "dree": "^5.1.5",
     "eslint": "8.57.0",
+    "fast-glob": "^3.3.2",
+    "image-meta": "^0.2.1",
     "np": "^8.0.4",
     "prettier": "3.3.3",
+    "tsup": "^8.3.5",
     "typescript": "5.4.5",
-    "cpy-cli": "^5.0.0",
-    "@babel/types": "^7.26.7",
-    "@types/babel__traverse": "^7.20.6",
-    "@types/babel__generator": "^7.6.8"
+    "unbuild": "^3.2.0",
+    "vite": "^6.2.6",
+    "vite-plugin-inspect": "^11.0.0"
   }
 }

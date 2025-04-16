@@ -5,20 +5,22 @@ import { parse } from '@babel/parser';
 import _traverse from '@babel/traverse';
 import _generate from '@babel/generator';
 import * as t from '@babel/types';
+import VueInspector from 'vite-plugin-inspect'
 
 // @ts-expect-error any
 const traverse = _traverse.default;
 // @ts-expect-error any
 const generate = _generate.default;
 
-export function qwikDevtools(): Plugin {
+export function qwikDevtools(): Plugin[] {
   let _config: ResolvedConfig;
-  return {
+  const qwikDevtoolsPlugin: Plugin = {
     name: 'vite-plugin-qwik-devtools',
     apply: 'serve',
     configResolved(viteConfig) {
       _config = viteConfig;
     },
+  
     transform: {
       order: 'pre',
       handler(code, id) {
@@ -60,7 +62,11 @@ export function qwikDevtools(): Plugin {
 
       createServerRpc(rpcFunctions);
     },
-  };
+  }
+  return [
+    qwikDevtoolsPlugin,
+    VueInspector(), // Add the VueInspector plugin instance
+  ];
 }
 
 function test(code: string, id: string) {

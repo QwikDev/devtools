@@ -21,9 +21,9 @@
     "README.md"
   ],
   "peerDependencies": {
-    "vite": "^6.0.7",
-    "@qwik.dev/core": "^2.0.0-alpha.4",
-    "@qwik.dev/router": "^2.0.0-alpha.4"
+    "vite": "^6.2.6",
+    "@qwik.dev/core": "^2.0.0-alpha.9",
+    "@qwik.dev/router": "^2.0.0-alpha.9"
   },
   "dependencies": {
     "birpc": "^0.2.19",

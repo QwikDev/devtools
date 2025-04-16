@@ -20,7 +20,7 @@
     "dree": "^5.1.5"
   },
   "peerDependencies": {
-    "vite": "^6.0.7"
+    "vite": "^6.2.6"
   },
   "devDependencies": {
     "@types/eslint": "8.56.10",
@@ -29,7 +29,7 @@
     "@typescript-eslint/eslint-plugin": "7.16.1",
     "@typescript-eslint/parser": "7.16.1",
     "eslint": "8.57.0",
-    "eslint-plugin-qwik": "2.0.0-alpha.3",
+    "eslint-plugin-qwik": "2.0.0-alpha.9",
     "np": "^8.0.4",
     "prettier": "3.3.3",
     "typescript": "5.4.5",
