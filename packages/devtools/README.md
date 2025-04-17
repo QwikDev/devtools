@@ -6,7 +6,7 @@ Enhance your Qwik development experience with DevTools that provide real-time in
 
 ## Installation
 
-> Qwik DevTools requires **Qwik v2.0.0-alpha.4 or higher**.
+> Qwik DevTools requires **Qwik v2.0.0-alpha.9 or higher**.
 
 ```shell copy
 npm install @qwik.dev/devtools -D

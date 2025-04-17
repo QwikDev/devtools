@@ -21,9 +21,9 @@
     "README.md"
   ],
   "peerDependencies": {
-    "vite": "^6.0.7",
-    "@qwik.dev/core": "^2.0.0-alpha.4",
-    "@qwik.dev/router": "^2.0.0-alpha.4"
+    "vite": "^6.2.6",
+    "@qwik.dev/core": "^2.0.0-alpha.9",
+    "@qwik.dev/router": "^2.0.0-alpha.9"
   },
   "dependencies": {
     "birpc": "^0.2.19",
@@ -37,7 +37,8 @@
     "@types/node": "^22.10.5",
     "@changesets/cli": "^2.27.11",
     "@changesets/get-github-info": "^0.6.0",
-    "@changesets/types": "^6.0.0"
+    "@changesets/types": "^6.0.0",
+    "vite-plugin-inspect":"^11.0.0"
   },
   "private": false,
   "keywords": [
