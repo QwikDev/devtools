@@ -7,7 +7,8 @@ export type TabName =
   | "routes"
   | "state"
   | "assets"
-  | "components";
+  | "components"
+  | "inspect";
 
 export interface State {
   isOpen: Signal<boolean>;
