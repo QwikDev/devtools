@@ -33,12 +33,12 @@
     "qwik": "qwik"
   },
   "peerDependencies": {
-    "@qwik.dev/core": "^2.0.0-alpha.4",
-    "@qwik.dev/router": "^2.0.0-alpha.4"
+    "@qwik.dev/core": "^2.0.0-alpha.9",
+    "@qwik.dev/router": "^2.0.0-alpha.9"
   },
   "devDependencies": {
     "@devtools/kit": "workspace:*",
-    "@qwik.dev/react": "^2.0.0-alpha.6",
+    "@qwik.dev/react": "^2.0.0-alpha.9",
     "react-complex-tree": "^2.4.6",
     "@qwikest/icons": "^0.0.13",
     "@types/eslint": "8.56.10",
@@ -52,7 +52,7 @@
     "cpy-cli": "^5.0.0",
     "dree": "^5.1.5",
     "eslint": "8.57.0",
-    "eslint-plugin-qwik": "2.0.0-alpha.3",
+    "eslint-plugin-qwik": "2.0.0-alpha.9",
     "nodemon": "^3.1.9",
     "np": "^8.0.4",
     "postcss": "^8.4.39",
