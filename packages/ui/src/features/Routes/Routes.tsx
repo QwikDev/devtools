@@ -10,7 +10,7 @@ export const Routes = component$(({ state }: RoutesProps) => {
   const location = useLocation();
 
   return (
-    <div class="overflow-hidden rounded-xl border border-white/10">
+    <div class="overflow-hidden rounded-xl border border-white/10 flex-1">
       <div class="grid grid-cols-4 gap-4 bg-white/[0.03] p-4 text-sm font-medium">
         <div>Route Path</div>
         <div>Name</div>

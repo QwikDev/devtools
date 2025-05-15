@@ -11,7 +11,7 @@ export const Inspect = component$(() => {
   const location = useLocation();
   console.log(location);
   return (
-    <div class="overflow-hidden rounded-xl border border-white/10">
+    <div class="overflow-hidden rounded-xl border border-white/10 flex-1">
       <iframe src={`${location.url.href}${inspectorLink}`} width={'100%'} height={'100%'}></iframe>
     </div>
   );
