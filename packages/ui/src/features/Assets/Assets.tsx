@@ -15,7 +15,7 @@ export const Assets = component$(({ state }: AssetsProps) => {
         return (
           <div
             key={asset.filePath}
-            class="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-200 hover:bg-white/[0.05]"
+            class="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-200 hover:bg-white/[0.05] "
           >
             {isImage ? (
               <div class="aspect-square overflow-hidden bg-black/20">
