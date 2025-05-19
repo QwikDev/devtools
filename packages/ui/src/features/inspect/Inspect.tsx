@@ -1,6 +1,5 @@
 import { component$ } from "@qwik.dev/core";
 // import { State } from "../../types/state";
-// import { useLocation } from "@qwik.dev/router";
 import {inspectorLink} from './constant'
 // interface RoutesProps {
 //   state: State;
