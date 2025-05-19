@@ -7,7 +7,7 @@ export default component$(() => {
 
   return (
     <>
-      <h1 onClick$={() => console.log(111)}>Hi 👋</h1>
+      <h1>Hi 👋</h1>
       <div>
         <Text />
       </div>
