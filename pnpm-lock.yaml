@@ -242,9 +242,6 @@ importers:
       '@qwik.dev/core':
         specifier: ^2.0.0-alpha.9
         version: 2.0.0-alpha.9(prettier@3.3.3)(vite@6.2.6(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
-      '@qwik.dev/router':
-        specifier: ^2.0.0-alpha.9
-        version: 2.0.0-alpha.9(acorn@8.14.0)(rollup@4.30.1)(typescript@5.4.5)(vite@6.2.6(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
     devDependencies:
       '@devtools/kit':
         specifier: workspace:*

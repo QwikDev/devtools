@@ -1,10 +1,11 @@
 import {
   component$,
   useStore,
-  useVisibleTask$,
   noSerialize,
   useStyles$,
-  useSignal
+  useSignal,
+  useTask$,
+  isBrowser
 } from "@qwik.dev/core";
 import { tryCreateHotContext } from "vite-hot-client";
 import {
@@ -57,7 +58,8 @@ export const QwikDevtools = component$(() => {
   });
 
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(async ({ track }) => {
+  useTask$(async ({ track }) => {
+    if (isBrowser) {
     const hot = await tryCreateHotContext(undefined, ["/"]);
 
     if (!hot) {
@@ -102,6 +104,7 @@ export const QwikDevtools = component$(() => {
         });
       }
     });
+  }
   });
 
   return (
