@@ -33,8 +33,7 @@
     "qwik": "qwik"
   },
   "peerDependencies": {
-    "@qwik.dev/core": "^2.0.0-alpha.9",
-    "@qwik.dev/router": "^2.0.0-alpha.9"
+    "@qwik.dev/core": "^2.0.0-alpha.9"
   },
   "devDependencies": {
     "@devtools/kit": "workspace:*",

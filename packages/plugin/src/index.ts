@@ -61,6 +61,10 @@ export function qwikDevtools(): Plugin[] {
       const rpcFunctions = getServerFunctions({ server, config: _config });
 
       createServerRpc(rpcFunctions);
+
+      server.middlewares.use('/__qwik-inspect/', (req, res, next) => {
+        
+      })
     },
   }
   return [

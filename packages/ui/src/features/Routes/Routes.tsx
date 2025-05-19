@@ -1,13 +1,11 @@
 import { component$ } from "@qwik.dev/core";
 import { State } from "../../types/state";
-import { useLocation } from "@qwik.dev/router";
 
 interface RoutesProps {
   state: State;
 }
 
 export const Routes = component$(({ state }: RoutesProps) => {
-  const location = useLocation();
 
   return (
     <div class="overflow-hidden rounded-xl border border-white/10 flex-1">
@@ -33,9 +31,9 @@ export const Routes = component$(({ state }: RoutesProps) => {
               <span
                 class={{
                   "text-emerald-400":
-                    (location.url.pathname === "/" &&
+                    (location.pathname === "/" &&
                       route.relativePath === "") ||
-                    location.url.pathname === `/${route.relativePath}/`,
+                    location.pathname === `/${route.relativePath}/`,
                 }}
               >
                 {route.relativePath === "" ? "/" : `/${route.relativePath}/`}
