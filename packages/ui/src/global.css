@@ -5,6 +5,112 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root {
+  --color-background: #FFFFFF;
+  --color-foreground: #000000;
+  --color-primary: #3B82F6;
+  --color-secondary: #6B7280; /* Tailwind's secondary.light */
+  --color-border: #E5E7EB;
+  --color-card: #F3F4F6;
+
+  /* Specific variables based on existing CSS (light theme equivalents) */
+  --color-background-darker: #E5E7EB; /* Equivalent for #1c1c1f */
+  --color-text-muted: #4B5563; /* Equivalent for #a1a1aa */
+  --color-text-subtle: #9CA3AF; /* Equivalent for #94a3b8 */
+
+  --color-border-translucent: rgba(0, 0, 0, 0.05); /* For rgba(255, 255, 255, 0.1) */
+  --color-border-strong-translucent: rgba(0, 0, 0, 0.1); /* For rgba(255,255,255,0.15) and 0.08 */
+  --color-border-darker: #D1D5DB; /* For #3f3f46 */
+
+  --color-shadow-soft: rgba(0, 0, 0, 0.1); /* For general soft shadows like rgba(0,0,0,0.1), rgba(0,0,0,0.15) */
+  --color-shadow-medium: rgba(0, 0, 0, 0.15); /* For rgba(0,0,0,0.2) */
+  --color-shadow-strong: rgba(0, 0, 0, 0.2); /* For rgba(0,0,0,0.3) */
+
+  --color-glow-base: rgba(59, 130, 246, 0.2); /* Primary blue for glow */
+  --color-glow-border: rgba(59, 130, 246, 0.3);
+  --color-glow-shadow: rgba(59, 130, 246, 0.15);
+  --color-glow-hover-base: rgba(59, 130, 246, 0.3);
+  --color-glow-hover-border: rgba(59, 130, 246, 0.4);
+  --color-glow-hover-shadow: rgba(59, 130, 246, 0.2);
+
+  --color-icon-accent: #2563EB; /* For #10b981, using primary dark as a placeholder */
+  --color-active-route-bg: rgba(59, 130, 246, 0.1); /* Primary with alpha */
+  --color-active-route-text: #2563EB; /* Primary dark */
+
+  --color-card-item-bg: rgba(0, 0, 0, 0.02); /* For rgba(255,255,255,0.03) */
+  --color-card-item-hover-bg: rgba(0, 0, 0, 0.03); /* For rgba(255,255,255,0.05) */
+  --color-asset-type-bg: rgba(0, 0, 0, 0.05); /* For rgba(255,255,255,0.1) */
+  --color-file-ext-text: rgba(0, 0, 0, 0.5); /* For rgba(255,255,255,0.7) */
+
+  /* Scrollbar variables */
+  --color-scrollbar-thumb: #D1D5DB;
+  --color-scrollbar-thumb-hover: #A1A1AA;
+
+  /* Tailwind semantic variables */
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary-foreground: #FFFFFF; /* Assuming secondary (#6B7280) is dark enough for white text */
+  --color-muted: #9CA3AF; /* Similar to existing --color-text-subtle */
+  --color-muted-foreground: #4B5563; /* Similar to existing --color-text-muted */
+  --color-accent: #10B981; /* Green accent */
+  --color-accent-foreground: #FFFFFF;
+  --color-input: var(--color-border); /* Alias to border */
+  --color-ring: var(--color-primary); /* Alias to primary */
+  --color-card-foreground: var(--color-foreground); /* Alias to foreground */
+}
+
+html.dark {
+  --color-background: #18181B;
+  --color-foreground: #FFFFFF;
+  --color-primary: #2563EB; /* Tailwind's primary.dark */
+  --color-secondary: #9CA3AF; /* Tailwind's secondary.dark */
+  --color-border: #374151;
+  --color-card: #27272A;
+
+  /* Specific variables based on existing CSS (dark theme) */
+  --color-background-darker: #1c1c1f;
+  --color-text-muted: #a1a1aa;
+  --color-text-subtle: #94a3b8;
+
+  --color-border-translucent: rgba(255, 255, 255, 0.1);
+  --color-border-strong-translucent: rgba(255, 255, 255, 0.15); /* For 0.15 and 0.08 on dark */
+  --color-border-darker: #3f3f46;
+
+  --color-shadow-soft: rgba(0, 0, 0, 0.15); /* Existing value */
+  --color-shadow-medium: rgba(0, 0, 0, 0.2);  /* Existing value */
+  --color-shadow-strong: rgba(0, 0, 0, 0.3);  /* Existing value */
+
+  /* Glow colors are specific and don't directly map to the main palette */
+  --color-glow-base: rgba(0, 220, 130, 0.35);
+  --color-glow-border: rgba(0, 220, 130, 0.5);
+  --color-glow-shadow: rgba(0, 220, 130, 0.25);
+  --color-glow-hover-base: rgba(0, 220, 130, 0.4);
+  --color-glow-hover-border: rgba(0, 220, 130, 0.6);
+  --color-glow-hover-shadow: rgba(0, 220, 130, 0.3);
+
+  --color-icon-accent: #10b981; /* Original green */
+  --color-active-route-bg: #22c55e20; /* Original green with alpha */
+  --color-active-route-text: #22c55e; /* Original green */
+
+  --color-card-item-bg: rgba(255, 255, 255, 0.03);
+  --color-card-item-hover-bg: rgba(255, 255, 255, 0.05);
+  --color-asset-type-bg: rgba(255, 255, 255, 0.1);
+  --color-file-ext-text: rgba(255, 255, 255, 0.7);
+
+  /* Scrollbar variables */
+  --color-scrollbar-thumb: #3f3f46;
+  --color-scrollbar-thumb-hover: #52525b;
+
+  /* Tailwind semantic variables */
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary-foreground: #FFFFFF; /* Assuming secondary (#9CA3AF) is dark enough for white text */
+  --color-muted: #374151; /* Similar to existing html.dark --color-border */
+  --color-muted-foreground: #9CA3AF; /* Similar to existing html.dark --color-secondary */
+  --color-accent: #10B981; /* Matches existing html.dark --color-icon-accent */
+  --color-accent-foreground: #FFFFFF;
+  --color-input: var(--color-border); /* Alias to border */
+  --color-ring: var(--color-primary); /* Alias to primary */
+  --color-card-foreground: var(--color-foreground); /* Alias to foreground */
+}
 
 @layer utilities {
   .custom-scrollbar {
