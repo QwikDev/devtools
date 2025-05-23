@@ -1,11 +1,21 @@
-import { component$, useSignal, useVisibleTask$, $ } from "@qwik.dev/core";
+import { component$, useSignal, useTask$, $, useOnWindow } from "@qwik.dev/core";
 import { HiMoonMini, HiSunMini } from "@qwikest/icons/heroicons";
 
 export const ThemeToggle = component$(() => {
   const isDarkMode = useSignal(false);
+  const isBrowser = useSignal(false);
+
+  // Set isBrowser to true when component is mounted
+  useOnWindow('load', $(() => {
+    isBrowser.value = true;
+  }));
 
   // Initialize theme based on system preference or stored preference
-  useVisibleTask$(() => {
+  useTask$(({ track }) => {
+    // Track the isBrowser signal to ensure this runs only in the browser
+    const browser = track(() => isBrowser.value);
+    if (!browser) return;
+    
     // Check for stored preference
     const storedTheme = localStorage.getItem('theme');
     
