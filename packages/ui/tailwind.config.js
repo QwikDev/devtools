@@ -20,6 +20,18 @@ export default {
         ring: 'var(--color-ring)',                           // for focus rings
         card: 'var(--color-card)',                           // card backgrounds
         'card-foreground': 'var(--color-card-foreground)',       // text on cards
+        'card-item-bg': 'var(--color-card-item-bg)',
+        'card-item-hover-bg': 'var(--color-card-item-hover-bg)',
+        'background-darker': 'var(--color-background-darker)',
+        'text-muted': 'var(--color-text-muted)',
+        'text-subtle': 'var(--color-text-subtle)',
+        'border-translucent': 'var(--color-border-translucent)',
+        'border-strong-translucent': 'var(--color-border-strong-translucent)',
+        'border-darker': 'var(--color-border-darker)',
+        'asset-type-bg': 'var(--color-asset-type-bg)',
+        'file-ext-text': 'var(--color-file-ext-text)',
+        'active-route-bg': 'var(--color-active-route-bg)',
+        'active-route-text': 'var(--color-active-route-text)'
       },
     },
   },

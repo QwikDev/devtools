@@ -24,8 +24,8 @@ export const InstallButton = component$(
         class={[
           "rounded-full px-2 py-1 text-xs",
           installingPackage.value === pkg.name
-            ? "cursor-not-allowed bg-blue-500/5 text-blue-400/50"
-            : "bg-blue-500/10 text-blue-400 hover:bg-blue-500/20",
+            ? "cursor-not-allowed bg-primary/5 text-primary/50"
+            : "bg-primary/10 text-primary hover:bg-primary/20",
         ].join(" ")}
       >
         {installingPackage.value === pkg.name ? (

@@ -113,7 +113,7 @@ export const QwikDevtools = component$(() => {
 
       {state.isOpen.value && (
         <DevtoolsPanel state={state}>
-          <div class="flex flex-col gap-2 border-r border-zinc-700 bg-zinc-900/95 p-3">
+          <div class="flex flex-col gap-2 border-r border-border bg-background/95 p-3">
             <Tab state={state} id="overview" title="Overview">
               <HiBoltOutline class="h-5 w-5" />
             </Tab>
@@ -153,7 +153,7 @@ export const QwikDevtools = component$(() => {
             {state.activeTab === "assets" && (
               <TabContent>
                 <TabTitle title="Public Assets" q:slot="title" />
-                <div class="flex gap-4 text-sm text-zinc-400">
+                <div class="flex gap-4 text-sm text-muted-foreground">
                   <span>
                     Total Size:{" "}
                     {(
