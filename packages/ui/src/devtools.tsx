@@ -38,6 +38,7 @@ import { DevtoolsPanel } from "./components/DevtoolsPanel/DevtoolsPanel";
 import { Packages } from "./features/Packages/Packages";
 import { Components } from "./features/Components/Components";
 import { Inspect } from "./features/inspect/Inspect";
+import { ThemeToggle } from "./components/ThemeToggle/ThemeToggle";
 
 function getClientRpcFunctions() {
   return {
@@ -132,6 +133,10 @@ export const QwikDevtools = component$(() => {
             <Tab state={state} id="inspect" title="inspect">
               <HiMegaphoneMini class="h-5 w-5" />
             </Tab>
+
+            <div class="mt-auto">
+                <ThemeToggle />
+            </div>
           </div>
 
           <div class="custom-scrollbar flex-1 overflow-y-auto p-4">

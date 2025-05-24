@@ -48,7 +48,7 @@ export const Packages = component$(() => {
             debounceSearch(target.value);
           }}
           placeholder="Search npm packages..."
-          class="w-full rounded-lg border border-border bg-foreground/5 px-4 py-2 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-border"
+          class="w-full rounded-lg border  border-border bg-input px-4 py-2 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-ring"
         />
       </div>
 

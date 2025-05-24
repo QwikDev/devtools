@@ -9,7 +9,7 @@ import {inspectorLink} from './constant'
 export const Inspect = component$(() => {
   return (
     <div class="overflow-hidden rounded-xl border border-border flex-1">
-      <iframe src={`${location.href}${inspectorLink}`} width={'100%'} height={'100%'}></iframe>
+      <iframe src={`${location.href}${inspectorLink}`} width={'100%'} height={'100%'} id="inspect_qwik"></iframe>
     </div>
   );
 });

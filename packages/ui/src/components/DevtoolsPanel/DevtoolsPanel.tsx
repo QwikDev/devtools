@@ -1,6 +1,6 @@
 import { component$, Slot, useSignal, useTask$, isBrowser } from "@qwik.dev/core";
 import { State } from "../../types/state";
-import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
+
 
 interface DevtoolsPanelProps {
   state: State;
@@ -45,9 +45,6 @@ export const DevtoolsPanel = component$(({ state }: DevtoolsPanelProps) => {
       ref={panelRef}
       class="fixed bottom-6 right-6 flex h-[calc(100vh-3rem)] w-[calc(100vw-3rem)] translate-y-0 transform overflow-hidden rounded-lg border-2 border-border bg-background text-foreground backdrop-blur-lg transition-transform duration-300 ease-in-out"
     >
-      <div class="absolute right-4 top-4 z-10">
-        <ThemeToggle />
-      </div>
       <Slot />
     </div>
   );
