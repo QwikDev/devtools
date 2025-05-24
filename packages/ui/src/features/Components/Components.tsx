@@ -49,7 +49,7 @@ const ComponentsStore = component$(() => {
   return (
     <div>
       <select
-        class="mt-2 w-1/2 rounded-md border bg-transparent p-2 font-mono"
+        class="mt-2 w-1/2 rounded-md border border-border bg-transparent p-2 font-mono text-foreground"
         onChange$={(_, e) => handleComponentSelected(e.value)}
       >
         <option value="">Select component</option>
@@ -73,14 +73,14 @@ const ComponentStoreUpdate = component$<{
   value: ComponentStateStore;
 }>(({ value }) => {
   return (
-    <div class="mt-2 flex  w-1/2 flex-col font-mono text-white">
+    <div class="mt-2 flex w-1/2 flex-col font-mono text-foreground">
       {Object.keys(value).map((key) => {
         if (value[key].type === "signal") {
           return (
             <div class="flex flex-col" key={key}>
               <h2 class="text-lg font-bold">Signal: {key}</h2>
               <input
-                class="mt-2 rounded-md border bg-transparent p-2 font-mono"
+                class="mt-2 rounded-md border border-border bg-transparent p-2 font-mono text-foreground"
                 type={typeof value[key].value === "string" ? "text" : "number"}
                 bind:value={value[key].value}
               />
@@ -96,7 +96,7 @@ const ComponentStoreUpdate = component$<{
                 <div class="flex flex-col" key={storeKey}>
                   <h3 class="text-md font-bold">Key: {storeKey}</h3>
                   <input
-                    class="mt-2 rounded-md border bg-transparent p-2 font-mono"
+                    class="mt-2 rounded-md border border-border bg-transparent p-2 font-mono text-foreground"
                     type={
                       typeof value[key].value[storeKey] === "string"
                         ? "text"

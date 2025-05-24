@@ -38,6 +38,7 @@ import { DevtoolsPanel } from "./components/DevtoolsPanel/DevtoolsPanel";
 import { Packages } from "./features/Packages/Packages";
 import { Components } from "./features/Components/Components";
 import { Inspect } from "./features/inspect/Inspect";
+import { ThemeToggle } from "./components/ThemeToggle/ThemeToggle";
 
 function getClientRpcFunctions() {
   return {
@@ -113,7 +114,7 @@ export const QwikDevtools = component$(() => {
 
       {state.isOpen.value && (
         <DevtoolsPanel state={state}>
-          <div class="flex flex-col gap-2 border-r border-zinc-700 bg-zinc-900/95 p-3">
+          <div class="flex flex-col gap-2 border-r border-border bg-background/95 p-3">
             <Tab state={state} id="overview" title="Overview">
               <HiBoltOutline class="h-5 w-5" />
             </Tab>
@@ -132,6 +133,10 @@ export const QwikDevtools = component$(() => {
             <Tab state={state} id="inspect" title="inspect">
               <HiMegaphoneMini class="h-5 w-5" />
             </Tab>
+
+            <div class="mt-auto">
+                <ThemeToggle />
+            </div>
           </div>
 
           <div class="custom-scrollbar flex-1 overflow-y-auto p-4">
@@ -153,7 +158,7 @@ export const QwikDevtools = component$(() => {
             {state.activeTab === "assets" && (
               <TabContent>
                 <TabTitle title="Public Assets" q:slot="title" />
-                <div class="flex gap-4 text-sm text-zinc-400">
+                <div class="flex gap-4 text-sm text-muted-foreground">
                   <span>
                     Total Size:{" "}
                     {(

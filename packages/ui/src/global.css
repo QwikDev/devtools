@@ -5,11 +5,66 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root {
+  --color-background: #FFFFFF;
+  --color-foreground: #000000;
+  --color-primary: #3B82F6;
+  --color-secondary: #6B7280; /* Tailwind's secondary.light */
+  --color-border: #E5E7EB;
+  --color-card: #F3F4F6;
+
+  /* Specific variables based on existing CSS (light theme equivalents) */
+  --color-text-muted: #4B5563; /* Equivalent for #a1a1aa */
+
+
+  --color-card-item-bg: rgba(0, 0, 0, 0.02); /* For rgba(255,255,255,0.03) 1 */
+  --color-card-item-hover-bg: rgba(0, 0, 0, 0.03); /* For rgba(255,255,255,0.05) 1*/  
+
+  /* Scrollbar variables */
+  --color-scrollbar-thumb: #D1D5DB;
+  --color-scrollbar-thumb-hover: #A1A1AA;
+
+  /* Tailwind semantic variables */
+  --color-primary-foreground: #FFFFFF;
+  --color-muted: #9CA3AF; /* Similar to existing --color-text-subtle */
+  --color-muted-foreground: #4B5563; /* Similar to existing --color-text-muted */
+  --color-accent: #10B981; /* Green accent */
+  --color-accent-foreground: #FFFFFF;
+  --color-input: var(--color-border); /* Alias to border */
+  --color-ring: var(--color-primary); /* Alias to primary */
+}
+
+html.dark {
+  --color-background: #18181B;
+  --color-foreground: #FFFFFF;
+  --color-primary: #2563EB; /* Tailwind's primary.dark */
+  --color-secondary: #9CA3AF; /* Tailwind's secondary.dark */
+  --color-border: #374151;
+  --color-card: #27272A;
+
+  /* Specific variables based on existing CSS (dark theme) */
+  --color-text-muted: #a1a1aa;
+  --color-card-item-bg: rgba(255, 255, 255, 0.03);
+  --color-card-item-hover-bg: rgba(255, 255, 255, 0.05);
+
+  /* Scrollbar variables */
+  --color-scrollbar-thumb: #3f3f46;
+  --color-scrollbar-thumb-hover: #52525b;
+
+  /* Tailwind semantic variables */
+  --color-primary-foreground: #FFFFFF;
+  --color-muted: #374151; /* Similar to existing html.dark --color-border */
+  --color-muted-foreground: #9CA3AF; /* Similar to existing html.dark --color-secondary */
+  --color-accent: #10B981; /* Matches existing html.dark --color-icon-accent */
+  --color-accent-foreground: #FFFFFF;
+  --color-input: var(--color-border); /* Alias to border */
+  --color-ring: var(--color-primary); /* Alias to primary */
+}
 
 @layer utilities {
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgb(63 63 70) transparent;
+    scrollbar-color: var(--color-scrollbar-thumb) transparent;
   }
 
   .custom-scrollbar::-webkit-scrollbar {
@@ -21,11 +76,11 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgb(63 63 70);
+    background-color: var(--color-scrollbar-thumb);
     border-radius: 20px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(82 82 91);
+    background-color: var(--color-scrollbar-thumb-hover);
   }
 }

@@ -15,9 +15,9 @@ export const Tab = component$<TabProps>(({ state, id, title }) => {
       class={{
         "flex h-10 w-10 items-center justify-center rounded-lg p-2.5 transition-all duration-200":
           true,
-        "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white":
+        "bg-foreground/5 text-muted-foreground hover:bg-foreground/10 hover:text-foreground":
           state.activeTab !== id,
-        "bg-emerald-500 text-white shadow-lg shadow-emerald-500/35":
+        "bg-accent text-accent-foreground shadow-lg shadow-accent/35":
           state.activeTab === id,
       }}
     >

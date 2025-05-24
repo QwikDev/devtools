@@ -3,12 +3,20 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
 import { qwikReact } from "@qwik.dev/react/vite";
+import { qwikDevtools } from '@devtools/plugin';
+import { createRequire } from "module";
 const { dependencies = {}, peerDependencies = {} } = pkg as any;
 const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
 const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
-
+const require = createRequire(import.meta.url);
 export default defineConfig(() => {
   return {
+    resolve: {
+      alias: {
+        '@devtools/ui': require.resolve('.'),
+        '@qwik.dev/devtools/ui': require.resolve('.')
+      }
+    },
     build: {
       target: "es2020",
       lib: {
@@ -32,6 +40,6 @@ export default defineConfig(() => {
         ],
       },
     },
-    plugins: [qwikVite(), tsconfigPaths(), qwikReact()],
+    plugins: [qwikVite(), tsconfigPaths(), qwikReact(), qwikDevtools()],
   };
 });

@@ -91,8 +91,8 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     <div
       ref={elementRef}
       class={{
-        "fixed flex h-9 w-9 origin-center items-center justify-center rounded-lg border border-white/10 bg-zinc-900 backdrop-blur-md select-none": true,
-        "rotate-90 border-emerald-500/50 bg-zinc-900/95 shadow-lg shadow-emerald-500/35": state.isOpen.value && !isDragging.value,
+        "fixed flex h-9 w-9 origin-center items-center justify-center rounded-lg border border-border bg-background backdrop-blur-md select-none": true,
+        "rotate-90 border-accent/50 bg-background/95 shadow-lg shadow-accent/35": state.isOpen.value && !isDragging.value,
         "cursor-grab": !isDragging.value,
         "cursor-grabbing": isDragging.value,
         "transition-all duration-300 ease-in-out": !isDragging.value,
