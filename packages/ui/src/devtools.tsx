@@ -5,7 +5,9 @@ import {
   useStyles$,
   useSignal,
   useTask$,
-  isBrowser
+  isBrowser,
+  useOnDocument,
+  $
 } from "@qwik.dev/core";
 import { tryCreateHotContext } from "vite-hot-client";
 import {
@@ -39,7 +41,7 @@ import { Packages } from "./features/Packages/Packages";
 import { Components } from "./features/Components/Components";
 import { Inspect } from "./features/inspect/Inspect";
 import { ThemeToggle } from "./components/ThemeToggle/ThemeToggle";
-
+import { ThemeScript } from "./components/router-head/theme-script";
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -58,6 +60,16 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
 
+  useOnDocument(
+    'qinit',
+    $(() => {
+      const scriptElement = document.createElement('script');
+      scriptElement.innerHTML = ThemeScript();
+      document.body.appendChild(
+        scriptElement
+      );
+    })
+  );
   // eslint-disable-next-line qwik/no-use-visible-task
   useTask$(async ({ track }) => {
     if (isBrowser) {
@@ -112,7 +124,7 @@ export const QwikDevtools = component$(() => {
     <DevtoolsContainer>
       <DevtoolsButton state={state} />
 
-      {state.isOpen.value && (
+      {true && (
         <DevtoolsPanel state={state}>
           <div class="flex flex-col gap-2 border-r border-border bg-background/95 p-3">
             <Tab state={state} id="overview" title="Overview">
@@ -204,3 +216,4 @@ export const QwikDevtools = component$(() => {
     </DevtoolsContainer>
   );
 });
+

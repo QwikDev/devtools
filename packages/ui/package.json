@@ -8,6 +8,7 @@
       "import": "./lib/index.qwik.mjs"
     }
   },
+  "types": "./lib-types/ui/src/index.d.ts",
   "files": [
     "lib",
     "lib-types"

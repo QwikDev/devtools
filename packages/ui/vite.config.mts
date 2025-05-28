@@ -9,10 +9,12 @@ const { dependencies = {}, peerDependencies = {} } = pkg as any;
 const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
 const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
 const require = createRequire(import.meta.url);
+const isBuild = process.argv.includes('lib')
+
 export default defineConfig(() => {
   return {
     resolve: {
-      alias: {
+      alias: isBuild ? undefined : {
         '@devtools/ui': require.resolve('.'),
         '@qwik.dev/devtools/ui': require.resolve('.')
       }

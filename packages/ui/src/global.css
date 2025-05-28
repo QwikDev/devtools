@@ -6,6 +6,7 @@
 @tailwind components;
 @tailwind utilities;
 :root {
+  --theme-name: 'light';
   --color-background: #FFFFFF;
   --color-foreground: #000000;
   --color-primary: #3B82F6;
@@ -34,7 +35,8 @@
   --color-ring: var(--color-primary); /* Alias to primary */
 }
 
-html.dark {
+:root[data-theme='dark'] {
+  --theme-name: 'dark';
   --color-background: #18181B;
   --color-foreground: #FFFFFF;
   --color-primary: #2563EB; /* Tailwind's primary.dark */
