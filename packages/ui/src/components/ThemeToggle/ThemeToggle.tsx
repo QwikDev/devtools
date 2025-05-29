@@ -6,7 +6,6 @@ import {
   event$,
 } from "@qwik.dev/core";
 import { HiMoonMini, HiSunMini } from "@qwikest/icons/heroicons";
-import { useDark } from "../../hooks/useDark";
 import { themeStorageKey } from "../router-head/theme-script";
 
 type ThemeName = "dark" | "light" | undefined;
@@ -57,9 +56,9 @@ export const setTheme = (theme: ThemeName) => {
 };
 
 export const ThemeToggle = component$(() => {
-  const dark = useDark();
   const onClick$ = event$(() => {
     const currentTheme = getTheme();
+  
     setTheme(currentTheme === "dark" ? "light" : "dark");
   });
   return (
@@ -67,7 +66,7 @@ export const ThemeToggle = component$(() => {
       onClick$={onClick$}
       class="hover:bg-accent/10 flex h-8 w-8 items-center justify-center rounded-md bg-background text-foreground"
     >
-      {dark.isDark.value ? (
+      {true ? (
         <HiSunMini class="h-5 w-5" />
       ) : (
         <HiMoonMini class="h-5 w-5" />

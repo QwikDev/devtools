@@ -64,8 +64,9 @@ export const QwikDevtools = component$(() => {
     "DOMContentLoaded",
     sync$(() => {
       const scriptElement = document.createElement("script");
-      scriptElement.innerHTML = ThemeScript();
-      document.head.prepend(scriptElement);
+      scriptElement.innerHTML = `try {const p = localStorage.getItem('theme-preference');if (p) { document.documentElement.setAttribute('data-theme', p); }} catch (e) { }`.replace(/\s+/g, "");
+    
+      document.head.appendChild(scriptElement);
     }),
   );
   // eslint-disable-next-line qwik/no-use-visible-task
