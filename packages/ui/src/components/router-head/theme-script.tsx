@@ -1,12 +1,11 @@
-export const themeStorageKey = 'theme-preference';
+export const themeStorageKey = "theme-preference";
 export const ThemeScript = () => {
   const themeScript = `
         try {
-          document.firstElementChild
-              .setAttribute('data-theme',
-                  localStorage.getItem('${themeStorageKey}') ??
-                  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-              );
-        } catch (e) { }`.replace(/\s+/g, '');
-  return themeScript
+          const p = localStorage.getItem('${themeStorageKey}');
+          if (p) {
+            document.documentElement.setAttribute('data-theme', p);
+          }
+        } catch (e) { }`.replace(/\s+/g, "");
+  return themeScript;
 };

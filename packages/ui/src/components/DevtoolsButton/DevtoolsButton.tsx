@@ -28,7 +28,7 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     const deltaY = event.clientY - startMousePos.value.y;
 
     if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
-      isMoved.value = true; 
+      isMoved.value = true;
     }
     let newX = startElementPos.value.x - deltaX;
     let newY = startElementPos.value.y - deltaY;
@@ -37,7 +37,6 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     newY = Math.max(0, newY);
 
     position.value = { x: newX, y: newY };
-    
   });
 
   /**
@@ -45,12 +44,11 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
    */
   const handleMouseUp = $(() => {
     if (isDragging.value) {
-        isDragging.value = false; // Stop dragging
-    } 
+      isDragging.value = false; // Stop dragging
+    }
     if (!isMoved.value) {
       state.isOpen.value = !state.isOpen.value;
     }
-  
   });
 
   /**
@@ -76,23 +74,24 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
   // Effect to add/remove window event listeners based on dragging state
   useTask$(({ track, cleanup }) => {
     track(() => isDragging.value);
-    if (isDragging.value && typeof window !== 'undefined') {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
+    if (isDragging.value && typeof window !== "undefined") {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
       cleanup(() => {
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mouseup", handleMouseUp);
       });
     }
   });
-
 
   return (
     <div
       ref={elementRef}
       class={{
-        "fixed flex h-9 w-9 origin-center items-center justify-center rounded-lg border border-border bg-background backdrop-blur-md select-none": true,
-        "rotate-90 border-accent/50 bg-background/95 shadow-lg shadow-accent/35": state.isOpen.value && !isDragging.value,
+        "fixed flex h-9 w-9 origin-center select-none items-center justify-center rounded-lg border border-border bg-background backdrop-blur-md":
+          true,
+        "border-accent/50 bg-background/95 shadow-accent/35 rotate-90 shadow-lg":
+          state.isOpen.value && !isDragging.value,
         "cursor-grab": !isDragging.value,
         "cursor-grabbing": isDragging.value,
         "transition-all duration-300 ease-in-out": !isDragging.value,
@@ -100,8 +99,8 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
       style={{
         bottom: `${position.value.y}px`,
         right: `${position.value.x}px`,
-        userSelect: isDragging.value ? 'none' : undefined,
-        transition: isDragging.value ? 'none' : undefined,
+        userSelect: isDragging.value ? "none" : undefined,
+        transition: isDragging.value ? "none" : undefined,
       }}
       onMouseDown$={handleMouseDown}
     >
@@ -111,7 +110,7 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
         src="https://qwik.dev/logos/qwik-logo.svg"
         alt="Qwik Logo"
         draggable={false}
-        class="h-5 w-5 opacity-90 drop-shadow-md pointer-events-none"
+        class="pointer-events-none h-5 w-5 opacity-90 drop-shadow-md"
       />
     </div>
   );

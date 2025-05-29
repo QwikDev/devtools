@@ -1,4 +1,4 @@
-import { QwikDevtools } from './devtools';
+import { QwikDevtools } from "./devtools";
 
 export default () => {
   return (

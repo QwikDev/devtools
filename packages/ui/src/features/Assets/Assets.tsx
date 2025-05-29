@@ -29,7 +29,9 @@ export const Assets = component$(({ state }: AssetsProps) => {
               </div>
             ) : (
               <div class="flex aspect-square items-center justify-center bg-black/20">
-                <span class="font-mono text-2xl text-muted-foreground">{fileExt}</span>
+                <span class="font-mono text-2xl text-muted-foreground">
+                  {fileExt}
+                </span>
               </div>
             )}
             <div class="space-y-2 p-4">
@@ -38,7 +40,9 @@ export const Assets = component$(({ state }: AssetsProps) => {
               </div>
               <div class="flex items-center justify-between text-xs text-muted-foreground">
                 <span>{(asset.size / 1024).toFixed(2)} KB</span>
-                <span class="rounded-full bg-foreground/5 px-2 py-1">{fileExt}</span>
+                <span class="bg-foreground/5 rounded-full px-2 py-1">
+                  {fileExt}
+                </span>
               </div>
             </div>
           </div>

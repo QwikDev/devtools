@@ -1,6 +1,11 @@
-import { component$, Slot, useSignal, useTask$, isBrowser } from "@qwik.dev/core";
+import {
+  component$,
+  Slot,
+  useSignal,
+  useTask$,
+  isBrowser,
+} from "@qwik.dev/core";
 import { State } from "../../types/state";
-
 
 interface DevtoolsPanelProps {
   state: State;

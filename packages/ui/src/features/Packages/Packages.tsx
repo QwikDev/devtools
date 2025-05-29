@@ -56,7 +56,7 @@ export const Packages = component$(() => {
         value={searchResults}
         onPending={() => (
           <div class="absolute right-3 top-1">
-            <div class="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-foreground/40" />
+            <div class="border-t-foreground/40 h-5 w-5 animate-spin rounded-full border-2 border-border" />
           </div>
         )}
         onRejected={(error) => (
@@ -71,12 +71,12 @@ export const Packages = component$(() => {
                 return (
                   <div
                     key={pkg.name}
-                    class="flex flex-col gap-2 rounded-lg bg-foreground/5 p-3"
+                    class="bg-foreground/5 flex flex-col gap-2 rounded-lg p-3"
                   >
                     <div class="flex items-center justify-between">
                       <div class="text-sm">{pkg.name}</div>
                       <div class="flex items-center gap-2">
-                        <div class="rounded-full border border-border bg-foreground/5 px-2 py-1 text-xs text-muted-foreground">
+                        <div class="bg-foreground/5 rounded-full border border-border px-2 py-1 text-xs text-muted-foreground">
                           {pkg.version}
                         </div>
                         <InstallButton

@@ -1,9 +1,15 @@
-import { component$, createSignal, isBrowser, Signal,event$ } from "@qwik.dev/core";
+import {
+  component$,
+  createSignal,
+  isBrowser,
+  Signal,
+  event$,
+} from "@qwik.dev/core";
 import { HiMoonMini, HiSunMini } from "@qwikest/icons/heroicons";
 import { useDark } from "../../hooks/useDark";
-import { themeStorageKey } from '../router-head/theme-script';
+import { themeStorageKey } from "../router-head/theme-script";
 
-type ThemeName = 'dark' | 'light' | undefined;
+type ThemeName = "dark" | "light" | undefined;
 
 export const getTheme = (): ThemeName => {
   let theme;
@@ -15,20 +21,24 @@ export const getTheme = (): ThemeName => {
   if (theme) {
     return theme as ThemeName;
   } else {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   }
 };
 
 let currentThemeSignal: Signal<ThemeName>;
 export const getThemeSignal = () => {
   if (!isBrowser) {
-    throw new Error('getThemeSignal is only available in the browser');
+    throw new Error("getThemeSignal is only available in the browser");
   }
   if (!currentThemeSignal) {
     currentThemeSignal = createSignal(getTheme());
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      currentThemeSignal.value = getTheme();
-    });
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", () => {
+        currentThemeSignal.value = getTheme();
+      });
   }
   return currentThemeSignal;
 };
@@ -40,7 +50,7 @@ export const setTheme = (theme: ThemeName) => {
   } else {
     localStorage.setItem(themeStorageKey, theme);
   }
-  document.firstElementChild?.setAttribute('data-theme', theme!);
+  document.firstElementChild?.setAttribute("data-theme", theme!);
   if (currentThemeSignal) {
     currentThemeSignal.value = theme;
   }
@@ -50,12 +60,12 @@ export const ThemeToggle = component$(() => {
   const dark = useDark();
   const onClick$ = event$(() => {
     const currentTheme = getTheme();
-    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    setTheme(currentTheme === "dark" ? "light" : "dark");
   });
   return (
     <button
       onClick$={onClick$}
-      class="flex h-8 w-8 items-center justify-center rounded-md bg-background text-foreground hover:bg-accent/10"
+      class="hover:bg-accent/10 flex h-8 w-8 items-center justify-center rounded-md bg-background text-foreground"
     >
       {dark.isDark.value ? (
         <HiSunMini class="h-5 w-5" />

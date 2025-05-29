@@ -6,9 +6,8 @@ interface RoutesProps {
 }
 
 export const Routes = component$(({ state }: RoutesProps) => {
-
   return (
-    <div class="overflow-hidden rounded-xl border border-border flex-1">
+    <div class="flex-1 overflow-hidden rounded-xl border border-border">
       <div class="grid grid-cols-4 gap-4 bg-card-item-bg p-4 text-sm font-medium">
         <div>Route Path</div>
         <div>Name</div>
@@ -31,8 +30,7 @@ export const Routes = component$(({ state }: RoutesProps) => {
               <span
                 class={{
                   "text-accent":
-                    (location.pathname === "/" &&
-                      route.relativePath === "") ||
+                    (location.pathname === "/" && route.relativePath === "") ||
                     location.pathname === `/${route.relativePath}/`,
                 }}
               >

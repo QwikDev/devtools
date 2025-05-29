@@ -12,7 +12,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
     <>
       <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
         <div class="flex items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg">
-          <div class="rounded-lg border border-border bg-foreground/5 p-3.5">
+          <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
             <LuFolderTree class="h-6 w-6 text-accent" />
           </div>
           <div>
@@ -22,7 +22,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
         </div>
 
         <div class="flex items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg">
-          <div class="rounded-lg border border-border bg-foreground/5 p-3.5">
+          <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
             <HiCubeOutline class="h-6 w-6 text-accent" />
           </div>
           <div>
@@ -32,7 +32,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
         </div>
 
         <div class="flex items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg">
-          <div class="rounded-lg border border-border bg-foreground/5 p-3.5">
+          <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
             <HiPhotoOutline class="h-6 w-6 text-accent" />
           </div>
           <div>
@@ -48,10 +48,10 @@ export const Overview = component$(({ state }: OverviewProps) => {
           {state.npmPackages.map(([name, version]) => (
             <div
               key={name}
-              class="flex items-center justify-between rounded-lg bg-foreground/5 p-3"
+              class="bg-foreground/5 flex items-center justify-between rounded-lg p-3"
             >
               <div class="text-sm">{name}</div>
-              <div class="rounded-full border border-border bg-foreground/5 px-2 py-1 text-xs text-muted-foreground">
+              <div class="bg-foreground/5 rounded-full border border-border px-2 py-1 text-xs text-muted-foreground">
                 {version}
               </div>
             </div>

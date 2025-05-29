@@ -7,7 +7,7 @@ import {
   useTask$,
   isBrowser,
   useOnDocument,
-  $
+  sync$,
 } from "@qwik.dev/core";
 import { tryCreateHotContext } from "vite-hot-client";
 import {
@@ -15,7 +15,7 @@ import {
   HiCubeOutline,
   HiPhotoOutline,
   HiCodeBracketMini,
-  HiMegaphoneMini
+  HiMegaphoneMini,
 } from "@qwikest/icons/heroicons";
 import { LuFolderTree } from "@qwikest/icons/lucide";
 import {
@@ -61,63 +61,61 @@ export const QwikDevtools = component$(() => {
   });
 
   useOnDocument(
-    'qinit',
-    $(() => {
-      const scriptElement = document.createElement('script');
+    "DOMContentLoaded",
+    sync$(() => {
+      const scriptElement = document.createElement("script");
       scriptElement.innerHTML = ThemeScript();
-      document.body.appendChild(
-        scriptElement
-      );
-    })
+      document.head.prepend(scriptElement);
+    }),
   );
   // eslint-disable-next-line qwik/no-use-visible-task
   useTask$(async ({ track }) => {
     if (isBrowser) {
-    const hot = await tryCreateHotContext(undefined, ["/"]);
+      const hot = await tryCreateHotContext(undefined, ["/"]);
 
-    if (!hot) {
-      throw new Error("Vite Hot Context not connected");
-    }
-
-    setViteClientContext(hot);
-    createClientRpc(getClientRpcFunctions());
-
-    track(() => {
-      if (state.isOpen.value) {
-        const rpc = getViteClientRpc();
-        rpc.getAssetsFromPublicDir().then((data) => {
-          state.assets = data;
-        });
-        rpc.getComponents().then((data) => {
-          state.components = data;
-        });
-        rpc.getRoutes().then((data: RoutesInfo) => {
-          const children: RoutesInfo[] = data.children || [];
-          const directories: RoutesInfo[] = children.filter(
-            (child) => child.type === "directory",
-          );
-
-          const values: RoutesInfo[] = [
-            {
-              relativePath: "",
-              name: "index",
-              type: RouteType.DIRECTORY,
-              path: "",
-              isSymbolicLink: false,
-              children: undefined,
-            },
-            ...directories,
-          ];
-
-          state.routes = noSerialize(values);
-        });
-
-        rpc.getQwikPackages().then((data: NpmInfo) => {
-          state.npmPackages = data;
-        });
+      if (!hot) {
+        throw new Error("Vite Hot Context not connected");
       }
-    });
-  }
+
+      setViteClientContext(hot);
+      createClientRpc(getClientRpcFunctions());
+
+      track(() => {
+        if (state.isOpen.value) {
+          const rpc = getViteClientRpc();
+          rpc.getAssetsFromPublicDir().then((data) => {
+            state.assets = data;
+          });
+          rpc.getComponents().then((data) => {
+            state.components = data;
+          });
+          rpc.getRoutes().then((data: RoutesInfo) => {
+            const children: RoutesInfo[] = data.children || [];
+            const directories: RoutesInfo[] = children.filter(
+              (child) => child.type === "directory",
+            );
+
+            const values: RoutesInfo[] = [
+              {
+                relativePath: "",
+                name: "index",
+                type: RouteType.DIRECTORY,
+                path: "",
+                isSymbolicLink: false,
+                children: undefined,
+              },
+              ...directories,
+            ];
+
+            state.routes = noSerialize(values);
+          });
+
+          rpc.getQwikPackages().then((data: NpmInfo) => {
+            state.npmPackages = data;
+          });
+        }
+      });
+    }
   });
 
   return (
@@ -126,7 +124,7 @@ export const QwikDevtools = component$(() => {
 
       {true && (
         <DevtoolsPanel state={state}>
-          <div class="flex flex-col gap-2 border-r border-border bg-background/95 p-3">
+          <div class="bg-background/95 flex flex-col gap-2 border-r border-border p-3">
             <Tab state={state} id="overview" title="Overview">
               <HiBoltOutline class="h-5 w-5" />
             </Tab>
@@ -147,7 +145,7 @@ export const QwikDevtools = component$(() => {
             </Tab>
 
             <div class="mt-auto">
-                <ThemeToggle />
+              <ThemeToggle />
             </div>
           </div>
 
@@ -207,7 +205,7 @@ export const QwikDevtools = component$(() => {
             )}
             {state.activeTab === "inspect" && (
               <TabContent>
-                <Inspect  q:slot="content" />
+                <Inspect q:slot="content" />
               </TabContent>
             )}
           </div>
@@ -216,4 +214,3 @@ export const QwikDevtools = component$(() => {
     </DevtoolsContainer>
   );
 });
-
