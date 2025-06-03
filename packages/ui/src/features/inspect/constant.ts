@@ -1,1 +1,1 @@
-export const inspectorLink = "__inspect/";
+export const inspectorLink = '__inspect/';

@@ -45,7 +45,7 @@
   color: rgb(16 185 129 / var(--tw-bg-opacity, 1)) !important;
 }
 
-.rct-tree-item-button[aria-expanded="true"] {
+.rct-tree-item-button[aria-expanded='true'] {
   color: #fff !important;
 }
 

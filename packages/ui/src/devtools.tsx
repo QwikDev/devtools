@@ -8,16 +8,16 @@ import {
   isBrowser,
   useOnDocument,
   sync$,
-} from "@qwik.dev/core";
-import { tryCreateHotContext } from "vite-hot-client";
+} from '@qwik.dev/core';
+import { tryCreateHotContext } from 'vite-hot-client';
 import {
   HiBoltOutline,
   HiCubeOutline,
   HiPhotoOutline,
   HiCodeBracketMini,
   HiMegaphoneMini,
-} from "@qwikest/icons/heroicons";
-import { LuFolderTree } from "@qwikest/icons/lucide";
+} from '@qwikest/icons/heroicons';
+import { LuFolderTree } from '@qwikest/icons/lucide';
 import {
   createClientRpc,
   getViteClientRpc,
@@ -25,22 +25,22 @@ import {
   type NpmInfo,
   type RoutesInfo,
   RouteType,
-} from "@devtools/kit";
-import globalCss from "./global.css?inline";
-import { Tab } from "./components/Tab/Tab";
-import { TabContent } from "./components/TabContent/TabContent";
-import { Overview } from "./features/Overview/Overview";
-import { State } from "./types/state";
-import { Assets } from "./features/Assets/Assets";
-import { Routes } from "./features/Routes/Routes";
-import { TabTitle } from "./components/TabTitle/TabTitle";
-import { DevtoolsButton } from "./components/DevtoolsButton/DevtoolsButton";
-import { DevtoolsContainer } from "./components/DevtoolsContainer/DevtoolsContainer";
-import { DevtoolsPanel } from "./components/DevtoolsPanel/DevtoolsPanel";
-import { Packages } from "./features/Packages/Packages";
-import { Components } from "./features/Components/Components";
-import { Inspect } from "./features/inspect/Inspect";
-import { ThemeToggle } from "./components/ThemeToggle/ThemeToggle";
+} from '@devtools/kit';
+import globalCss from './global.css?inline';
+import { Tab } from './components/Tab/Tab';
+import { TabContent } from './components/TabContent/TabContent';
+import { Overview } from './features/Overview/Overview';
+import { State } from './types/state';
+import { Assets } from './features/Assets/Assets';
+import { Routes } from './features/Routes/Routes';
+import { TabTitle } from './components/TabTitle/TabTitle';
+import { DevtoolsButton } from './components/DevtoolsButton/DevtoolsButton';
+import { DevtoolsContainer } from './components/DevtoolsContainer/DevtoolsContainer';
+import { DevtoolsPanel } from './components/DevtoolsPanel/DevtoolsPanel';
+import { Packages } from './features/Packages/Packages';
+import { Components } from './features/Components/Components';
+import { Inspect } from './features/inspect/Inspect';
+import { ThemeToggle } from './components/ThemeToggle/ThemeToggle';
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -52,7 +52,7 @@ export const QwikDevtools = component$(() => {
 
   const state = useStore<State>({
     isOpen: useSignal(false),
-    activeTab: "overview",
+    activeTab: 'overview',
     npmPackages: [],
     assets: [],
     components: [],
@@ -60,21 +60,25 @@ export const QwikDevtools = component$(() => {
   });
 
   useOnDocument(
-    "DOMContentLoaded",
+    'DOMContentLoaded',
     sync$(() => {
-      const scriptElement = document.createElement("script");
-      scriptElement.innerHTML = `try {const p = localStorage.getItem('theme-preference');if (p) { document.documentElement.setAttribute('data-theme', p); }} catch (e) { }`.replace(/\s+/g, "");
-    
+      const scriptElement = document.createElement('script');
+      scriptElement.innerHTML =
+        `try {const p = localStorage.getItem('theme-preference');if (p) { document.documentElement.setAttribute('data-theme', p); }} catch (e) { }`.replace(
+          /\s+/g,
+          '',
+        );
+
       document.head.appendChild(scriptElement);
     }),
   );
   // eslint-disable-next-line qwik/no-use-visible-task
   useTask$(async ({ track }) => {
     if (isBrowser) {
-      const hot = await tryCreateHotContext(undefined, ["/"]);
+      const hot = await tryCreateHotContext(undefined, ['/']);
 
       if (!hot) {
-        throw new Error("Vite Hot Context not connected");
+        throw new Error('Vite Hot Context not connected');
       }
 
       setViteClientContext(hot);
@@ -92,15 +96,15 @@ export const QwikDevtools = component$(() => {
           rpc.getRoutes().then((data: RoutesInfo) => {
             const children: RoutesInfo[] = data.children || [];
             const directories: RoutesInfo[] = children.filter(
-              (child) => child.type === "directory",
+              (child) => child.type === 'directory',
             );
 
             const values: RoutesInfo[] = [
               {
-                relativePath: "",
-                name: "index",
+                relativePath: '',
+                name: 'index',
                 type: RouteType.DIRECTORY,
-                path: "",
+                path: '',
                 isSymbolicLink: false,
                 children: undefined,
               },
@@ -150,7 +154,7 @@ export const QwikDevtools = component$(() => {
           </div>
 
           <div class="custom-scrollbar flex-1 overflow-y-auto p-4">
-            {state.activeTab === "overview" && (
+            {state.activeTab === 'overview' && (
               <TabContent>
                 <div class="flex items-center gap-3" q:slot="title">
                   <img
@@ -165,18 +169,18 @@ export const QwikDevtools = component$(() => {
                 <Overview state={state} q:slot="content" />
               </TabContent>
             )}
-            {state.activeTab === "assets" && (
+            {state.activeTab === 'assets' && (
               <TabContent>
                 <TabTitle title="Public Assets" q:slot="title" />
                 <div class="flex gap-4 text-sm text-muted-foreground">
                   <span>
-                    Total Size:{" "}
+                    Total Size:{' '}
                     {(
                       state.assets?.reduce(
                         (acc, asset) => acc + asset.size,
                         0,
                       ) / 1024
-                    ).toFixed(2)}{" "}
+                    ).toFixed(2)}{' '}
                     KB
                   </span>
                   <span>Count: {state.assets?.length || 0}</span>
@@ -185,25 +189,25 @@ export const QwikDevtools = component$(() => {
                 <Assets state={state} q:slot="content" />
               </TabContent>
             )}
-            {state.activeTab === "packages" && (
+            {state.activeTab === 'packages' && (
               <TabContent>
                 <TabTitle title="Install an npm package" q:slot="title" />
                 <Packages q:slot="content" />
               </TabContent>
             )}
-            {state.activeTab === "routes" && (
+            {state.activeTab === 'routes' && (
               <TabContent>
                 <TabTitle title="Application Routes" q:slot="title" />
                 <Routes state={state} q:slot="content" />
               </TabContent>
             )}
-            {state.activeTab === "components" && (
+            {state.activeTab === 'components' && (
               <TabContent>
                 <TabTitle title="Components Tree" q:slot="title" />
                 <Components q:slot="content" />
               </TabContent>
             )}
-            {state.activeTab === "inspect" && (
+            {state.activeTab === 'inspect' && (
               <TabContent>
                 <Inspect q:slot="content" />
               </TabContent>

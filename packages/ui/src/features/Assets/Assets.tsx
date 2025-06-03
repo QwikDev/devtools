@@ -1,5 +1,5 @@
-import { component$ } from "@qwik.dev/core";
-import { State } from "../../types/state";
+import { component$ } from '@qwik.dev/core';
+import { State } from '../../types/state';
 
 interface AssetsProps {
   state: State;
@@ -10,7 +10,7 @@ export const Assets = component$(({ state }: AssetsProps) => {
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {state.assets?.map((asset) => {
         const isImage = asset.path.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i);
-        const fileExt = asset.path.split(".").pop()?.toUpperCase();
+        const fileExt = asset.path.split('.').pop()?.toUpperCase();
 
         return (
           <div
@@ -36,7 +36,7 @@ export const Assets = component$(({ state }: AssetsProps) => {
             )}
             <div class="space-y-2 p-4">
               <div class="truncate text-sm" title={asset.path}>
-                {asset.path.split("/").pop()}
+                {asset.path.split('/').pop()}
               </div>
               <div class="flex items-center justify-between text-xs text-muted-foreground">
                 <span>{(asset.size / 1024).toFixed(2)} KB</span>

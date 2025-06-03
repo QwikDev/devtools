@@ -1,6 +1,6 @@
-import { $, QRL } from "@qwik.dev/core";
+import { $, QRL } from '@qwik.dev/core';
 
-import { useSignal } from "@qwik.dev/core";
+import { useSignal } from '@qwik.dev/core';
 
 export const useDebouncer = <A extends readonly unknown[], R>(
   fn: QRL<(...args: [...A]) => R>,

@@ -1,11 +1,11 @@
 /** @jsxImportSource react */
 //@ts-nocheck
-import { qwikify$ } from "@qwik.dev/react";
+import { qwikify$ } from '@qwik.dev/react';
 import {
   UncontrolledTreeEnvironment,
   Tree,
   StaticTreeDataProvider,
-} from "react-complex-tree";
+} from 'react-complex-tree';
 
 const readTemplate = (template: any, data: any = { items: {} }) => {
   for (const [key, value] of Object.entries(template)) {
@@ -27,9 +27,9 @@ const readTemplate = (template: any, data: any = { items: {} }) => {
 
 const longTree = {
   root: {
-    "<QwikRouterProvider />": {
-      "<RouterHead />": null,
-      "<RouterOutlet />": null,
+    '<QwikRouterProvider />': {
+      '<RouterHead />': null,
+      '<RouterOutlet />': null,
     },
   },
 };
@@ -53,7 +53,7 @@ function Greetings() {
       canDropOnFolder={false}
       canDropOnNonFolder={false}
       viewState={{
-        "tree-1": {
+        'tree-1': {
           expandedItems: [],
         },
       }}
@@ -64,4 +64,4 @@ function Greetings() {
 }
 
 // Convert React component to Qwik component
-export const QGreetings = qwikify$(Greetings, { eagerness: "load" });
+export const QGreetings = qwikify$(Greetings, { eagerness: 'load' });

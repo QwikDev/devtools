@@ -1,5 +1,5 @@
-import { component$, useSignal, $, useTask$ } from "@qwik.dev/core";
-import type { State } from "../../types/state"; // Assuming State type is defined elsewhere
+import { component$, useSignal, $, useTask$ } from '@qwik.dev/core';
+import type { State } from '../../types/state'; // Assuming State type is defined elsewhere
 
 interface DevtoolsButtonProps {
   state: State;
@@ -74,12 +74,12 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
   // Effect to add/remove window event listeners based on dragging state
   useTask$(({ track, cleanup }) => {
     track(() => isDragging.value);
-    if (isDragging.value && typeof window !== "undefined") {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
+    if (isDragging.value && typeof window !== 'undefined') {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
       cleanup(() => {
-        window.removeEventListener("mousemove", handleMouseMove);
-        window.removeEventListener("mouseup", handleMouseUp);
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
       });
     }
   });
@@ -88,19 +88,19 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     <div
       ref={elementRef}
       class={{
-        "fixed flex h-9 w-9 origin-center select-none items-center justify-center rounded-lg border border-border bg-background backdrop-blur-md":
+        'fixed flex h-9 w-9 origin-center select-none items-center justify-center rounded-lg border border-border bg-background backdrop-blur-md':
           true,
-        "border-accent/50 bg-background/95 shadow-accent/35 rotate-90 shadow-lg":
+        'border-accent/50 bg-background/95 shadow-accent/35 rotate-90 shadow-lg':
           state.isOpen.value && !isDragging.value,
-        "cursor-grab": !isDragging.value,
-        "cursor-grabbing": isDragging.value,
-        "transition-all duration-300 ease-in-out": !isDragging.value,
+        'cursor-grab': !isDragging.value,
+        'cursor-grabbing': isDragging.value,
+        'transition-all duration-300 ease-in-out': !isDragging.value,
       }}
       style={{
         bottom: `${position.value.y}px`,
         right: `${position.value.x}px`,
-        userSelect: isDragging.value ? "none" : undefined,
-        transition: isDragging.value ? "none" : undefined,
+        userSelect: isDragging.value ? 'none' : undefined,
+        transition: isDragging.value ? 'none' : undefined,
       }}
       onMouseDown$={handleMouseDown}
     >

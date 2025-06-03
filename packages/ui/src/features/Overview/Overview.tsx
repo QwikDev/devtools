@@ -1,7 +1,7 @@
-import { component$ } from "@qwik.dev/core";
-import { HiCubeOutline, HiPhotoOutline } from "@qwikest/icons/heroicons";
-import { LuFolderTree } from "@qwikest/icons/lucide";
-import { State } from "../../types/state";
+import { component$ } from '@qwik.dev/core';
+import { HiCubeOutline, HiPhotoOutline } from '@qwikest/icons/heroicons';
+import { LuFolderTree } from '@qwikest/icons/lucide';
+import { State } from '../../types/state';
 
 interface OverviewProps {
   state: State;

@@ -4,13 +4,13 @@ import {
   Resource,
   useResource$,
   useSignal,
-} from "@qwik.dev/core";
-import { useDebouncer } from "../../hooks/useDebouncer";
-import { Package } from "./types";
-import { InstallButton } from "./components/InstallButton/InstallButton";
+} from '@qwik.dev/core';
+import { useDebouncer } from '../../hooks/useDebouncer';
+import { Package } from './types';
+import { InstallButton } from './components/InstallButton/InstallButton';
 
 export const Packages = component$(() => {
-  const debouncedQuery = useSignal("");
+  const debouncedQuery = useSignal('');
   const installingPackage = useSignal<string | null>(null);
 
   const debounceSearch = useDebouncer(
@@ -34,7 +34,7 @@ export const Packages = component$(() => {
     const packages: Package[] = data.objects.map((obj: any) => ({
       name: obj.package.name,
       version: obj.package.version,
-      description: obj.package.description || "No description available",
+      description: obj.package.description || 'No description available',
     }));
     return packages;
   });
@@ -61,7 +61,7 @@ export const Packages = component$(() => {
         )}
         onRejected={(error) => (
           <div class="mt-2 text-xs text-red-400">
-            {error.message || "Failed to fetch packages"}
+            {error.message || 'Failed to fetch packages'}
           </div>
         )}
         onResolved={(packages) => {

@@ -1,5 +1,5 @@
-import { component$ } from "@qwik.dev/core";
-import { State } from "../../types/state";
+import { component$ } from '@qwik.dev/core';
+import { State } from '../../types/state';
 
 interface RoutesProps {
   state: State;
@@ -17,9 +17,9 @@ export const Routes = component$(({ state }: RoutesProps) => {
       {state.routes?.map((route, i) => {
         const children = route.children || [];
         const layout =
-          route.relativePath !== "" &&
-          route.type === "directory" &&
-          children.find((child) => child.name.startsWith("layout"));
+          route.relativePath !== '' &&
+          route.type === 'directory' &&
+          children.find((child) => child.name.startsWith('layout'));
 
         return (
           <div
@@ -29,12 +29,12 @@ export const Routes = component$(({ state }: RoutesProps) => {
             <div>
               <span
                 class={{
-                  "text-accent":
-                    (location.pathname === "/" && route.relativePath === "") ||
+                  'text-accent':
+                    (location.pathname === '/' && route.relativePath === '') ||
                     location.pathname === `/${route.relativePath}/`,
                 }}
               >
-                {route.relativePath === "" ? "/" : `/${route.relativePath}/`}
+                {route.relativePath === '' ? '/' : `/${route.relativePath}/`}
               </span>
             </div>
             <div class="text-muted-foreground">{route.name}</div>
@@ -42,11 +42,11 @@ export const Routes = component$(({ state }: RoutesProps) => {
             <div>
               <span
                 class={{
-                  "text-accent": layout && i > 0,
-                  "text-muted-foreground": !layout || i === 0,
+                  'text-accent': layout && i > 0,
+                  'text-muted-foreground': !layout || i === 0,
                 }}
               >
-                {layout && i > 0 ? `${route.relativePath}/layout` : "default"}
+                {layout && i > 0 ? `${route.relativePath}/layout` : 'default'}
               </span>
             </div>
           </div>

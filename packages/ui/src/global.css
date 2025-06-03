@@ -6,7 +6,7 @@
 @tailwind components;
 @tailwind utilities;
 :root {
-  --theme-name: "light";
+  --theme-name: 'light';
   --color-background: #ffffff;
   --color-foreground: #000000;
   --color-primary: #3b82f6;
@@ -39,8 +39,8 @@
   --color-ring: var(--color-primary); /* Alias to primary */
 }
 
-:root[data-theme="dark"] {
-  --theme-name: "dark";
+:root[data-theme='dark'] {
+  --theme-name: 'dark';
   --color-background: #18181b;
   --color-foreground: #ffffff;
   --color-primary: #2563eb; /* Tailwind's primary.dark */
@@ -69,7 +69,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --theme-name: "dark";
+    --theme-name: 'dark';
     --color-background: #18181b;
     --color-foreground: #ffffff;
     --color-primary: #2563eb; /* Tailwind's primary.dark */

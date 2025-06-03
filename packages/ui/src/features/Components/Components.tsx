@@ -1,11 +1,11 @@
-import { $, component$, useSignal, useStyles$ } from "@qwik.dev/core";
-import { QGreetings } from "./components/Tree";
-import reactTreeCss from "react-complex-tree/lib/style-modern.css?inline";
-import styles from "./styles.css?inline";
+import { $, component$, useSignal, useStyles$ } from '@qwik.dev/core';
+import { QGreetings } from './components/Tree';
+import reactTreeCss from 'react-complex-tree/lib/style-modern.css?inline';
+import styles from './styles.css?inline';
 
 export interface ComponentStateStore {
   [key: string]: {
-    type: "signal" | "store";
+    type: 'signal' | 'store';
     value: any;
   };
 }
@@ -75,20 +75,20 @@ const ComponentStoreUpdate = component$<{
   return (
     <div class="mt-2 flex w-1/2 flex-col font-mono text-foreground">
       {Object.keys(value).map((key) => {
-        if (value[key].type === "signal") {
+        if (value[key].type === 'signal') {
           return (
             <div class="flex flex-col" key={key}>
               <h2 class="text-lg font-bold">Signal: {key}</h2>
               <input
                 class="mt-2 rounded-md border border-border bg-transparent p-2 font-mono text-foreground"
-                type={typeof value[key].value === "string" ? "text" : "number"}
+                type={typeof value[key].value === 'string' ? 'text' : 'number'}
                 bind:value={value[key].value}
               />
             </div>
           );
         }
 
-        if (value[key].type === "store") {
+        if (value[key].type === 'store') {
           return (
             <div class="flex flex-col" key={key}>
               <h2 class="text-lg font-bold">Store: {key}</h2>
@@ -98,14 +98,14 @@ const ComponentStoreUpdate = component$<{
                   <input
                     class="mt-2 rounded-md border border-border bg-transparent p-2 font-mono text-foreground"
                     type={
-                      typeof value[key].value[storeKey] === "string"
-                        ? "text"
-                        : "number"
+                      typeof value[key].value[storeKey] === 'string'
+                        ? 'text'
+                        : 'number'
                     }
                     value={value[key].value[storeKey]}
                     onChange$={(_, e) => {
                       value[key].value[storeKey] =
-                        typeof value[key].value[storeKey] === "string"
+                        typeof value[key].value[storeKey] === 'string'
                           ? e.value
                           : Number(e.value);
                     }}

@@ -1,4 +1,4 @@
-import { component$, Slot } from "@qwik.dev/core";
+import { component$, Slot } from '@qwik.dev/core';
 
 export const TabContent = component$(() => {
   return (
