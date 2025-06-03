@@ -6,8 +6,6 @@ import {
   useSignal,
   useTask$,
   isBrowser,
-  useOnDocument,
-  sync$,
 } from '@qwik.dev/core';
 import { tryCreateHotContext } from 'vite-hot-client';
 import {
@@ -41,6 +39,7 @@ import { Packages } from './features/Packages/Packages';
 import { Components } from './features/Components/Components';
 import { Inspect } from './features/inspect/Inspect';
 import { ThemeToggle } from './components/ThemeToggle/ThemeToggle';
+import { ThemeScript } from './components/ThemeToggle/theme-script';
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -59,19 +58,6 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
 
-  useOnDocument(
-    'DOMContentLoaded',
-    sync$(() => {
-      const scriptElement = document.createElement('script');
-      scriptElement.innerHTML =
-        `try {const p = localStorage.getItem('theme-preference');if (p) { document.documentElement.setAttribute('data-theme', p); }} catch (e) { }`.replace(
-          /\s+/g,
-          '',
-        );
-
-      document.head.appendChild(scriptElement);
-    }),
-  );
   // eslint-disable-next-line qwik/no-use-visible-task
   useTask$(async ({ track }) => {
     if (isBrowser) {
@@ -123,7 +109,10 @@ export const QwikDevtools = component$(() => {
   });
 
   return (
+    <>
+    <ThemeScript/>
     <DevtoolsContainer>
+      
       <DevtoolsButton state={state} />
 
       {state.isOpen.value && (
@@ -216,5 +205,6 @@ export const QwikDevtools = component$(() => {
         </DevtoolsPanel>
       )}
     </DevtoolsContainer>
+    </>
   );
 });
