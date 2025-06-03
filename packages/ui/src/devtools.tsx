@@ -41,7 +41,6 @@ import { Packages } from "./features/Packages/Packages";
 import { Components } from "./features/Components/Components";
 import { Inspect } from "./features/inspect/Inspect";
 import { ThemeToggle } from "./components/ThemeToggle/ThemeToggle";
-import { ThemeScript } from "./components/router-head/theme-script";
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -123,7 +122,7 @@ export const QwikDevtools = component$(() => {
     <DevtoolsContainer>
       <DevtoolsButton state={state} />
 
-      {true && (
+      {state.isOpen.value && (
         <DevtoolsPanel state={state}>
           <div class="bg-background/95 flex flex-col gap-2 border-r border-border p-3">
             <Tab state={state} id="overview" title="Overview">
