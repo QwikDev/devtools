@@ -1,16 +1,18 @@
 import {
   component$,
   createSignal,
-  isBrowser,
   Signal,
   event$,
+  isServer,
 } from '@qwik.dev/core';
-import {  HiSunMini } from '@qwikest/icons/heroicons';
 import { themeStorageKey } from '../router-head/theme-script';
 
-type ThemeName = 'dark' | 'light' | undefined;
+type ThemeName = 'dark' | 'light' | 'auto';
 
 export const getTheme = (): ThemeName => {
+  if (isServer) {
+    return 'auto';
+  }
   let theme;
   try {
     theme = localStorage.getItem(themeStorageKey);
@@ -28,7 +30,7 @@ export const getTheme = (): ThemeName => {
 
 let currentThemeSignal: Signal<ThemeName>;
 export const getThemeSignal = () => {
-  if (!isBrowser) {
+  if (isServer) {
     throw new Error('getThemeSignal is only available in the browser');
   }
   if (!currentThemeSignal) {
@@ -43,30 +45,44 @@ export const getThemeSignal = () => {
 };
 
 export const setTheme = (theme: ThemeName) => {
-  if (!theme) {
-    localStorage.removeItem(themeStorageKey);
-    theme = getTheme();
+  if (theme === 'auto') {
+    document.firstElementChild?.removeAttribute('data-theme');
   } else {
-    localStorage.setItem(themeStorageKey, theme);
+    document.firstElementChild?.setAttribute('data-theme', theme!);
   }
-  document.firstElementChild?.setAttribute('data-theme', theme!);
+
+  localStorage.setItem(themeStorageKey, theme);
+  
   if (currentThemeSignal) {
     currentThemeSignal.value = theme;
   }
 };
 
 export const ThemeToggle = component$(() => {
-  const onClick$ = event$(() => {
-    const currentTheme = getTheme();
-    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  const themeValue =  createSignal(getTheme());
+  const onClick$ = event$((_:any, e:any) => {
+    if(e.value === 'auto'){
+      setTheme('auto')
+      themeValue.value = e.value
+    }else {
+      setTheme(e.value);
+      themeValue.value = e.value
+    }
   });
+
   return (
-    <button
-      onClick$={onClick$}
-      class="hover:bg-accent/10 flex h-8 w-8 items-center justify-center rounded-md bg-background text-foreground"
-    >
-      {/* {true ? <HiSunMini class="h-5 w-5" /> : <HiMoonMini class="h-5 w-5" />} */}
-      <HiSunMini class="h-5 w-5" /> 
-    </button>
+    <div class="theme-control" /* 你可能需要一个包装器 */>
+      <label for="theme-select" class="sr-only"> {/* 可选: 屏幕阅读器标签 */}
+        Choose a theme
+      </label>
+      <select 
+        class="w-10 rounded-lg border border-border bg-background px-1 py-2 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-ring"
+        onInput$={onClick$}
+      >
+        <option value="dark" selected={themeValue.value === 'dark'}>Dark</option>
+        <option value="light" selected={themeValue.value === 'light'}>Light</option>
+        <option value="auto" selected={themeValue.value === 'auto'}>Auto</option>
+      </select>
+    </div>
   );
 });
