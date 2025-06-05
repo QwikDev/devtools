@@ -52,36 +52,44 @@ export const setTheme = (theme: ThemeName) => {
   }
 
   localStorage.setItem(themeStorageKey, theme);
-  
+
   if (currentThemeSignal) {
     currentThemeSignal.value = theme;
   }
 };
 
 export const ThemeToggle = component$(() => {
-  const themeValue =  createSignal(getTheme());
-  const onClick$ = event$((_:any, e:any) => {
-    if(e.value === 'auto'){
-      setTheme('auto')
-      themeValue.value = e.value
-    }else {
+  const themeValue = createSignal(getTheme());
+  const onClick$ = event$((_: any, e: any) => {
+    if (e.value === 'auto') {
+      setTheme('auto');
+      themeValue.value = e.value;
+    } else {
       setTheme(e.value);
-      themeValue.value = e.value
+      themeValue.value = e.value;
     }
   });
 
   return (
     <div class="theme-control" /* 你可能需要一个包装器 */>
-      <label for="theme-select" class="sr-only"> {/* 可选: 屏幕阅读器标签 */}
+      <label for="theme-select" class="sr-only">
+        {' '}
+        {/* 可选: 屏幕阅读器标签 */}
         Choose a theme
       </label>
-      <select 
+      <select
         class="w-10 rounded-lg border border-border bg-background px-1 py-2 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-ring"
         onInput$={onClick$}
       >
-        <option value="dark" selected={themeValue.value === 'dark'}>Dark</option>
-        <option value="light" selected={themeValue.value === 'light'}>Light</option>
-        <option value="auto" selected={themeValue.value === 'auto'}>Auto</option>
+        <option value="dark" selected={themeValue.value === 'dark'}>
+          Dark
+        </option>
+        <option value="light" selected={themeValue.value === 'light'}>
+          Light
+        </option>
+        <option value="auto" selected={themeValue.value === 'auto'}>
+          Auto
+        </option>
       </select>
     </div>
   );

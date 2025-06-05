@@ -1,4 +1,4 @@
-import { themeStorageKey } from "../router-head/theme-script";
+import { themeStorageKey } from '../router-head/theme-script';
 
 export const ThemeScript = () => {
   const themeScript = `
@@ -13,4 +13,4 @@ export const ThemeScript = () => {
           
         } catch (err) { }`;
   return <script dangerouslySetInnerHTML={themeScript} />;
-}
+};
