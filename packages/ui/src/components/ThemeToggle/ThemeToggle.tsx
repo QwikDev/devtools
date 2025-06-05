@@ -22,9 +22,8 @@ export const getTheme = (): ThemeName => {
   if (theme) {
     return theme as ThemeName;
   } else {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
+    // should be 'auto' when no theme is set
+    return 'auto'
   }
 };
 
