@@ -61,20 +61,13 @@ export const setTheme = (theme: ThemeName) => {
 export const ThemeToggle = component$(() => {
   const themeValue = createSignal(getTheme());
   const onClick$ = event$((_: any, e: any) => {
-    if (e.value === 'auto') {
-      setTheme('auto');
-      themeValue.value = e.value;
-    } else {
-      setTheme(e.value);
-      themeValue.value = e.value;
-    }
+    setTheme(e.value);
+    themeValue.value = e.value;
   });
 
   return (
-    <div class="theme-control" /* 你可能需要一个包装器 */>
+    <div class="theme-control">
       <label for="theme-select" class="sr-only">
-        {' '}
-        {/* 可选: 屏幕阅读器标签 */}
         Choose a theme
       </label>
       <select

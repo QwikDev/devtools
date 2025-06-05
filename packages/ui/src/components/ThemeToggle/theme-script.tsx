@@ -4,10 +4,9 @@ export const ThemeScript = () => {
   const themeScript = `
         try {
           const getItem = localStorage.getItem('${themeStorageKey}')
-          if(getItem !== 'auto'){
+          if(getItem === 'light' || getItem === 'dark'){
               document.firstElementChild
-              .setAttribute('data-theme',
-                  getItem ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+              .setAttribute('data-theme', getItem)
               );
           }
           
