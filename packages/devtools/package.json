@@ -22,8 +22,8 @@
   ],
   "peerDependencies": {
     "vite": "^6.2.6",
-    "@qwik.dev/core": "^2.0.0-alpha.9",
-    "@qwik.dev/router": "^2.0.0-alpha.9"
+    "@qwik.dev/core": "^2.0.0-beta.1",
+    "@qwik.dev/router": "^2.0.0-beta.1"
   },
   "dependencies": {
     "birpc": "^0.2.19",

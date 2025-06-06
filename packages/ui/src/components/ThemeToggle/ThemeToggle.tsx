@@ -6,6 +6,11 @@ import {
   isServer,
 } from '@qwik.dev/core';
 import { themeStorageKey } from '../router-head/theme-script';
+import {
+  HiSunOutline,
+  HiMoonOutline,
+  HiStopCircleOutline,
+} from '@qwikest/icons/heroicons';
 
 type ThemeName = 'dark' | 'light' | 'auto';
 
@@ -23,7 +28,7 @@ export const getTheme = (): ThemeName => {
     return theme as ThemeName;
   } else {
     // should be 'auto' when no theme is set
-    return 'auto'
+    return 'auto';
   }
 };
 
@@ -59,30 +64,44 @@ export const setTheme = (theme: ThemeName) => {
 
 export const ThemeToggle = component$(() => {
   const themeValue = createSignal(getTheme());
-  const onClick$ = event$((_: any, e: any) => {
-    setTheme(e.value);
-    themeValue.value = e.value;
+  const onClick$ = event$(() => {
+    let newTheme = getTheme();
+    console.log('Theme changed to:', newTheme);
+    if (newTheme === 'dark') {
+      newTheme = 'light';
+      setTheme(newTheme);
+    } else if (newTheme === 'light') {
+      newTheme = 'auto';
+      setTheme(newTheme);
+    } else {
+      newTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'light'
+        : 'dark';
+      setTheme(newTheme);
+    }
+    console.log('New theme set:', newTheme);
+
+    themeValue.value = newTheme;
   });
 
   return (
-    <div class="theme-control">
-      <label for="theme-select" class="sr-only">
-        Choose a theme
-      </label>
-      <select
-        class="w-10 rounded-lg border border-border bg-background px-1 py-2 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-ring"
-        onInput$={onClick$}
+    <>
+      <button
+        onClick$={onClick$}
+        class="group flex h-8 w-8 items-center justify-center rounded-md bg-background text-foreground hover:opacity-60"
       >
-        <option value="dark" selected={themeValue.value === 'dark'}>
-          Dark
-        </option>
-        <option value="light" selected={themeValue.value === 'light'}>
-          Light
-        </option>
-        <option value="auto" selected={themeValue.value === 'auto'}>
-          Auto
-        </option>
-      </select>
-    </div>
+        <div class="transition-transform duration-200 ease-out group-hover:scale-110 group-active:scale-75">
+          {themeValue.value === 'light' && (
+            <HiSunOutline class="animate-in zoom-in-50 h-5 w-5 duration-300 ease-out" />
+          )}
+          {themeValue.value === 'dark' && (
+            <HiMoonOutline class="animate-in zoom-in-50 h-5 w-5 duration-300 ease-out" />
+          )}
+          {themeValue.value === 'auto' && (
+            <HiStopCircleOutline class="animate-in zoom-in-50 h-5 w-5 duration-300 ease-out" />
+          )}
+        </div>
+      </button>
+    </>
   );
 });
