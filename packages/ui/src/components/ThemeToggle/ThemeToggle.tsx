@@ -66,7 +66,6 @@ export const ThemeToggle = component$(() => {
   const themeValue = createSignal(getTheme());
   const onClick$ = event$(() => {
     let newTheme = getTheme();
-    console.log('Theme changed to:', newTheme);
     if (newTheme === 'dark') {
       newTheme = 'light';
       setTheme(newTheme);
@@ -79,8 +78,6 @@ export const ThemeToggle = component$(() => {
         : 'dark';
       setTheme(newTheme);
     }
-    console.log('New theme set:', newTheme);
-
     themeValue.value = newTheme;
   });
 

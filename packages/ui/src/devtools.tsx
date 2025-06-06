@@ -58,8 +58,7 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
 
-  // eslint-disable-next-line qwik/no-use-visible-task
-  useTask$(async ({ track }) => {
+  useTask$(async ({ track }: any) => {
     if (isBrowser) {
       const hot = await tryCreateHotContext(undefined, ['/']);
 
