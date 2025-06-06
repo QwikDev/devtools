@@ -58,7 +58,7 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
 
-  useTask$(async ({ track }: any) => {
+  useTask$(async ({ track }) => {
     if (isBrowser) {
       const hot = await tryCreateHotContext(undefined, ['/']);
 

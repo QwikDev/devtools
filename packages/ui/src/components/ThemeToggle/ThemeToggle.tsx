@@ -1,7 +1,6 @@
 import {
   component$,
   createSignal,
-  Signal,
   event$,
   isServer,
 } from '@qwik.dev/core';
@@ -32,22 +31,6 @@ export const getTheme = (): ThemeName => {
   }
 };
 
-let currentThemeSignal: Signal<ThemeName>;
-export const getThemeSignal = () => {
-  if (isServer) {
-    throw new Error('getThemeSignal is only available in the browser');
-  }
-  if (!currentThemeSignal) {
-    currentThemeSignal = createSignal(getTheme());
-    window
-      .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', () => {
-        currentThemeSignal.value = getTheme();
-      });
-  }
-  return currentThemeSignal;
-};
-
 export const setTheme = (theme: ThemeName) => {
   if (theme === 'auto') {
     document.firstElementChild?.removeAttribute('data-theme');
@@ -57,9 +40,6 @@ export const setTheme = (theme: ThemeName) => {
 
   localStorage.setItem(themeStorageKey, theme);
 
-  if (currentThemeSignal) {
-    currentThemeSignal.value = theme;
-  }
 };
 
 export const ThemeToggle = component$(() => {
