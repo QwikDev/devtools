@@ -1,8 +1,8 @@
 import {
   component$,
-  createSignal,
   event$,
   isServer,
+  useStyles$
 } from '@qwik.dev/core';
 import { themeStorageKey } from '../router-head/theme-script';
 import {
@@ -10,6 +10,10 @@ import {
   HiMoonOutline,
   HiStopCircleOutline,
 } from '@qwikest/icons/heroicons';
+import {
+  BsBrilliance
+} from '@qwikest/icons/bootstrap';
+import themeTogglecss from './themToggle.css?inline';
 
 type ThemeName = 'dark' | 'light' | 'auto';
 
@@ -43,40 +47,31 @@ export const setTheme = (theme: ThemeName) => {
 };
 
 export const ThemeToggle = component$(() => {
-  const themeValue = createSignal(getTheme());
+  useStyles$(themeTogglecss)
   const onClick$ = event$(() => {
-    let newTheme = getTheme();
-    if (newTheme === 'dark') {
-      newTheme = 'light';
-      setTheme(newTheme);
-    } else if (newTheme === 'light') {
-      newTheme = 'auto';
-      setTheme(newTheme);
+    let currentTheme = getTheme();
+    if (currentTheme === 'dark') {
+      currentTheme = 'light';
+    } else if (currentTheme === 'light') {
+      currentTheme = 'auto';
     } else {
-      newTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+      currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'light'
         : 'dark';
-      setTheme(newTheme);
     }
-    themeValue.value = newTheme;
+    setTheme(currentTheme);
   });
 
   return (
     <>
       <button
         onClick$={onClick$}
-        class="group flex h-8 w-8 items-center justify-center rounded-md bg-background text-foreground hover:opacity-60"
+        class="group flex h-8 w-8 items-center justify-center rounded-md bg-background text-foreground hover:opacity-60 relative"
       >
-        <div class="transition-transform duration-200 ease-out group-hover:scale-110 group-active:scale-75">
-          {themeValue.value === 'light' && (
-            <HiSunOutline class="animate-in zoom-in-50 h-5 w-5 duration-300 ease-out" />
-          )}
-          {themeValue.value === 'dark' && (
-            <HiMoonOutline class="animate-in zoom-in-50 h-5 w-5 duration-300 ease-out" />
-          )}
-          {themeValue.value === 'auto' && (
-            <HiStopCircleOutline class="animate-in zoom-in-50 h-5 w-5 duration-300 ease-out" />
-          )}
+        <div class="absolute inset-0 grid place-items-center transition-transform duration-200 ease-out group-hover:scale-110 group-active:scale-75">
+          <HiSunOutline class="themeIcon light col-start-1 row-start-1" />
+          <HiMoonOutline class="themeIcon dark col-start-1 row-start-1" />
+          <BsBrilliance class="themeIcon auto col-start-1 row-start-1" />
         </div>
       </button>
     </>
