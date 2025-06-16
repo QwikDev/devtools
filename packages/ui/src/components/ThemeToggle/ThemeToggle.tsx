@@ -19,12 +19,7 @@ export const getTheme = (): ThemeName => {
   } catch {
     //
   }
-  if (theme) {
-    return theme as ThemeName;
-  } else {
-    // should be 'auto' when no theme is set
-    return 'auto';
-  }
+  return theme as ThemeName || 'auto'
 };
 
 export const setTheme = (theme: ThemeName) => {
