@@ -4,8 +4,8 @@ import {
   noSerialize,
   useStyles$,
   useSignal,
-  useTask$,
-  isBrowser,
+  isServer,
+  useVisibleTask$,
 } from '@qwik.dev/core';
 import { tryCreateHotContext } from 'vite-hot-client';
 import {
@@ -58,8 +58,7 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
 
-  useTask$(async ({ track }) => {
-    if (isBrowser) {
+  useVisibleTask$(async ({ track }) => {
       const hot = await tryCreateHotContext(undefined, ['/']);
 
       if (!hot) {
@@ -104,7 +103,6 @@ export const QwikDevtools = component$(() => {
           });
         }
       });
-    }
   });
 
   return (
