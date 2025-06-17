@@ -10,11 +10,14 @@ import {
 import { tryCreateHotContext } from 'vite-hot-client';
 import {
   HiBoltOutline,
-  HiCubeOutline,
   HiPhotoOutline,
   HiCodeBracketMini,
   HiMegaphoneMini,
+  HiCubeOutline,
 } from '@qwikest/icons/heroicons';
+import {
+  BsDiagram3
+} from '@qwikest/icons/bootstrap';
 import { LuFolderTree } from '@qwikest/icons/lucide';
 import {
   createClientRpc,
@@ -32,6 +35,7 @@ import { State } from './types/state';
 import { Assets } from './features/Assets/Assets';
 import { Routes } from './features/Routes/Routes';
 import { TabTitle } from './components/TabTitle/TabTitle';
+import {RenderTree} from './features/RenderTree/RenderTree'
 import { DevtoolsButton } from './components/DevtoolsButton/DevtoolsButton';
 import { DevtoolsContainer } from './components/DevtoolsContainer/DevtoolsContainer';
 import { DevtoolsPanel } from './components/DevtoolsPanel/DevtoolsPanel';
@@ -120,6 +124,9 @@ export const QwikDevtools = component$(() => {
               <Tab state={state} id="packages" title="Packages">
                 <HiCubeOutline class="h-5 w-5" />
               </Tab>
+              <Tab state={state} id="renderTree" title="renderTree">
+                <BsDiagram3 class="h-5 w-5" />
+              </Tab>
               <Tab state={state} id="routes" title="Routes">
                 <LuFolderTree class="h-5 w-5" />
               </Tab>
@@ -195,6 +202,12 @@ export const QwikDevtools = component$(() => {
               {state.activeTab === 'inspect' && (
                 <TabContent>
                   <Inspect q:slot="content" />
+                </TabContent>
+              )}
+              {state.activeTab === 'renderTree' && (
+                <TabContent >
+                  <TabTitle title="render Tree" q:slot="title" />
+                  <RenderTree q:slot="content" />
                 </TabContent>
               )}
             </div>
