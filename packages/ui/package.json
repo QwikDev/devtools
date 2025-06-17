@@ -8,6 +8,7 @@
       "import": "./lib/index.qwik.mjs"
     }
   },
+  "types": "./lib-types/ui/src/index.d.ts",
   "files": [
     "lib",
     "lib-types"
@@ -33,11 +34,12 @@
     "qwik": "qwik"
   },
   "peerDependencies": {
-    "@qwik.dev/core": "^2.0.0-alpha.9"
+    "@qwik.dev/core": "^2.0.0-beta.1",
+    "@devtools/plugin": "workspace:*"
   },
   "devDependencies": {
     "@devtools/kit": "workspace:*",
-    "@qwik.dev/react": "^2.0.0-alpha.9",
+    "@qwik.dev/react": "^2.0.0-beta.1",
     "react-complex-tree": "^2.4.6",
     "@qwikest/icons": "^0.0.13",
     "@types/eslint": "8.56.10",

@@ -1,5 +1,5 @@
-import { component$, useSignal, $, useTask$ } from "@qwik.dev/core";
-import type { State } from "../../types/state"; // Assuming State type is defined elsewhere
+import { component$, useSignal, $, useTask$ } from '@qwik.dev/core';
+import type { State } from '../../types/state'; // Assuming State type is defined elsewhere
 
 interface DevtoolsButtonProps {
   state: State;
@@ -28,7 +28,7 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     const deltaY = event.clientY - startMousePos.value.y;
 
     if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
-      isMoved.value = true; 
+      isMoved.value = true;
     }
     let newX = startElementPos.value.x - deltaX;
     let newY = startElementPos.value.y - deltaY;
@@ -37,7 +37,6 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     newY = Math.max(0, newY);
 
     position.value = { x: newX, y: newY };
-    
   });
 
   /**
@@ -45,12 +44,11 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
    */
   const handleMouseUp = $(() => {
     if (isDragging.value) {
-        isDragging.value = false; // Stop dragging
-    } 
+      isDragging.value = false; // Stop dragging
+    }
     if (!isMoved.value) {
       state.isOpen.value = !state.isOpen.value;
     }
-  
   });
 
   /**
@@ -86,16 +84,17 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     }
   });
 
-
   return (
     <div
       ref={elementRef}
       class={{
-        "fixed flex h-9 w-9 origin-center items-center justify-center rounded-lg border border-white/10 bg-zinc-900 backdrop-blur-md select-none": true,
-        "rotate-90 border-emerald-500/50 bg-zinc-900/95 shadow-lg shadow-emerald-500/35": state.isOpen.value && !isDragging.value,
-        "cursor-grab": !isDragging.value,
-        "cursor-grabbing": isDragging.value,
-        "transition-all duration-300 ease-in-out": !isDragging.value,
+        'fixed flex h-9 w-9 origin-center select-none items-center justify-center rounded-lg border border-border bg-background backdrop-blur-md':
+          true,
+        'border-accent/50 bg-background/95 shadow-accent/35 rotate-90 shadow-lg':
+          state.isOpen.value && !isDragging.value,
+        'cursor-grab': !isDragging.value,
+        'cursor-grabbing': isDragging.value,
+        'transition-all duration-300 ease-in-out': !isDragging.value,
       }}
       style={{
         bottom: `${position.value.y}px`,
@@ -111,7 +110,7 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
         src="https://qwik.dev/logos/qwik-logo.svg"
         alt="Qwik Logo"
         draggable={false}
-        class="h-5 w-5 opacity-90 drop-shadow-md pointer-events-none"
+        class="pointer-events-none h-5 w-5 opacity-90 drop-shadow-md"
       />
     </div>
   );

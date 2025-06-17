@@ -29,8 +29,8 @@
   "devDependencies": {
     "@devtools/plugin": "workspace:*",
     "@devtools/ui": "workspace:*",
-    "@qwik.dev/core": "^2.0.0-alpha.9",
-    "@qwik.dev/router": "^2.0.0-alpha.9",
+    "@qwik.dev/core": "^2.0.0-beta.1",
+    "@qwik.dev/router": "^2.0.0-beta.1",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",
     "@typescript-eslint/eslint-plugin": "7.16.1",

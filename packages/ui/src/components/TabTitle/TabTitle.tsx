@@ -1,4 +1,4 @@
-import { component$ } from "@qwik.dev/core";
+import { component$ } from '@qwik.dev/core';
 
 interface TabTitleProps {
   title: string;

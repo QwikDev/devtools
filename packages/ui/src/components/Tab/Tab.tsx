@@ -1,5 +1,5 @@
-import { component$, Slot } from "@qwik.dev/core";
-import { State, TabName } from "../../types/state";
+import { component$, Slot } from '@qwik.dev/core';
+import { State, TabName } from '../../types/state';
 
 interface TabProps {
   state: State;
@@ -13,11 +13,11 @@ export const Tab = component$<TabProps>(({ state, id, title }) => {
       onClick$={() => (state.activeTab = id)}
       title={title}
       class={{
-        "flex h-10 w-10 items-center justify-center rounded-lg p-2.5 transition-all duration-200":
+        'flex h-10 w-10 items-center justify-center rounded-lg p-2.5 transition-all duration-200':
           true,
-        "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white":
+        'bg-foreground/5 hover:bg-foreground/10 text-muted-foreground hover:text-foreground':
           state.activeTab !== id,
-        "bg-emerald-500 text-white shadow-lg shadow-emerald-500/35":
+        'shadow-accent/35 bg-accent text-accent-foreground shadow-lg':
           state.activeTab === id,
       }}
     >
