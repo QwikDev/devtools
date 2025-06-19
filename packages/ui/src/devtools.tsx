@@ -4,7 +4,6 @@ import {
   noSerialize,
   useStyles$,
   useSignal,
-  isServer,
   useVisibleTask$,
 } from '@qwik.dev/core';
 import { tryCreateHotContext } from 'vite-hot-client';
@@ -207,7 +206,7 @@ export const QwikDevtools = component$(() => {
               {state.activeTab === 'renderTree' && (
                 <TabContent >
                   <TabTitle title="render Tree" q:slot="title" />
-                  <RenderTree q:slot="content" />
+                  <RenderTree  q:slot="content" />
                 </TabContent>
               )}
             </div>
