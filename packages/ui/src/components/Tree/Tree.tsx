@@ -1,7 +1,10 @@
-import { $, component$, QRL, useSignal, useStore } from "@qwik.dev/core";
+import { $, component$, QRL, useSignal, useStore, useComputed$, useVisibleTask$ } from "@qwik.dev/core";
 import {
   HiChevronUpMini
 } from '@qwikest/icons/heroicons';
+import { _dumpState, _getDomContainer, _preprocessState, _vnode_toString } from '@qwik.dev/core/internal';
+import { vnode_toObject } from "./filterVnode";
+
 
 export interface TreeNode {
   id: string;
@@ -141,6 +144,54 @@ export const Tree = component$(() => {
     activeNodeId.value = id;
   });
 
+  const domContainerFromResultHtml = useComputed$(() => {
+    try {
+      const htmlElement = document.documentElement;
+      return _getDomContainer(htmlElement);
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  });
+const parsedState = useComputed$(() => {
+    try {
+      const container = domContainerFromResultHtml.value;
+      const doc = container!.element;
+      const qwikStates = doc.querySelectorAll('script[type="qwik/state"]');
+      if (qwikStates.length !== 0) {
+        const data = qwikStates[qwikStates.length - 1];
+        const origState = JSON.parse(data?.textContent || '[]');
+        _preprocessState(origState, container as any);
+        return origState
+      }
+      return 'No state found';
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  });
+
+  const vdomTree = useComputed$(() => {
+    try {
+      const container = domContainerFromResultHtml.value;
+      return _vnode_toString.call(
+        container!.rootVNode as any,
+        Number.MAX_SAFE_INTEGER,
+        '',
+        true,
+        false,
+        false
+      );
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  });
+
+  useVisibleTask$(() => {
+      store.treeData = vnode_toObject(domContainerFromResultHtml.value!.rootVNode, false, false) as any;
+    console.log(store.treeData, 'domContainerFromResultHtml');
+  })
   return (
     <div class="h-full w-full overflow-y-auto p-4">
       {store.treeData.map((rootNode) => (

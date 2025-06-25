@@ -81,7 +81,7 @@ export const QwikDevtools = component$(() => {
             state.components = data;
           });
           rpc.getRoutes().then((data: RoutesInfo) => {
-            const children: RoutesInfo[] = data.children || [];
+            const children: RoutesInfo[] = data?.children || [];
             const directories: RoutesInfo[] = children.filter(
               (child) => child.type === 'directory',
             );
