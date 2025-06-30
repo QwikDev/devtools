@@ -51,7 +51,6 @@ function getClientRpcFunctions() {
 
 export const QwikDevtools = component$(() => {
   useStyles$(globalCss);
-
   const state = useStore<State>({
     isOpen: useSignal(false),
     activeTab: 'overview',

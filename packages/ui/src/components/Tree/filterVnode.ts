@@ -18,87 +18,77 @@ function initVnode({
   props = {},
   element = {},
   children = [],
-  elementType = ''
-}: VNodeObject
+}
 ): VNodeObject {
   return {
     name,
     props,
     element,
     children,
-    label: elementType,
+    label: name,
     id: `vnode-${index++}`,
   }
 }
 export function vnode_toObject(
   vnodeItem: _VNode | null,
   materialize: boolean = false,
-  siblings: boolean = false
 ): VNodeObject | VNodeObject[] | null {
-  const vnode = vnodeItem;
-
-  if (vnode === null || vnode === undefined) {
+  if (vnodeItem === null || vnodeItem === undefined) {
     return null;
   }
 
-  const result: VNodeObject[] = [];
-
-  traverse(vnode, result, siblings, materialize);
-  // 返回兄弟节点数组
-  return result;
 
 
+ return buildTreeRecursive(vnodeItem, materialize);
 }
 
-function traverse(vnode: _VNode, result: VNodeObject[], siblings: boolean, materialize: boolean): void {
-  let vnodeItem: _VNode | null = vnode;
-  do {
-    if (vnode_isTextVNode(vnodeItem)) {
-      // const text = vnode_getText(vnodeItem);
-      result.push(initVnode({ name: 'text', element: vnodeItem })); // Fixed: use vnodeItem
-    } else if (vnode_isVirtualVNode(vnodeItem)) {
-      const vnodeObject = initVnode({ name: 'virtual', element: vnodeItem }) // Fixed: use vnodeItem
-      vnode_getAttrKeys(vnodeItem).forEach((key) => { // Fixed: use vnodeItem
+function buildTreeRecursive(vnode: _VNode | null, materialize: boolean): VNodeObject[] {
+  if (!vnode) {
+    return [];
+  }
+
+  const result: VNodeObject[] = [];
+  let currentVNode: _VNode | null = vnode;
+
+  while (currentVNode) {
+    
+    const item = Array.isArray((currentVNode as any)?.[6]) && (currentVNode as any)?.[6]?.find((item: any) => typeof item === 'function');
+ 
+    if ( vnode_isVirtualVNode(currentVNode) && item){
+      const vnodeObject = initVnode({ element: currentVNode });
+      vnode_getAttrKeys(currentVNode).forEach((key) => {
         if (key !== DEBUG_TYPE) {
-          const value = vnode_getAttr(vnodeItem!, key); // Fixed: use vnodeItem
-          if (!vnodeObject.props) {
-            vnodeObject.props = {};
-          }
-          vnodeObject.props[key] = value;
+          const value = vnode_getAttr(currentVNode!, key);
+          vnodeObject.props![key] = value;
         }
       });
       
-      const child = vnode_getFirstChild(vnodeItem); // Fixed: use vnodeItem
-      if (child) {
-        if (!vnodeObject.children) {
-          vnodeObject.children = [];
-        }
-        traverse(child, result, true, true);
+      const firstChild = vnode_getFirstChild(currentVNode);
+      const filteredChildren = firstChild ? buildTreeRecursive(firstChild, materialize) : [];
+      if (filteredChildren.length > 0) {
+        vnodeObject.children = filteredChildren;
       }
 
-      // result.push(vnodeObject);
-    } else if (vnode_isElementVNode(vnodeItem)) {
-      const vnodeObject = initVnode({ name: 'element', element: vnodeItem, elementType: vnodeItem[6]!.nodeName }) // Fixed: use vnodeItem
-      const keys = vnode_getAttrKeys(vnodeItem); // Fixed: use vnodeItem
-      keys.forEach((key) => {
-        const value = vnode_getAttr(vnodeItem!, key); // Fixed: use vnodeItem
-        if (!vnodeObject.props) {
-          vnodeObject.props = {};
+      if(Array.isArray((currentVNode as any)[6])) {
+        const itme = (currentVNode as any)[6].find((item: any) => typeof item === 'function');
+        if (itme && itme.$symbol$) {
+            vnodeObject.label = itme.$symbol$;
+            vnodeObject.name = itme.$symbol$;
         }
-        vnodeObject.props[key] = value;
-      });
+      }
+
       result.push(vnodeObject);
-      if (vnode_isMaterialized(vnodeItem)) { // Fixed: use vnodeItem
-        const child = vnode_getFirstChild(vnodeItem); // Fixed: use vnodeItem
-        if (child) {
-          if (!vnodeObject.children) {
-            vnodeObject.children = [];
-          }
-          traverse(child, vnodeObject.children, true, true);
-        }
-      }
 
-    }
-    vnodeItem = (siblings && vnode_getNextSibling(vnodeItem)) || null;
-  } while (vnodeItem);
+    } else if (vnode_isMaterialized(currentVNode) || ( vnode_isVirtualVNode(currentVNode) && !item)) {
+      const firstChild = vnode_getFirstChild(currentVNode);
+      if (firstChild) {
+        const childObjects = buildTreeRecursive(firstChild, materialize);
+        result.push(...childObjects);
+      }
+    } 
+
+    currentVNode = vnode_getNextSibling(currentVNode);
+  }
+
+  return result;
 }
