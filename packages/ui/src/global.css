@@ -11,12 +11,11 @@
   --color-background: #ffffff;
   --color-foreground: #000000;
   --color-primary: #10b981;
-  --color-primary-hover: #f2f2f2;     /* green-600 */
-  --color-primary-active: #047857;    /* green-700 */
+  --color-primary-hover: #f2f2f2; /* green-600 */
+  --color-primary-active: #047857; /* green-700 */
   --color-secondary: #6b7280; /* Tailwind's secondary.light */
   --color-border: #e5e7eb;
   --color-card: #f3f4f6;
-  
 
   /* Specific variables based on existing CSS (light theme equivalents) */
 
@@ -47,9 +46,9 @@
   --theme-name: 'dark';
   --color-background: #18181b;
   --color-foreground: #ffffff;
-  --color-primary: #34d399;  /* Tailwind's primary.dark */
-   --color-primary-hover: #10b981;     /* green-500 */
-  --color-primary-active: #059669;    /* green-600 */
+  --color-primary: #34d399; /* Tailwind's primary.dark */
+  --color-primary-hover: #10b981; /* green-500 */
+  --color-primary-active: #059669; /* green-600 */
   --color-secondary: #9ca3af; /* Tailwind's secondary.dark */
   --color-border: #374151;
   --color-card: #27272a;

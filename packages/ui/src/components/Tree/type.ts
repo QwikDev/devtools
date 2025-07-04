@@ -27,11 +27,6 @@ export const enum VNodeFlags {
   NS_math /* ****************** */ = 0b10_000000, // http://www.w3.org/1998/Math/MathML
 }
 
-export const enum TextVNodeProps {
-  node = 4,
-  text = 5,
-}
-
 export const enum ElementVNodeProps {
   firstChild = 4,
   lastChild = 5,
@@ -40,28 +35,7 @@ export const enum ElementVNodeProps {
   PROPS_OFFSET = 8,
 }
 
-export const enum VirtualType {
-  Virtual = 'V',
-  Fragment = 'F',
-  WrappedSignal = 'S',
-  Awaited = 'A',
-  Component = 'C',
-  InlineComponent = 'I',
-  Projection = 'P',
-}
-
 export const DEBUG_TYPE = 'q:type';
-
-
-export const VirtualTypeName: Record<string, string> = {
-  [VirtualType.Virtual]: /* ********* */ 'Virtual', //
-  [VirtualType.Fragment]: /* ******** */ 'Fragment', //
-  [VirtualType.WrappedSignal]: /* *** */ 'Signal', //
-  [VirtualType.Awaited]: /* ********* */ 'Awaited', //
-  [VirtualType.Component]: /* ******* */ 'Component', //
-  [VirtualType.InlineComponent]: /* * */ 'InlineComponent', //
-  [VirtualType.Projection]: /* ****** */ 'Projection', //
-};
 
 export const enum VirtualVNodeProps {
   firstChild = ElementVNodeProps.firstChild,

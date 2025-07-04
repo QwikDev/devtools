@@ -8,16 +8,19 @@ interface OverviewProps {
 }
 
 export const Overview = component$(({ state }: OverviewProps) => {
-  const pageJump = $((pageName:TabName) => {
+  const pageJump = $((pageName: TabName) => {
     state.activeTab = pageName;
-  })
+  });
   const stopPropagation = sync$((e: MouseEvent) => {
-      e.preventDefault();
-  })
+    e.preventDefault();
+  });
   return (
     <>
       <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-        <div onClick$={[$(() => pageJump('routes')), stopPropagation]} class="flex items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg cursor-pointer">
+        <div
+          onClick$={[$(() => pageJump('routes')), stopPropagation]}
+          class="flex cursor-pointer items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+        >
           <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
             <LuFolderTree class="h-6 w-6 text-accent" />
           </div>
@@ -27,7 +30,10 @@ export const Overview = component$(({ state }: OverviewProps) => {
           </div>
         </div>
 
-        <div onClick$={[$(() => pageJump('components')), stopPropagation]} class="flex items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg cursor-pointer">
+        <div
+          onClick$={[$(() => pageJump('components')), stopPropagation]}
+          class="flex cursor-pointer items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+        >
           <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
             <HiCubeOutline class="h-6 w-6 text-accent" />
           </div>
@@ -37,7 +43,10 @@ export const Overview = component$(({ state }: OverviewProps) => {
           </div>
         </div>
 
-        <div onClick$={[$(() => pageJump('assets')), stopPropagation]} class="flex items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg cursor-pointer">
+        <div
+          onClick$={[$(() => pageJump('assets')), stopPropagation]}
+          class="flex cursor-pointer items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+        >
           <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
             <HiPhotoOutline class="h-6 w-6 text-accent" />
           </div>
@@ -48,7 +57,10 @@ export const Overview = component$(({ state }: OverviewProps) => {
         </div>
       </div>
 
-      <div  onClick$={[$(() => pageJump('packages')), stopPropagation]} class="space-y-4 rounded-xl border border-border bg-card-item-bg p-5 cursor-pointer hover:-translate-y-0.5 hover:bg-card-item-hover-bg">
+      <div
+        onClick$={[$(() => pageJump('packages')), stopPropagation]}
+        class="cursor-pointer space-y-4 rounded-xl border border-border bg-card-item-bg p-5 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+      >
         <h3 class="text-lg font-semibold">Installed Packages</h3>
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
           {state.npmPackages.map(([name, version]) => (

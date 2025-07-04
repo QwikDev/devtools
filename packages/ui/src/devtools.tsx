@@ -14,9 +14,7 @@ import {
   HiMegaphoneMini,
   HiCubeOutline,
 } from '@qwikest/icons/heroicons';
-import {
-  BsDiagram3
-} from '@qwikest/icons/bootstrap';
+import { BsDiagram3 } from '@qwikest/icons/bootstrap';
 import { LuFolderTree } from '@qwikest/icons/lucide';
 import {
   createClientRpc,
@@ -34,7 +32,7 @@ import { State } from './types/state';
 import { Assets } from './features/Assets/Assets';
 import { Routes } from './features/Routes/Routes';
 import { TabTitle } from './components/TabTitle/TabTitle';
-import {RenderTree} from './features/RenderTree/RenderTree'
+import { RenderTree } from './features/RenderTree/RenderTree';
 import { DevtoolsButton } from './components/DevtoolsButton/DevtoolsButton';
 import { DevtoolsContainer } from './components/DevtoolsContainer/DevtoolsContainer';
 import { DevtoolsPanel } from './components/DevtoolsPanel/DevtoolsPanel';
@@ -61,50 +59,50 @@ export const QwikDevtools = component$(() => {
   });
 
   useVisibleTask$(async ({ track }) => {
-      const hot = await tryCreateHotContext(undefined, ['/']);
+    const hot = await tryCreateHotContext(undefined, ['/']);
 
-      if (!hot) {
-        throw new Error('Vite Hot Context not connected');
+    if (!hot) {
+      throw new Error('Vite Hot Context not connected');
+    }
+
+    setViteClientContext(hot);
+    createClientRpc(getClientRpcFunctions());
+
+    track(() => {
+      if (state.isOpen.value) {
+        const rpc = getViteClientRpc();
+        rpc.getAssetsFromPublicDir().then((data) => {
+          state.assets = data;
+        });
+        rpc.getComponents().then((data) => {
+          state.components = data;
+        });
+        rpc.getRoutes().then((data: RoutesInfo) => {
+          const children: RoutesInfo[] = data?.children || [];
+          const directories: RoutesInfo[] = children.filter(
+            (child) => child.type === 'directory',
+          );
+
+          const values: RoutesInfo[] = [
+            {
+              relativePath: '',
+              name: 'index',
+              type: RouteType.DIRECTORY,
+              path: '',
+              isSymbolicLink: false,
+              children: undefined,
+            },
+            ...directories,
+          ];
+
+          state.routes = noSerialize(values);
+        });
+
+        rpc.getQwikPackages().then((data: NpmInfo) => {
+          state.npmPackages = data;
+        });
       }
-
-      setViteClientContext(hot);
-      createClientRpc(getClientRpcFunctions());
-
-      track(() => {
-        if (state.isOpen.value) {
-          const rpc = getViteClientRpc();
-          rpc.getAssetsFromPublicDir().then((data) => {
-            state.assets = data;
-          });
-          rpc.getComponents().then((data) => {
-            state.components = data;
-          });
-          rpc.getRoutes().then((data: RoutesInfo) => {
-            const children: RoutesInfo[] = data?.children || [];
-            const directories: RoutesInfo[] = children.filter(
-              (child) => child.type === 'directory',
-            );
-
-            const values: RoutesInfo[] = [
-              {
-                relativePath: '',
-                name: 'index',
-                type: RouteType.DIRECTORY,
-                path: '',
-                isSymbolicLink: false,
-                children: undefined,
-              },
-              ...directories,
-            ];
-
-            state.routes = noSerialize(values);
-          });
-
-          rpc.getQwikPackages().then((data: NpmInfo) => {
-            state.npmPackages = data;
-          });
-        }
-      });
+    });
   });
 
   return (
@@ -203,9 +201,9 @@ export const QwikDevtools = component$(() => {
                 </TabContent>
               )}
               {state.activeTab === 'renderTree' && (
-                <TabContent >
+                <TabContent>
                   <TabTitle title="render Tree" q:slot="title" />
-                  <RenderTree  q:slot="content" />
+                  <RenderTree q:slot="content" />
                 </TabContent>
               )}
             </div>

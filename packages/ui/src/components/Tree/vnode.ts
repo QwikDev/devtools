@@ -1,19 +1,17 @@
-import { _VNode as VNode , _TextVNode } from '@qwik.dev/core/internal';
-import { VNodeProps,  VNodeFlags, TextVNodeProps, ElementVNodeProps, VirtualVNodeProps, Q_PROPS_SEPARATOR, QContainerAttr, QContainerValue } from './type';
-
+import { _VNode as VNode, _TextVNode } from '@qwik.dev/core/internal';
+import {
+  VNodeProps,
+  VNodeFlags,
+  ElementVNodeProps,
+  VirtualVNodeProps,
+  Q_PROPS_SEPARATOR,
+  QContainerAttr,
+  QContainerValue,
+} from './type';
 
 export const vnode_isTextVNode = (vNode: VNode): vNode is _TextVNode => {
   const flag = (vNode as VNode)[VNodeProps.flags];
   return (flag & VNodeFlags.Text) === VNodeFlags.Text;
-};
-
-export const vnode_getText = (vnode: VNode) => {
-  const textVNode = vnode as _TextVNode;
-  let text = textVNode[TextVNodeProps.text];
-  if (text === undefined) {
-    text = textVNode[TextVNodeProps.text] = textVNode[TextVNodeProps.node]!.nodeValue!;
-  }
-  return text; 
 };
 
 export const vnode_isVirtualVNode = (vNode: VNode) => {
@@ -27,9 +25,9 @@ export const vnode_getFirstChild = (vnode: VNode) => {
   }
   let vFirstChild = vnode[ElementVNodeProps.firstChild];
   if (vFirstChild === undefined) {
-    vFirstChild = vnode 
+    vFirstChild = vnode;
   }
-  return vFirstChild as  VNode | null;
+  return vFirstChild as VNode | null;
 };
 
 export const vnode_isMaterialized = (vNode: VNode): boolean => {
@@ -41,11 +39,9 @@ export const vnode_isMaterialized = (vNode: VNode): boolean => {
   );
 };
 
-
 export const vnode_getNextSibling = (vnode: VNode): VNode | null => {
   return vnode[VNodeProps.nextSibling];
-}
-
+};
 
 export const vnode_getPropStartIndex = (vnode: VNode): number => {
   const type = vnode[VNodeProps.flags] & VNodeFlags.TYPE_MASK;
@@ -54,15 +50,18 @@ export const vnode_getPropStartIndex = (vnode: VNode): number => {
   } else if (type === VNodeFlags.Virtual) {
     return VirtualVNodeProps.PROPS_OFFSET;
   }
-  throw type
+  throw type;
 };
-
 
 export const vnode_getProps = (vnode: VNode): unknown[] => {
   return vnode[vnode_getPropStartIndex(vnode)] as unknown[];
 };
 
-export const mapApp_findIndx = <T>(array: (T | null)[], key: string, start: number): number => {
+export const mapApp_findIndx = <T>(
+  array: (T | null)[],
+  key: string,
+  start: number,
+): number => {
   let bottom = (start as number) >> 1;
   let top = (array.length - 2) >> 1;
   while (bottom <= top) {
@@ -84,7 +83,7 @@ export const mapArray_set = <T>(
   array: (T | null)[],
   key: string,
   value: T | null,
-  start: number
+  start: number,
 ) => {
   const indx = mapApp_findIndx(array, key, start);
   if (indx >= 0) {
@@ -101,7 +100,7 @@ export const mapArray_set = <T>(
 export const vnode_ensureElementInflated = (vnode: VNode) => {
   const flags = vnode[VNodeProps.flags];
   if ((flags & VNodeFlags.INFLATED_TYPE_MASK) === VNodeFlags.Element) {
-    const elementVNode = vnode
+    const elementVNode = vnode;
     elementVNode[VNodeProps.flags] ^= VNodeFlags.Inflated;
     const element = elementVNode[ElementVNodeProps.element];
     const attributes = (element as any).attributes;
@@ -114,7 +113,10 @@ export const vnode_ensureElementInflated = (vnode: VNode) => {
         // all attributes after the ':' are considered immutable, and so we ignore them.
         break;
       } else if (key.startsWith(QContainerAttr)) {
-      if (attr.value === QContainerValue.TEXT && 'value' in (element as any)) {
+        if (
+          attr.value === QContainerValue.TEXT &&
+          'value' in (element as any)
+        ) {
           mapArray_set(props, 'value', (element as any).value, 0);
         }
       } else if (!key.startsWith('on:')) {
@@ -142,7 +144,11 @@ export const vnode_getAttrKeys = (vnode: VNode): string[] => {
   return [];
 };
 
-export const mapArray_get = <T>(array: (T | null)[], key: string, start: number): T | null => {
+export const mapArray_get = <T>(
+  array: (T | null)[],
+  key: string,
+  start: number,
+): T | null => {
   const indx = mapApp_findIndx(array, key, start);
   if (indx >= 0) {
     return array[indx + 1] as T | null;
@@ -159,20 +165,4 @@ export const vnode_getAttr = (vnode: VNode, key: string): string | null => {
     return mapArray_get(props as string[], key, 0);
   }
   return null;
-};
-
-export const vnode_isElementVNode = (vNode: VNode) => {
-  const flag = (vNode as VNode)[VNodeProps.flags];
-  return (flag & VNodeFlags.Element) === VNodeFlags.Element;
-};
-
-export const vnode_getNode = (vnode: VNode | null)=> {
-  if (vnode === null || vnode_isVirtualVNode(vnode)) {
-    return null;
-  }
-  if (vnode_isElementVNode(vnode)) {
-    return vnode[ElementVNodeProps.element];
-  }
-
-  return vnode[TextVNodeProps.node]!;
 };
