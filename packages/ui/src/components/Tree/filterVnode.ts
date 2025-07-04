@@ -1,6 +1,7 @@
 import { _VNode } from '@qwik.dev/core/internal';
 import { vnode_getAttr, vnode_getAttrKeys, vnode_getFirstChild, vnode_getNextSibling, vnode_getNode, vnode_getText, vnode_isElementVNode, vnode_isMaterialized, vnode_isTextVNode, vnode_isVirtualVNode } from './vnode';
 import { DEBUG_TYPE, VirtualType, VirtualTypeName } from './type';
+import { htmlContainer } from '../../utils/location';
 
 let index = 0
 interface VNodeObject {
@@ -41,7 +42,7 @@ export function vnode_toObject(
 
  return buildTreeRecursive(vnodeItem, materialize);
 }
-
+const container = htmlContainer()
 function buildTreeRecursive(vnode: _VNode | null, materialize: boolean): VNodeObject[] {
   if (!vnode) {
     return [];
@@ -52,9 +53,22 @@ function buildTreeRecursive(vnode: _VNode | null, materialize: boolean): VNodeOb
 
   while (currentVNode) {
     
-    const item = Array.isArray((currentVNode as any)?.[6]) && (currentVNode as any)?.[6]?.find((item: any) => typeof item === 'function');
- 
-    if ( vnode_isVirtualVNode(currentVNode) && item){
+    const item = (vnodeList: any) => Array.isArray((vnodeList as any)?.[6]) && (vnodeList as any)?.[6]?.find((item: any) => typeof item === 'function');
+    
+    const item1 = Array.isArray((currentVNode as any)?.[6]) && (currentVNode as any)?.[6]?.find((item: any) => item === 'q:renderFn');
+    if(!item(currentVNode) && item1) {
+     
+      (currentVNode as any)?.[6].forEach((prop, index) => {
+        if(index % 2 === 0){
+          (currentVNode?.[6] as any)[index + 1] = container.getHostProp(currentVNode!, prop)
+          console.log(currentVNode)
+        }
+        
+      })
+      console.log(currentVNode, item1)
+    }
+    if ( vnode_isVirtualVNode(currentVNode) && item(currentVNode)){
+      console.log(currentVNode)
       const vnodeObject = initVnode({ element: currentVNode });
       vnode_getAttrKeys(currentVNode).forEach((key) => {
         if (key !== DEBUG_TYPE) {
@@ -79,10 +93,10 @@ function buildTreeRecursive(vnode: _VNode | null, materialize: boolean): VNodeOb
 
       result.push(vnodeObject);
 
-    } else if (vnode_isMaterialized(currentVNode) || ( vnode_isVirtualVNode(currentVNode) && !item)) {
+    } else if (vnode_isMaterialized(currentVNode) || ( vnode_isVirtualVNode(currentVNode) && !item(currentVNode))) {
       const firstChild = vnode_getFirstChild(currentVNode);
       if (firstChild) {
-        const childObjects = buildTreeRecursive(firstChild, materialize);
+        const childObjects = buildTreeRecursive(firstChild, materialize );
         result.push(...childObjects);
       }
     } 
