@@ -3,9 +3,13 @@ import type { Signal } from '@qwik.dev/core';
 import { HiChevronUpMini } from '@qwikest/icons/heroicons';
 
 export interface TreeNode {
-  id: string;
-  label: string;
+  name?: string | 'text';
+  props?: Record<string, any>;
+  element?: Record<string, any>;
   children?: TreeNode[];
+  elementType?: string;
+  label?: string;
+  id: string;
 }
 
 const TreeNodeComponent = component$(
@@ -28,6 +32,17 @@ const TreeNodeComponent = component$(
       }
     });
 
+    const iterateProps = ( porps: Record<string, any>) => {
+      const displayProp = ['q:id', 'q:key']
+      return displayProp.reduce((totalStr, prop) => {
+        if(porps[prop]){
+          totalStr += `${prop}="${porps[prop]}" `
+        }
+        return totalStr
+
+      }, '')
+    }
+
     // Check if the current node is the one that is active
     const isActive = props.node.id === props.activeNodeId;
     return (
@@ -48,7 +63,9 @@ const TreeNodeComponent = component$(
           ) : (
             <div class="mr-2 w-4 flex-shrink-0"></div>
           )}
-          <span class="text-sm">{`<${props.node.label}>`}</span>
+          <span class="text-sm">
+            {`<${props.node.label} ${iterateProps(props.node.props!)}>`}
+          </span>
         </div>
         {!isExpanded.value && hasChildren && (
           <div class="mt-1">

@@ -36,6 +36,8 @@ export const enum ElementVNodeProps {
 }
 
 export const DEBUG_TYPE = 'q:type';
+export const RENDER_TYPE = 'q:renderFn'
+export const ISDEVTOOL = 'Qwikdevtools'
 
 export const enum VirtualVNodeProps {
   firstChild = ElementVNodeProps.firstChild,

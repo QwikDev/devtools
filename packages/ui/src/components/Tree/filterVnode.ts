@@ -1,4 +1,4 @@
-import { _VNode } from '@qwik.dev/core/internal';
+import { _VNode, QRL } from '@qwik.dev/core/internal';
 import {
   vnode_getAttr,
   vnode_getAttrKeys,
@@ -6,27 +6,21 @@ import {
   vnode_getNextSibling,
   vnode_isMaterialized,
   vnode_isVirtualVNode,
+  vnode_getProps,
+  normalizeName,
 } from './vnode';
-import { DEBUG_TYPE } from './type';
+import { DEBUG_TYPE, RENDER_TYPE } from './type';
 import { htmlContainer } from '../../utils/location';
+import { TreeNode } from './Tree';
 
 let index = 0;
-interface VNodeObject {
-  name?: string | 'text';
-  props?: Record<string, any>;
-  element?: Record<string, any>;
-  children?: VNodeObject[];
-  elementType?: string;
-  label?: string;
-  id: string;
-}
 
 function initVnode({
   name = 'text',
   props = {},
   element = {},
   children = [],
-}): VNodeObject {
+}): TreeNode {
   return {
     name,
     props,
@@ -38,88 +32,73 @@ function initVnode({
 }
 export function vnode_toObject(
   vnodeItem: _VNode | null,
-  materialize: boolean = false,
-): VNodeObject | VNodeObject[] | null {
+): TreeNode[] | null  {
   if (vnodeItem === null || vnodeItem === undefined) {
     return null;
   }
 
-  return buildTreeRecursive(vnodeItem, materialize);
+  return buildTreeRecursive(vnodeItem, false);
 }
 const container = htmlContainer();
 function buildTreeRecursive(
   vnode: _VNode | null,
   materialize: boolean,
-): VNodeObject[] {
+): TreeNode[] {
+  // Return early if the starting node is null.
   if (!vnode) {
     return [];
   }
 
-  const result: VNodeObject[] = [];
+  const result: TreeNode[] = [];
   let currentVNode: _VNode | null = vnode;
 
+  // Iterate over sibling nodes.
   while (currentVNode) {
-    const item = (vnodeList: any) =>
-      Array.isArray((vnodeList as any)?.[6]) &&
-      (vnodeList as any)?.[6]?.find((item: any) => typeof item === 'function');
-
-    const item1 =
-      Array.isArray((currentVNode as any)?.[6]) &&
-      (currentVNode as any)?.[6]?.find((item: any) => item === 'q:renderFn');
-    if (!item(currentVNode) && item1) {
-      (currentVNode as any)?.[6].forEach((prop, index) => {
-        if (index % 2 === 0) {
-          (currentVNode?.[6] as any)[index + 1] = container.getHostProp(
-            currentVNode!,
-            prop,
-          );
-          console.log(currentVNode);
-        }
-      });
-      console.log(currentVNode, item1);
-    }
-    if (vnode_isVirtualVNode(currentVNode) && item(currentVNode)) {
-      console.log(currentVNode);
+    const isVirtual = vnode_isVirtualVNode(currentVNode);
+    // Determine if the node is a Fragment ('F') to be filtered out.
+    const isFragment = isVirtual && typeof container.getHostProp(currentVNode, RENDER_TYPE) === 'function';
+    if (isFragment) {
       const vnodeObject = initVnode({ element: currentVNode });
+
       vnode_getAttrKeys(currentVNode).forEach((key) => {
-        if (key !== DEBUG_TYPE) {
-          const value = vnode_getAttr(currentVNode!, key);
-          vnodeObject.props![key] = value;
+        // We skip the DEBUG_TYPE prop as it's for internal use.
+        if (key === DEBUG_TYPE) return;
+
+        const value = container.getHostProp(currentVNode!, key) as QRL;
+        
+        // Update the underlying VNode props array and the new object's props.
+        vnode_getProps(currentVNode!)[vnode_getProps(currentVNode!).indexOf(key) + 1] = value;
+        vnodeObject.props![key] = vnode_getAttr(currentVNode!, key);
+
+        // Special handling to set the label from the render function's symbol.
+        if (key === RENDER_TYPE) {
+          vnodeObject.label = normalizeName(value!.getSymbol())
+          vnodeObject.name = normalizeName(value!.getSymbol())
         }
       });
-
+      
+      // Recursively build the tree for child nodes.
       const firstChild = vnode_getFirstChild(currentVNode);
-      const filteredChildren = firstChild
-        ? buildTreeRecursive(firstChild, materialize)
-        : [];
-      if (filteredChildren.length > 0) {
-        vnodeObject.children = filteredChildren;
+      const children = firstChild ? buildTreeRecursive(firstChild, materialize) : [];
+      if (children.length > 0) {
+        vnodeObject.children = children;
       }
-
-      if (Array.isArray((currentVNode as any)[6])) {
-        const itme = (currentVNode as any)[6].find(
-          (item: any) => typeof item === 'function',
-        );
-        if (itme && itme.$symbol$) {
-          vnodeObject.label = itme.$symbol$;
-          vnodeObject.name = itme.$symbol$;
-        }
-      }
-
+      
       result.push(vnodeObject);
-    } else if (
-      vnode_isMaterialized(currentVNode) ||
-      (vnode_isVirtualVNode(currentVNode) && !item(currentVNode))
-    ) {
+    } else if (vnode_isMaterialized(currentVNode) || (isVirtual && !isFragment)) {
+      // For materialized nodes, similar to Fragments, we skip the container node
+      // itself and just process its children.
       const firstChild = vnode_getFirstChild(currentVNode);
       if (firstChild) {
-        const childObjects = buildTreeRecursive(firstChild, materialize);
-        result.push(...childObjects);
+        result.push(...buildTreeRecursive(firstChild, materialize));
       }
     }
 
+    // Move to the next sibling in the tree.
     currentVNode = vnode_getNextSibling(currentVNode);
   }
 
   return result;
 }
+
+
