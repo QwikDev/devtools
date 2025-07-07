@@ -32,16 +32,15 @@ const TreeNodeComponent = component$(
       }
     });
 
-    const iterateProps = ( porps: Record<string, any>) => {
-      const displayProp = ['q:id', 'q:key']
+    const iterateProps = (porps: Record<string, any>) => {
+      const displayProp = ['q:id', 'q:key'];
       return displayProp.reduce((totalStr, prop) => {
-        if(porps[prop]){
-          totalStr += `${prop}="${porps[prop]}" `
+        if (porps[prop]) {
+          totalStr += `${prop}="${porps[prop]}" `;
         }
-        return totalStr
-
-      }, '')
-    }
+        return totalStr;
+      }, '');
+    };
 
     // Check if the current node is the one that is active
     const isActive = props.node.id === props.activeNodeId;

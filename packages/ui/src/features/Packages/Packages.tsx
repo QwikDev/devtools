@@ -56,7 +56,7 @@ export const Packages = component$(() => {
         value={searchResults}
         onPending={() => (
           <div class="absolute right-3 top-1">
-            <div class="border-t-foreground/40 h-5 w-5 animate-spin rounded-full border-2 border-border" />
+            <div class="border-t-foreground/40 animate-spin h-5 w-5 rounded-full border-2 border-border" />
           </div>
         )}
         onRejected={(error) => (

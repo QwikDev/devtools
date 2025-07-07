@@ -30,9 +30,7 @@ function initVnode({
     id: `vnode-${index++}`,
   };
 }
-export function vnode_toObject(
-  vnodeItem: _VNode | null,
-): TreeNode[] | null  {
+export function vnode_toObject(vnodeItem: _VNode | null): TreeNode[] | null {
   if (vnodeItem === null || vnodeItem === undefined) {
     return null;
   }
@@ -56,7 +54,9 @@ function buildTreeRecursive(
   while (currentVNode) {
     const isVirtual = vnode_isVirtualVNode(currentVNode);
     // Determine if the node is a Fragment ('F') to be filtered out.
-    const isFragment = isVirtual && typeof container.getHostProp(currentVNode, RENDER_TYPE) === 'function';
+    const isFragment =
+      isVirtual &&
+      typeof container.getHostProp(currentVNode, RENDER_TYPE) === 'function';
     if (isFragment) {
       const vnodeObject = initVnode({ element: currentVNode });
 
@@ -65,27 +65,34 @@ function buildTreeRecursive(
         if (key === DEBUG_TYPE) return;
 
         const value = container.getHostProp(currentVNode!, key) as QRL;
-        
+
         // Update the underlying VNode props array and the new object's props.
-        vnode_getProps(currentVNode!)[vnode_getProps(currentVNode!).indexOf(key) + 1] = value;
+        vnode_getProps(currentVNode!)[
+          vnode_getProps(currentVNode!).indexOf(key) + 1
+        ] = value;
         vnodeObject.props![key] = vnode_getAttr(currentVNode!, key);
 
         // Special handling to set the label from the render function's symbol.
         if (key === RENDER_TYPE) {
-          vnodeObject.label = normalizeName(value!.getSymbol())
-          vnodeObject.name = normalizeName(value!.getSymbol())
+          vnodeObject.label = normalizeName(value!.getSymbol());
+          vnodeObject.name = normalizeName(value!.getSymbol());
         }
       });
-      
+
       // Recursively build the tree for child nodes.
       const firstChild = vnode_getFirstChild(currentVNode);
-      const children = firstChild ? buildTreeRecursive(firstChild, materialize) : [];
+      const children = firstChild
+        ? buildTreeRecursive(firstChild, materialize)
+        : [];
       if (children.length > 0) {
         vnodeObject.children = children;
       }
-      
+
       result.push(vnodeObject);
-    } else if (vnode_isMaterialized(currentVNode) || (isVirtual && !isFragment)) {
+    } else if (
+      vnode_isMaterialized(currentVNode) ||
+      (isVirtual && !isFragment)
+    ) {
       // For materialized nodes, similar to Fragments, we skip the container node
       // itself and just process its children.
       const firstChild = vnode_getFirstChild(currentVNode);
@@ -100,5 +107,3 @@ function buildTreeRecursive(
 
   return result;
 }
-
-
