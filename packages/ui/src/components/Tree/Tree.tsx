@@ -1,5 +1,5 @@
 import { $, component$, QRL, useSignal } from '@qwik.dev/core';
-import type { Signal } from '@qwik.dev/core';
+import type { JSXOutput, Signal } from '@qwik.dev/core';
 import { HiChevronUpMini } from '@qwikest/icons/heroicons';
 
 export interface TreeNode {
@@ -16,9 +16,11 @@ const TreeNodeComponent = component$(
   (props: {
     node: TreeNode;
     level: number;
+    gap: number;
     activeNodeId: string;
     expandLevel: number;
     onNodeClick: QRL<(node: TreeNode) => void>;
+    renderNode?: QRL<(node: TreeNode) => JSXOutput>
   }) => {
     const isExpanded = useSignal(props.expandLevel <= props.level); // Default to expanded
     const hasChildren = props.node.children && props.node.children.length > 0;
@@ -45,7 +47,7 @@ const TreeNodeComponent = component$(
     // Check if the current node is the one that is active
     const isActive = props.node.id === props.activeNodeId;
     return (
-      <div style={{ paddingLeft: `${props.level * 20}px` }}>
+      <div style={{ paddingLeft: `${props.level * props.gap}px` }}>
         <div
           class={`flex cursor-pointer items-center rounded-md p-1 transition-colors duration-150 
                 ${
@@ -63,22 +65,28 @@ const TreeNodeComponent = component$(
             <div class="mr-2 w-4 flex-shrink-0"></div>
           )}
           <span class="text-sm">
-            {`<${props.node.label} ${iterateProps(props.node.props!)}>`}
+            {props.renderNode ? (
+              <>{props.renderNode(props.node)}</>
+            ) : (
+              `<${props.node.label || props.node.name} ${iterateProps(props.node.props! || {})}>`
+            )}
           </span>
         </div>
         {!isExpanded.value && hasChildren && (
-          <div class="mt-1">
+          <>
             {props.node.children?.map((child) => (
               <TreeNodeComponent
                 key={child.id}
                 node={child}
+                gap={props.gap}
                 expandLevel={props.expandLevel}
                 level={props.level + 1}
                 activeNodeId={props.activeNodeId}
                 onNodeClick={props.onNodeClick}
+                renderNode={props.renderNode}
               />
             ))}
-          </div>
+          </>
         )}
       </div>
     );
@@ -89,6 +97,8 @@ export const Tree = component$(
   (props: {
     data: Signal<TreeNode[]>;
     onNodeClick?: QRL<(node: TreeNode) => void>;
+    renderNode?: QRL<(node: TreeNode) => JSXOutput>;
+    gap?: number;
   }) => {
     const ref = useSignal<HTMLElement | undefined>();
     const store = props.data;
@@ -104,12 +114,14 @@ export const Tree = component$(
       <div class="h-full w-full overflow-x-auto overflow-y-auto" ref={ref}>
         {store.value.map((rootNode) => (
           <TreeNodeComponent
+            gap={props.gap || 20 }
             key={rootNode.id}
             node={rootNode}
             level={0}
             expandLevel={2}
             activeNodeId={activeNodeId.value}
             onNodeClick={setActiveNode}
+            renderNode={props.renderNode}
           />
         ))}
       </div>

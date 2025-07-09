@@ -1,19 +1,50 @@
 import {
   component$,
   useVisibleTask$,
-  useStore,
   useComputed$,
   $, 
-  useSignal
+  useSignal,
+  isSignal
 } from '@qwik.dev/core';
 import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
 import { ISDEVTOOL } from '../../components/Tree/type';
+import { objectToTree, QSEQ, signalToTree } from './transfromqseq';
 
 export const RenderTree = component$(() => {
   const data = useSignal<TreeNode[]>([]);
+  
+  // Use a more realistic state example
+  const exampleState = {
+    user: {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      'q:seq': { count: 5 },
+      preferences: {
+        theme: 'dark',
+        language: 'en-US',
+        notifications: true
+      },
+      roles: ['admin', 'user', 'moderator']
+    },
+    counter: 42,
+    isLoading: false,
+    items: [
+      { id: 1, name: 'Item 1', price: 10.99, inStock: true },
+      { id: 2, name: 'Item 2', price: 20.50, inStock: false }
+    ],
+    config: {
+      apiUrl: 'https://api.example.com',
+      timeout: 5000,
+      retry: 3
+    }
+  };
+  
+  const stateTree = useSignal<TreeNode[]>(objectToTree(exampleState));
+  
   const qwikContainer = useComputed$(() => {
     try {
       return htmlContainer();
@@ -35,8 +66,15 @@ export const RenderTree = component$(() => {
 
   const onNodeClick = $((node: TreeNode) => {
     console.log(node, '>>');
+    if(Array.isArray(node.props?.[QSEQ])){
+      node.props?.[QSEQ].map((item: any) => {
+        if(isSignal(item)){
+          return signalToTree(item)
+        } 
+      })
+    }
     
-    console.log(node.props['q:seq'].count, '>>')
+    
   });
 
   const currentTab = useSignal<'state' | 'code'>('state');
@@ -72,14 +110,70 @@ export const RenderTree = component$(() => {
 
             class="mt-5 flex-1 rounded-lg border border-border bg-card-item-bg p-2 shadow-sm"
           >
-            这里是您的个人资料详111情。您可以在此页面编辑您的姓名、头像和简介等信息。
+            
+            <Tree data={stateTree} gap={10} renderNode={$((node) => {
+              // Return different rendering based on node type
+              const elementType = node.elementType;
+              const label = node.label || node.name || '';
+              
+              // Handle different types of nodes
+              if (elementType === 'string') {
+                return (
+                  <span class="text-green-600 dark:text-green-400">
+                    {label}
+                  </span>
+                );
+              }
+              
+              if (elementType === 'number') {
+                return (
+                  <span class="text-blue-600 dark:text-blue-400">
+                    {label}
+                  </span>
+                );
+              }
+              
+              if (elementType === 'boolean') {
+                return (
+                  <span class="text-purple-600 dark:text-purple-400">
+                    {label}
+                  </span>
+                );
+              }
+              
+              if (elementType === 'null') {
+                return (
+                  <span class="text-gray-500 dark:text-gray-400 italic">
+                    {label}
+                  </span>
+                );
+              }
+              
+              if (elementType === 'function') {
+                return (
+                  <span class="text-orange-600 dark:text-orange-400 italic">
+                    {label}
+                  </span>
+                );
+              }
+              
+              if (elementType === 'array' || elementType === 'object') {
+                return (
+                  <span class="font-medium">
+                    {label}
+                  </span>
+                );
+              }
+              
+              return <span>{label}</span>;
+            })}></Tree>
           </div>
           }
 
           {currentTab.value === 'code' && <div
             class="mt-5 flex-1 rounded-lg border border-border bg-card-item-bg p-2 shadow-sm"
           >
-            这里是您的个人资料详情。您可以在此页面编辑您的姓名、头像和简介等信息。
+            This is where the code view will be displayed. You can inspect the component source code here.
           </div>
           }
         </div>

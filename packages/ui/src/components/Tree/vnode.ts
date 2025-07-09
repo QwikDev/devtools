@@ -1,4 +1,4 @@
-import { _VNode as VNode, _TextVNode } from '@qwik.dev/core/internal';
+import { _VNode as VNode, _TextVNode, isSignal  } from '@qwik.dev/core/internal';
 import {
   VNodeProps,
   VNodeFlags,
@@ -195,4 +195,9 @@ export function removeNodeFromTree(
 
     return true;
   });
+}
+
+
+export const isSignal = () => {
+  
 }
