@@ -9,9 +9,9 @@ import {
 import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
-import { removeNodeFromTree } from '../../components/Tree/vnode';
+import { isStore, isTask, removeNodeFromTree } from '../../components/Tree/vnode';
 import { ISDEVTOOL } from '../../components/Tree/type';
-import { objectToTree, QSEQ, signalToTree } from './transfromqseq';
+import { createTreeNodeObj, objectToTree, QSEQ, signalToTree, taskToTree } from './transfromqseq';
 
 export const RenderTree = component$(() => {
   const data = useSignal<TreeNode[]>([]);
@@ -67,11 +67,16 @@ export const RenderTree = component$(() => {
   const onNodeClick = $((node: TreeNode) => {
     console.log(node, '>>');
     if(Array.isArray(node.props?.[QSEQ])){
-      node.props?.[QSEQ].map((item: any) => {
+      stateTree.value = node.props?.[QSEQ].map((item: any) => {
         if(isSignal(item)){
-          return signalToTree(item)
-        } 
-      })
+          return createTreeNodeObj('useSignal', signalToTree(item))
+        } else if(isTask(item)){
+          return createTreeNodeObj('Task', taskToTree(item))
+        } else {
+          return  createTreeNodeObj('useStore', objectToTree(item))
+        }
+      }).flat()
+      console.log(stateTree.value.flat(), '>>>>')
     }
     
     

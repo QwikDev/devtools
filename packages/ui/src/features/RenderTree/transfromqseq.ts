@@ -40,14 +40,7 @@ export const objectToTree = (obj: any, parentPath: string = ''): TreeNode[] => {
  * Create a single TreeNode
  */
 function createTreeNode(value: any, key: string, path: string): TreeNode | null {
-  const node: TreeNode = {
-    id: `node-${nodeIdCounter++}`,
-    name: key,
-    label: key,
-    props: {},
-    children: []
-  };
-
+  const node: TreeNode =  createTreeNodeObj(key, )
   // Handle null or undefined
   if (value === null || value === undefined) {
     node.label = `${key}: ${value}`;
@@ -97,16 +90,20 @@ function createTreeNode(value: any, key: string, path: string): TreeNode | null 
 
   // Handle objects
   if (typeof value === 'object') {
-    const keys = Object.keys(value);
-    node.label = `${key}: Object {${keys.length}}`;
-    node.elementType = 'object';
-
-    // Recursively process child properties
-    node.children = Object.entries(value).map(([childKey, childValue]) => {
-      const childPath = `${path}.${childKey}`;
-      return createTreeNode(childValue, childKey, childPath);
-    }).filter(Boolean) as TreeNode[];
-
+    if(value.constructor.name !== 'Object'){
+      node.label = `${key}: Class {${value.constructor.name}}`;
+      node.elementType = 'object';
+    } else {
+      const keys = Object.keys(value);
+      node.label = `${key}: Object {${keys.length}}`;
+      node.elementType = 'object';
+  
+      // Recursively process child properties
+      node.children = Object.entries(value).map(([childKey, childValue]) => {
+        const childPath = `${path}.${childKey}`;
+        return createTreeNode(childValue, childKey, childPath);
+      }).filter(Boolean) as TreeNode[];
+    }
     return node;
   }
 
@@ -127,25 +124,22 @@ export const signalToTree = (signal: Signal): TreeNode[] => {
   return objectToTree(signal);
 };
 
-/**
- * Example usage
- */
-export const exampleUsage = () => {
-  const exampleState = {
-    user: {
-      id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      'q:seq': { count: 5 },
-      preferences: {
-        theme: 'dark',
-        language: 'en-US'
-      }
-    },
-    items: ['item1', 'item2', 'item3'],
-    isActive: true,
-    count: 42
-  };
 
-  return objectToTree(exampleState);
+/**
+ * Convert task to tree structure
+ */
+export const taskToTree = (task: any): TreeNode[] => {
+  nodeIdCounter = 0;
+  const valueNode = createTreeNode(task, 'value', 'value');
+  return valueNode ? [valueNode] : [];
 };
+
+
+export const createTreeNodeObj = (label: string, children: TreeNode[] = []): TreeNode => {
+  return {
+    id: `node-${nodeIdCounter++}`,
+    label,
+    props: {},
+    children,
+  };
+}

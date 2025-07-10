@@ -58,3 +58,6 @@ export const enum QContainerValue {
   // textarea
   TEXT = 'text',
 }
+
+
+export type StoreTarget = Record<string | symbol, any>;

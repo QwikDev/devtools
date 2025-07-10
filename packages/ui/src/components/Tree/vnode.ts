@@ -1,4 +1,4 @@
-import { _VNode as VNode, _TextVNode, isSignal  } from '@qwik.dev/core/internal';
+import { _VNode as VNode, _TextVNode, Task  } from '@qwik.dev/core/internal';
 import {
   VNodeProps,
   VNodeFlags,
@@ -7,6 +7,7 @@ import {
   Q_PROPS_SEPARATOR,
   QContainerAttr,
   QContainerValue,
+  StoreTarget,
 } from './type';
 import { TreeNode } from './Tree';
 
@@ -198,6 +199,12 @@ export function removeNodeFromTree(
 }
 
 
-export const isSignal = () => {
-  
-}
+export const STORE_TARGET = Symbol('store.target');
+
+export const isStore = (value: StoreTarget): boolean => {
+  return STORE_TARGET in value;
+};
+
+export const isTask = (value: any): boolean => {
+  return value.constructor?.name === 'Task';
+};
