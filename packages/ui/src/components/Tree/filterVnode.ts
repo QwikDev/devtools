@@ -37,7 +37,7 @@ export function vnode_toObject(vnodeItem: _VNode | null): TreeNode[] | null {
 
   return buildTreeRecursive(vnodeItem, false);
 }
-const container = htmlContainer();
+const container = htmlContainer()!;
 function buildTreeRecursive(
   vnode: _VNode | null,
   materialize: boolean,
@@ -65,7 +65,6 @@ function buildTreeRecursive(
         if (key === DEBUG_TYPE) return;
 
         const value = container.getHostProp(currentVNode!, key) as QRL;
-
         // Update the underlying VNode props array and the new object's props.
         vnode_getProps(currentVNode!)[
           vnode_getProps(currentVNode!).indexOf(key) + 1

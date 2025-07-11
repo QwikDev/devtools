@@ -4,14 +4,16 @@ import {
   useComputed$,
   $, 
   useSignal,
-  isSignal
+  isSignal,
+  useStore
 } from '@qwik.dev/core';
 import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
-import { isStore, isTask, removeNodeFromTree } from '../../components/Tree/vnode';
 import { ISDEVTOOL } from '../../components/Tree/type';
 import { createTreeNodeObj, objectToTree, QSEQ, signalToTree, taskToTree } from './transfromqseq';
+import { removeNodeFromTree } from '../../components/Tree/vnode';
+import { isStore } from '../../utils/type';
 
 export const RenderTree = component$(() => {
   const data = useSignal<TreeNode[]>([]);
@@ -42,7 +44,10 @@ export const RenderTree = component$(() => {
       retry: 3
     }
   };
-  
+  const usestore = useStore({
+    count: 0
+  })
+  console.log(isStore(usestore))
   const stateTree = useSignal<TreeNode[]>(objectToTree(exampleState));
   
   const qwikContainer = useComputed$(() => {
@@ -65,16 +70,19 @@ export const RenderTree = component$(() => {
   });
 
   const onNodeClick = $((node: TreeNode) => {
-    console.log(node, '>>');
     if(Array.isArray(node.props?.[QSEQ])){
       stateTree.value = node.props?.[QSEQ].map((item: any) => {
         if(isSignal(item)){
-          return createTreeNodeObj('useSignal', signalToTree(item))
-        } else if(isTask(item)){
-          return createTreeNodeObj('Task', taskToTree(item))
-        } else {
+        //   return createTreeNodeObj('useSignal', signalToTree(item))
+        // } else if(isTask(item)){
+        //   return createTreeNodeObj('Task', taskToTree(item))
+        // } else {
+          // console.log(isStore(item), '>>>>')
           return  createTreeNodeObj('useStore', objectToTree(item))
         }
+
+        console.log(unwrapStore(item), '>>>>')
+        return item
       }).flat()
       console.log(stateTree.value.flat(), '>>>>')
     }
