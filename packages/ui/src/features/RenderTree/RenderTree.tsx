@@ -4,46 +4,21 @@ import {
   useComputed$,
   $, 
   useSignal,
-  isSignal,
-  useStore
 } from '@qwik.dev/core';
 import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
 import { ISDEVTOOL } from '../../components/Tree/type';
-import { createTreeNodeObj, objectToTree, QSEQ, signalToTree, taskToTree } from './transfromqseq';
+import { QSEQ} from './transfromqseq';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
+import { isComputed, isPureSignal, isStore, isTask } from '../../utils/type';
+import { formatComputedData, formatSignalData, formatStoreData, formatTaskData, getData } from './formatTreeData';
+import { unwrapStore } from '@qwik.dev/core/internal';
 
 export const RenderTree = component$(() => {
   const data = useSignal<TreeNode[]>([]);
   
-  // Use a more realistic state example
-  const exampleState = {
-    user: {
-      id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      'q:seq': { count: 5 },
-      preferences: {
-        theme: 'dark',
-        language: 'en-US',
-        notifications: true
-      },
-      roles: ['admin', 'user', 'moderator']
-    },
-    counter: 42,
-    isLoading: false,
-    items: [
-      { id: 1, name: 'Item 1', price: 10.99, inStock: true },
-      { id: 2, name: 'Item 2', price: 20.50, inStock: false }
-    ],
-    config: {
-      apiUrl: 'https://api.example.com',
-      timeout: 5000,
-      retry: 3
-    }
-  };
-  const stateTree = useSignal<TreeNode[]>(objectToTree(exampleState));
+  const stateTree = useSignal<TreeNode[]>([]);
   
   const qwikContainer = useComputed$(() => {
     try {
@@ -58,7 +33,6 @@ export const RenderTree = component$(() => {
     data.value = removeNodeFromTree(
       vnode_toObject(qwikContainer.value!.rootVNode)!,
       (node) => {
-        // console.log(node.name, '>>')
         return node.name === ISDEVTOOL
       },
     );
@@ -66,20 +40,18 @@ export const RenderTree = component$(() => {
 
   const onNodeClick = $((node: TreeNode) => {
     if(Array.isArray(node.props?.[QSEQ])){
-      stateTree.value = node.props?.[QSEQ].map((item: any) => {
-        if(isSignal(item)){
-        //   return createTreeNodeObj('useSignal', signalToTree(item))
-        // } else if(isTask(item)){
-        //   return createTreeNodeObj('Task', taskToTree(item))
-        // } else {
-          // console.log(isStore(item), '>>>>')
-          return  createTreeNodeObj('useStore', objectToTree(item))
+      node.props?.[QSEQ].forEach((item: any) => {
+        if(isPureSignal(item)){
+          formatSignalData(item)
+        }else if(isTask(item)){
+          formatTaskData(item)
+        } else if(isComputed(item)){
+          formatComputedData(item)
+        } else if(isStore(item)){
+          formatStoreData(unwrapStore(item))
         }
-
-        // console.log(unwrapStore(item), '>>>>')
-        return item
-      }).flat()
-      console.log(stateTree.value.flat(), '>>>>')
+      })
+      stateTree.value = getData()
     }
     
     
@@ -120,11 +92,44 @@ export const RenderTree = component$(() => {
           >
             
             <Tree data={stateTree} gap={10} renderNode={$((node) => {
-              // Return different rendering based on node type
+              // 优化：根据 name 渲染不同样式
               const elementType = node.elementType;
               const label = node.label || node.name || '';
-              
-              // Handle different types of nodes
+              const name = node.label;
+              // useStoreList
+              if (name === 'useStoreList') {
+                return (
+                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 font-semibold text-sm">
+                    <span class="mr-1">🏪</span> {name}
+                  </span>
+                );
+              }
+              // useSignal
+              if (name === 'useSignalList') {
+                return (
+                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 font-semibold text-sm">
+                    <span class="mr-1">📶</span> {name}
+                  </span>
+                );
+              }
+              // Computed
+              if (name === 'ComputedList') {
+                return (
+                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 font-semibold text-sm">
+                    <span class="mr-1">🧮</span> {name}
+                  </span>
+                );
+              }
+              // Task
+              if (name === 'TaskList') {
+                return (
+                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200 font-semibold text-sm">
+                    <span class="mr-1">⏳</span>{name}
+                  </span>
+                );
+              }
+
+              // 其余类型保持原有逻辑
               if (elementType === 'string') {
                 return (
                   <span class="text-green-600 dark:text-green-400">
@@ -132,7 +137,6 @@ export const RenderTree = component$(() => {
                   </span>
                 );
               }
-              
               if (elementType === 'number') {
                 return (
                   <span class="text-blue-600 dark:text-blue-400">
@@ -140,7 +144,6 @@ export const RenderTree = component$(() => {
                   </span>
                 );
               }
-              
               if (elementType === 'boolean') {
                 return (
                   <span class="text-purple-600 dark:text-purple-400">
@@ -148,7 +151,6 @@ export const RenderTree = component$(() => {
                   </span>
                 );
               }
-              
               if (elementType === 'null') {
                 return (
                   <span class="text-gray-500 dark:text-gray-400 italic">
@@ -156,7 +158,6 @@ export const RenderTree = component$(() => {
                   </span>
                 );
               }
-              
               if (elementType === 'function') {
                 return (
                   <span class="text-orange-600 dark:text-orange-400 italic">
@@ -164,7 +165,6 @@ export const RenderTree = component$(() => {
                   </span>
                 );
               }
-              
               if (elementType === 'array' || elementType === 'object') {
                 return (
                   <span class="font-medium">
@@ -172,7 +172,6 @@ export const RenderTree = component$(() => {
                   </span>
                 );
               }
-              
               return <span>{label}</span>;
             })}></Tree>
           </div>

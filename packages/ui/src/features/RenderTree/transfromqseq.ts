@@ -40,7 +40,7 @@ export const objectToTree = (obj: any, parentPath: string = ''): TreeNode[] => {
  * Create a single TreeNode
  */
 function createTreeNode(value: any, key: string, path: string): TreeNode | null {
-  const node: TreeNode =  createTreeNodeObj(key, )
+  const node: TreeNode =  createTreeNodeObj(key )
   // Handle null or undefined
   if (value === null || value === undefined) {
     node.label = `${key}: ${value}`;
@@ -114,7 +114,6 @@ function createTreeNode(value: any, key: string, path: string): TreeNode | null 
  * Special handling for value property
  */
 export const signalToTree = (signal: Signal): TreeNode[] => {
-  nodeIdCounter = 0;
   
   if (isSignal(signal)) {
     const valueNode = createTreeNode(signal.value, 'value', 'value');
@@ -129,7 +128,6 @@ export const signalToTree = (signal: Signal): TreeNode[] => {
  * Convert task to tree structure
  */
 export const taskToTree = (task: any): TreeNode[] => {
-  nodeIdCounter = 0;
   const valueNode = createTreeNode(task, 'value', 'value');
   return valueNode ? [valueNode] : [];
 };
