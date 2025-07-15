@@ -199,7 +199,7 @@ export function removeNodeFromTree(
 }
 
 
-export const STORE_TARGET = Symbol('store.target');
+export const STORE_TARGET = 'store.target';
 
 export const isStore = (value: StoreTarget): boolean => {
   return STORE_TARGET in value;

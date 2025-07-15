@@ -13,7 +13,6 @@ import { htmlContainer } from '../../utils/location';
 import { ISDEVTOOL } from '../../components/Tree/type';
 import { createTreeNodeObj, objectToTree, QSEQ, signalToTree, taskToTree } from './transfromqseq';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
-import { isStore } from '../../utils/type';
 
 export const RenderTree = component$(() => {
   const data = useSignal<TreeNode[]>([]);
@@ -44,10 +43,6 @@ export const RenderTree = component$(() => {
       retry: 3
     }
   };
-  const usestore = useStore({
-    count: 0
-  })
-  console.log(isStore(usestore))
   const stateTree = useSignal<TreeNode[]>(objectToTree(exampleState));
   
   const qwikContainer = useComputed$(() => {
@@ -81,7 +76,7 @@ export const RenderTree = component$(() => {
           return  createTreeNodeObj('useStore', objectToTree(item))
         }
 
-        console.log(unwrapStore(item), '>>>>')
+        // console.log(unwrapStore(item), '>>>>')
         return item
       }).flat()
       console.log(stateTree.value.flat(), '>>>>')

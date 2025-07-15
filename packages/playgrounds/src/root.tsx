@@ -7,6 +7,7 @@ import {
 } from '@qwik.dev/router';
 import { RouterHead } from './components/router-head/router-head';
 import './global.css';
+import { QwikDevtools } from '@devtools/ui';
 
 export default component$(() => {
   /**
@@ -31,6 +32,7 @@ export default component$(() => {
       <body lang="en">
         <RouterOutlet />
         {!isDev && <ServiceWorkerRegister />}
+        <QwikDevtools></QwikDevtools>
       </body>
     </QwikRouterProvider>
   );
