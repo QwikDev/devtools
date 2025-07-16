@@ -51,7 +51,7 @@ export const RenderTree = component$(() => {
           formatStoreData(unwrapStore(item))
         }
       })
-      stateTree.value = getData()
+      stateTree.value = getData() as TreeNode[]
     }
     
     
@@ -91,88 +91,21 @@ export const RenderTree = component$(() => {
             class="mt-5 flex-1 rounded-lg border border-border bg-card-item-bg p-2 shadow-sm"
           >
             
-            <Tree data={stateTree} gap={10} renderNode={$((node) => {
-              // 优化：根据 name 渲染不同样式
-              const elementType = node.elementType;
+            <Tree data={stateTree} gap={10} isHover={false} 
+            renderNode={$((node) => {
               const label = node.label || node.name || '';
-              const name = node.label;
-              // useStoreList
-              if (name === 'useStoreList') {
+              const isProperty = label.split(':')
+              // 分组节点大色块样式
+              if (label === 'useStoreList' || label === 'useSignalList' || label === 'ComputedList' || label === 'TaskList') {
                 return (
-                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 font-semibold text-sm">
-                    <span class="mr-1">🏪</span> {name}
-                  </span>
-                );
-              }
-              // useSignal
-              if (name === 'useSignalList') {
-                return (
-                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 font-semibold text-sm">
-                    <span class="mr-1">📶</span> {name}
-                  </span>
-                );
-              }
-              // Computed
-              if (name === 'ComputedList') {
-                return (
-                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 font-semibold text-sm">
-                    <span class="mr-1">🧮</span> {name}
-                  </span>
-                );
-              }
-              // Task
-              if (name === 'TaskList') {
-                return (
-                  <span class="inline-flex items-center px-2 py-0.5 rounded bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200 font-semibold text-sm">
-                    <span class="mr-1">⏳</span>{name}
+                  <span class="text-gray-500 dark:text-gray-300">
+                    {label}
                   </span>
                 );
               }
 
-              // 其余类型保持原有逻辑
-              if (elementType === 'string') {
-                return (
-                  <span class="text-green-600 dark:text-green-400">
-                    {label}
-                  </span>
-                );
-              }
-              if (elementType === 'number') {
-                return (
-                  <span class="text-blue-600 dark:text-blue-400">
-                    {label}
-                  </span>
-                );
-              }
-              if (elementType === 'boolean') {
-                return (
-                  <span class="text-purple-600 dark:text-purple-400">
-                    {label}
-                  </span>
-                );
-              }
-              if (elementType === 'null') {
-                return (
-                  <span class="text-gray-500 dark:text-gray-400 italic">
-                    {label}
-                  </span>
-                );
-              }
-              if (elementType === 'function') {
-                return (
-                  <span class="text-orange-600 dark:text-orange-400 italic">
-                    {label}
-                  </span>
-                );
-              }
-              if (elementType === 'array' || elementType === 'object') {
-                return (
-                  <span class="font-medium">
-                    {label}
-                  </span>
-                );
-              }
-              return <span>{label}</span>;
+              return (isProperty.length > 1 ? (<><span class="text-red-300 dark:text-red-500">{isProperty[0]}</span><span class="text-gray-400">: {isProperty[1]}</span></>) : <span>{label}</span>)
+      
             })}></Tree>
           </div>
           }

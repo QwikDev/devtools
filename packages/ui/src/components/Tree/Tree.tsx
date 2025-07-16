@@ -9,6 +9,7 @@ export interface TreeNode {
   children?: TreeNode[];
   elementType?: string;
   label?: string;
+  isHover?: boolean;
   id: string;
 }
 
@@ -17,6 +18,7 @@ const TreeNodeComponent = component$(
     node: TreeNode;
     level: number;
     gap: number;
+    isHover: boolean;
     activeNodeId: string;
     expandLevel: number;
     onNodeClick: QRL<(node: TreeNode) => void>;
@@ -45,7 +47,7 @@ const TreeNodeComponent = component$(
     };
 
     // Check if the current node is the one that is active
-    const isActive = props.node.id === props.activeNodeId;
+    const isActive = props.isHover ? props.node.id === props.activeNodeId : false;
     return (
       <div style={{ paddingLeft: `${props.level * props.gap}px` }}>
         <div
@@ -76,6 +78,7 @@ const TreeNodeComponent = component$(
           <>
             {props.node.children?.map((child) => (
               <TreeNodeComponent
+                isHover={props.isHover}
                 key={child.id}
                 node={child}
                 gap={props.gap}
@@ -99,6 +102,7 @@ export const Tree = component$(
     onNodeClick?: QRL<(node: TreeNode) => void>;
     renderNode?: QRL<(node: TreeNode) => JSXOutput>;
     gap?: number;
+    isHover?: boolean;
   }) => {
     const ref = useSignal<HTMLElement | undefined>();
     const store = props.data;
@@ -114,6 +118,7 @@ export const Tree = component$(
       <div class="h-full w-full overflow-x-auto overflow-y-auto" ref={ref}>
         {store.value.map((rootNode) => (
           <TreeNodeComponent
+            isHover={props.isHover ?? true}
             gap={props.gap || 20 }
             key={rootNode.id}
             node={rootNode}
