@@ -9,10 +9,10 @@ import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
 import { ISDEVTOOL } from '../../components/Tree/type';
-import { QSEQ} from './transfromqseq';
+import { QPROPS, QSEQ} from './transfromqseq';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
-import { isComputed, isPureSignal, isStore, isTask } from '../../utils/type';
-import { formatComputedData, formatSignalData, formatStoreData, formatTaskData, getData } from './formatTreeData';
+import { isComputed, isListen, isPureSignal, isStore, isTask } from '../../utils/type';
+import { formatComputedData, formatListenData, formatPropsData, formatSignalData, formatStoreData, formatTaskData, getData } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
 
 export const RenderTree = component$(() => {
@@ -39,6 +39,7 @@ export const RenderTree = component$(() => {
   });
 
   const onNodeClick = $((node: TreeNode) => {
+    console.log(node)
     if(Array.isArray(node.props?.[QSEQ])){
       node.props?.[QSEQ].forEach((item: any) => {
         if(isPureSignal(item)){
@@ -51,9 +52,21 @@ export const RenderTree = component$(() => {
           formatStoreData(unwrapStore(item))
         }
       })
-      stateTree.value = getData() as TreeNode[]
+     
     }
-    
+    if(node.props?.[QPROPS]){
+      const props = unwrapStore(node.props?.[QPROPS])
+      Object.keys(props).forEach((key: any) => {
+        if(isListen(key)){
+          formatListenData({[key]: props[key]})
+        } else {
+          formatPropsData({[key]: props[key]})
+        }
+
+      })
+    }
+
+    stateTree.value = getData() as TreeNode[]
     
   });
 
@@ -66,7 +79,7 @@ export const RenderTree = component$(() => {
           <Tree data={data} onNodeClick={onNodeClick}></Tree>
         </div>
         <div class="border-l border-border"></div>
-        <div class="flex h-full w-[50%] flex-col overflow-y-auto p-4">
+        <div class="flex h-full w-[50%] flex-col p-4">
           <div class="border-b border-border">
             <div class="flex space-x-4 border-b border-border">
               <button
@@ -87,8 +100,7 @@ export const RenderTree = component$(() => {
           </div>
 
           {currentTab.value === 'state' && <div
-
-            class="mt-5 flex-1 rounded-lg border border-border bg-card-item-bg p-2 shadow-sm"
+            class="mt-5 flex-1 rounded-lg border border-border bg-card-item-bg p-2 shadow-sm overflow-y-auto"
           >
             
             <Tree data={stateTree} gap={10} isHover={false} 
@@ -96,7 +108,7 @@ export const RenderTree = component$(() => {
               const label = node.label || node.name || '';
               const isProperty = label.split(':')
               // 分组节点大色块样式
-              if (label === 'useStoreList' || label === 'useSignalList' || label === 'ComputedList' || label === 'TaskList') {
+              if (label === 'useStore' || label === 'useSignal' || label === 'Computed' || label === 'Task' || label === 'Props' || label === 'Listens') {
                 return (
                   <span class="text-gray-500 dark:text-gray-300">
                     {label}

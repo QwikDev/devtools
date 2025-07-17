@@ -20,3 +20,8 @@ export const isAsyncComputed = (value: any) => {
 export const isTask = (value: any) => {
   return value.constructor?.name === 'Task';
 };
+
+
+export const isListen = (str: string) => {
+  return /^on.*\$/.test(str);
+};

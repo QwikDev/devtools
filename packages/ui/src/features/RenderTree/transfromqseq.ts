@@ -2,6 +2,7 @@ import { isSignal, Signal } from '@qwik.dev/core';
 import { TreeNode } from '../../components/Tree/Tree';
 
 export const QSEQ = 'q:seq'
+export const QPROPS = 'q:props'
 
 let nodeIdCounter = 0;
 

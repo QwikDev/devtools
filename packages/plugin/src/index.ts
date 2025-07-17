@@ -56,7 +56,7 @@ export function qwikDevtools(): Plugin[] {
       },
     },
     configureServer(server) {
-      setViteServerContext(server);
+      setViteServerContext(server as any);
 
       const rpcFunctions = getServerFunctions({ server, config: _config });
 
@@ -65,7 +65,7 @@ export function qwikDevtools(): Plugin[] {
   }
   return [
     qwikDevtoolsPlugin,
-    VueInspector(), // Add the VueInspector plugin instance
+    VueInspector({build: true}), // Add the VueInspector plugin instance
   ];
 }
 
