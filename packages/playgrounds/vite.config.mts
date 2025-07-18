@@ -21,7 +21,7 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  */
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
-    plugins: [qwikRouter(), qwikVite(), tsconfigPaths()],
+    plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikDevtools()],
     build: {
       rollupOptions: {
         external: ['path'],

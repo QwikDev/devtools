@@ -16,6 +16,7 @@ export interface ServerFunctions {
     packageName: string,
     isDev?: boolean,
   ) => Promise<{ success: boolean; error?: string }>;
+  getModulesById: (id: string) => Promise<any>;
 }
 
 export type ServerRpc = BirpcReturn<ClientFunctions, ServerFunctions>;

@@ -14,13 +14,14 @@ const generate = _generate.default;
 
 export function qwikDevtools(): Plugin[] {
   let _config: ResolvedConfig;
+  const qwikData = new Map<string, any>();
   const qwikDevtoolsPlugin: Plugin = {
     name: 'vite-plugin-qwik-devtools',
     apply: 'serve',
     configResolved(viteConfig) {
       _config = viteConfig;
-    },
-  
+      console.log( 111, _config, __dirname)
+    }, 
     transform: {
       order: 'pre',
       handler(code, id) {
@@ -58,14 +59,14 @@ export function qwikDevtools(): Plugin[] {
     configureServer(server) {
       setViteServerContext(server as any);
 
-      const rpcFunctions = getServerFunctions({ server, config: _config });
+      const rpcFunctions = getServerFunctions({ server, config: _config, qwikData });
 
       createServerRpc(rpcFunctions);
     },
   }
   return [
     qwikDevtoolsPlugin,
-    VueInspector({build: true}), // Add the VueInspector plugin instance
+    VueInspector(), // Add the VueInspector plugin instance
   ];
 }
 
