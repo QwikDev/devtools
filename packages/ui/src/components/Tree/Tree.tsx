@@ -22,7 +22,7 @@ const TreeNodeComponent = component$(
     activeNodeId: string;
     expandLevel: number;
     onNodeClick: QRL<(node: TreeNode) => void>;
-    renderNode?: QRL<(node: TreeNode) => JSXOutput>
+    renderNode?: QRL<(node: TreeNode) => JSXOutput>;
   }) => {
     const isExpanded = useSignal(props.expandLevel <= props.level); // Default to expanded
     const hasChildren = props.node.children && props.node.children.length > 0;
@@ -47,7 +47,9 @@ const TreeNodeComponent = component$(
     };
 
     // Check if the current node is the one that is active
-    const isActive = props.isHover ? props.node.id === props.activeNodeId : false;
+    const isActive = props.isHover
+      ? props.node.id === props.activeNodeId
+      : false;
     return (
       <div style={{ paddingLeft: `${props.level * props.gap}px` }}>
         <div
@@ -119,7 +121,7 @@ export const Tree = component$(
         {store.value.map((rootNode) => (
           <TreeNodeComponent
             isHover={props.isHover ?? true}
-            gap={props.gap || 20 }
+            gap={props.gap || 20}
             key={rootNode.id}
             node={rootNode}
             level={0}

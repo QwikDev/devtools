@@ -1,62 +1,71 @@
-import { ComputedSignal, Signal } from '@qwik.dev/core';
-import { createTreeNodeObj, objectToTree, signalToTree, taskToTree } from './transfromqseq';
+import {
+  createTreeNodeObj,
+  objectToTree,
+  signalToTree,
+  taskToTree,
+} from './transfromqseq';
+import { TreeNode } from '../../components/Tree/Tree';
 
-const storeData = new Set();
+const dataMap = {
+  UseStore: { set: new Set(), toTree: objectToTree, display: true },
+  UseSignal: { set: new Set(), toTree: signalToTree, display: true },
+  Computed: { set: new Set(), toTree: signalToTree, display: true },
+  Task: { set: new Set(), toTree: taskToTree, display: true },
+  Props: { set: new Set(), toTree: objectToTree, display: true },
+  Listens: { set: new Set(), toTree: objectToTree, display: true },
+  Render: { set: new Set(), toTree: taskToTree, display: false },
+} as const;
 
-const signalData = new Set();
+type DataType = keyof typeof dataMap;
 
-const computedData = new Set();
-
-const taskData = new Set();
-
-const propsData = new Set();
-
-const listenData = new Set();
-
-export function formatSignalData(data: Signal) {
-  signalData.add(signalToTree(data));
-}
-export function formatTaskData(data: any) {
-  taskData.add(taskToTree(data));
-}
-
-export function formatComputedData(data: ComputedSignal<any>) {
-  computedData.add(signalToTree(data));
-}
-
-export function formatStoreData(data: any) {
-  storeData.add(objectToTree(data));
-}
-
-export function formatPropsData(data: any) {
-  propsData.add(objectToTree(data));
-}
-
-
-export function formatListenData(data: any) {
-  listenData.add(objectToTree(data));
+export function formatData(type: DataType, data: any) {
+  dataMap[type].set.add(data);
 }
 
 export function getData() {
-  const store = [...storeData as any].flat()
-  const signal = [...signalData as any].flat()
-  const computed = [...computedData as any].flat()
-  const task = [...taskData as any].flat()
-  const props = [...propsData as any].flat()
-  const listen = [...listenData as any].flat()
-  const data = [
-    store.length > 0 && createTreeNodeObj('useStore', store),
-    signal.length > 0 && createTreeNodeObj('useSignal', signal),
-    computed.length > 0 && createTreeNodeObj('Computed', computed),
-    task.length > 0 && createTreeNodeObj('Task', task),
-    props.length > 0 && createTreeNodeObj('Props', props),
-    listen.length > 0 && createTreeNodeObj('Listens', listen),
+  return Object.entries(dataMap)
+    .map(([name, { set, toTree, display }]) => {
+      const arr = [...set].map((item) => toTree(item as any)).flat();
+      set.clear();
+      if (display === false) return null;
+      return arr.length > 0 ? createTreeNodeObj(name, arr as TreeNode[]) : null;
+    })
+    .filter(Boolean);
+}
+
+function getRawDataObj() {
+  const result: Record<string, any[]> = {};
+  Object.entries(dataMap).forEach(([name, { set }]) => {
+    result[name] = [...set];
+  });
+  return result;
+}
+
+export function findAllQrl() {
+  const list: Array<keyof typeof dataMap> = [
+    'Computed',
+    'Task',
+    'Listens',
+    'Render',
   ];
-  storeData.clear(),
-  signalData.clear(),
-  computedData.clear(),
-  taskData.clear()
-  propsData.clear()
-  listenData.clear()
-  return data.filter(Boolean)
+  const qrlKey = '$qrl$';
+  const computedQrlKey = '$computeQrl$';
+  const chunkKey = '$chunk$';
+
+  const rawData = getRawDataObj();
+
+  const result = list.map((item) => {
+    return rawData[item].map((entry) => {
+      if (item === 'Listens') {
+        return Object.values(entry || {}).map((v: any) => v?.[chunkKey]);
+      } else if (item === 'Render') {
+        return (entry as any)?.[chunkKey];
+      } else {
+        const qrlObj = (entry as any)[qrlKey] || (entry as any)[computedQrlKey];
+        return qrlObj?.[chunkKey];
+      }
+    });
+  });
+
+  return result.flat(2).filter(Boolean);
 }

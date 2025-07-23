@@ -59,5 +59,4 @@ export const enum QContainerValue {
   TEXT = 'text',
 }
 
-
 export type StoreTarget = Record<string | symbol, any>;

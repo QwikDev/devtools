@@ -14,7 +14,7 @@ import { htmlContainer } from '../../utils/location';
 import { TreeNode } from './Tree';
 
 let index = 0;
- 
+
 function initVnode({
   name = 'text',
   props = {},

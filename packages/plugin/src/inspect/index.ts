@@ -2,12 +2,22 @@ import { ServerContext } from "../types";
 
 export function getModulesContent(ctx: ServerContext) {
   return {
-    getModulesById: async (id: string | string[]) => {
-        let pathIds: string[] = [];
-        
-        const modules = await Promise.all(pathIds.map(async (pathId) => {
+    getModulesByPathIds: async (pathIds: string | string[]) => {
+        let pathIdsList: string[] = [];
+
+        let isAddRoot = (pathId: string) => pathId.includes(ctx.config.root) || pathId.includes('/@fs') ? pathId : `${ctx.config.root}${pathId}`
+        if(!pathIds || pathIds.length === 0){
+          return []
+        }
+
+        if(Array.isArray(pathIds)){
+          pathIdsList = pathIds
+        }else{
+          pathIdsList = [pathIds]
+        }
+        const modules = await Promise.all(pathIdsList.map(async (pathId) => {
           try {
-            const modules = await ctx.server.transformRequest(`${ctx.config.root}${pathId}`);
+            const modules = await ctx.server.transformRequest(isAddRoot(pathId));
             return {
               pathId,
               modules
@@ -25,7 +35,7 @@ export function getModulesContent(ctx: ServerContext) {
         if (modules.length > 0) {
           return modules;
         }
-        return null;  
+        return [];  
     },
   };
 }

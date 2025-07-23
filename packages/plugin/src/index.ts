@@ -20,7 +20,6 @@ export function qwikDevtools(): Plugin[] {
     apply: 'serve',
     configResolved(viteConfig) {
       _config = viteConfig;
-      console.log( 111, _config, __dirname)
     }, 
     transform: {
       order: 'pre',

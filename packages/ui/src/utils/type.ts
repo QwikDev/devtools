@@ -1,5 +1,5 @@
-import { isSignal } from "@qwik.dev/core";
-import { unwrapStore } from "@qwik.dev/core/internal";
+import { isSignal } from '@qwik.dev/core';
+import { unwrapStore } from '@qwik.dev/core/internal';
 
 export function isPureSignal(obj: any): boolean {
   return isSignal(obj) && obj.constructor.name === 'SignalImpl';
@@ -10,7 +10,7 @@ export const isStore = (storeObj: any) => {
 };
 
 export const isComputed = (value: any) => {
-  return value.constructor?.name === 'ComputedSignalImpl'
+  return value.constructor?.name === 'ComputedSignalImpl';
 };
 
 export const isAsyncComputed = (value: any) => {
@@ -20,7 +20,6 @@ export const isAsyncComputed = (value: any) => {
 export const isTask = (value: any) => {
   return value.constructor?.name === 'Task';
 };
-
 
 export const isListen = (str: string) => {
   return /^on.*\$/.test(str);

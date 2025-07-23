@@ -2,24 +2,34 @@ import {
   component$,
   useVisibleTask$,
   useComputed$,
-  $, 
+  $,
   useSignal,
 } from '@qwik.dev/core';
 import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
 import { ISDEVTOOL } from '../../components/Tree/type';
-import { QPROPS, QSEQ} from './transfromqseq';
+import { QPROPS, QRENDERFN, QSEQ } from './transfromqseq';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
-import { isComputed, isListen, isPureSignal, isStore, isTask } from '../../utils/type';
-import { formatComputedData, formatListenData, formatPropsData, formatSignalData, formatStoreData, formatTaskData, getData } from './formatTreeData';
+import {
+  isComputed,
+  isListen,
+  isPureSignal,
+  isStore,
+  isTask,
+} from '../../utils/type';
+import { findAllQrl, formatData, getData } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
+import { getViteClientRpc } from '@devtools/kit';
 
 export const RenderTree = component$(() => {
+  const codes = useSignal<{ pathId: string; modules: any; error?: string }[]>(
+    [],
+  );
   const data = useSignal<TreeNode[]>([]);
-  
+
   const stateTree = useSignal<TreeNode[]>([]);
-  
+
   const qwikContainer = useComputed$(() => {
     try {
       return htmlContainer();
@@ -33,41 +43,44 @@ export const RenderTree = component$(() => {
     data.value = removeNodeFromTree(
       vnode_toObject(qwikContainer.value!.rootVNode)!,
       (node) => {
-        return node.name === ISDEVTOOL
+        return node.name === ISDEVTOOL;
       },
     );
   });
 
   const onNodeClick = $((node: TreeNode) => {
-    console.log(node)
-    if(Array.isArray(node.props?.[QSEQ])){
+    if (Array.isArray(node.props?.[QSEQ])) {
       node.props?.[QSEQ].forEach((item: any) => {
-        if(isPureSignal(item)){
-          formatSignalData(item)
-        }else if(isTask(item)){
-          formatTaskData(item)
-        } else if(isComputed(item)){
-          formatComputedData(item)
-        } else if(isStore(item)){
-          formatStoreData(unwrapStore(item))
+        if (isPureSignal(item)) {
+          formatData('UseSignal', item);
+        } else if (isTask(item)) {
+          formatData('Task', item);
+        } else if (isComputed(item)) {
+          formatData('Computed', item);
+        } else if (isStore(item)) {
+          formatData('UseStore', unwrapStore(item));
         }
-      })
-     
+      });
     }
-    if(node.props?.[QPROPS]){
-      const props = unwrapStore(node.props?.[QPROPS])
+    if (node.props?.[QRENDERFN]) {
+      formatData('Render', node.props?.[QRENDERFN]);
+    } else if (node.props?.[QPROPS]) {
+      const props = unwrapStore(node.props?.[QPROPS]);
       Object.keys(props).forEach((key: any) => {
-        if(isListen(key)){
-          formatListenData({[key]: props[key]})
+        if (isListen(key)) {
+          formatData('Listens', { [key]: props[key] });
         } else {
-          formatPropsData({[key]: props[key]})
+          formatData('Props', { [key]: props[key] });
         }
-
-      })
+      });
     }
 
-    stateTree.value = getData() as TreeNode[]
-    
+    const rpc = getViteClientRpc();
+    codes.value = [];
+    rpc?.getModulesByPathIds(findAllQrl()).then((res) => {
+      codes.value = res.filter((item) => item.modules);
+    });
+    stateTree.value = getData() as TreeNode[];
   });
 
   const currentTab = useSignal<'state' | 'code'>('state');
@@ -84,50 +97,105 @@ export const RenderTree = component$(() => {
             <div class="flex space-x-4 border-b border-border">
               <button
                 onClick$={() => (currentTab.value = 'state')}
-                style={currentTab.value === 'state' ? { borderBottom: '2px solid var(--color-primary-active)' } : {}}
-                class="px-4 py-3 text-sm font-medium border-b-transparent border-b-2 transition-all duration-300 ease-in-out"
+                style={
+                  currentTab.value === 'state'
+                    ? { borderBottom: '2px solid var(--color-primary-active)' }
+                    : {}
+                }
+                class="border-b-2 border-b-transparent px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out"
               >
-                state
+                State
               </button>
               <button
                 onClick$={() => (currentTab.value = 'code')}
-                style={currentTab.value === 'code' ? { borderBottom: '2px solid var(--color-primary-active)' } : {}}
-                class="px-4 py-3 text-sm font-medium border-b-transparent border-b-2  transition-all duration-300 ease-in-out"
+                style={
+                  currentTab.value === 'code'
+                    ? { borderBottom: '2px solid var(--color-primary-active)' }
+                    : {}
+                }
+                class="border-b-2 border-b-transparent px-4 py-3 text-sm font-medium  transition-all duration-300 ease-in-out"
               >
-                code
+                Code
               </button>
             </div>
           </div>
 
-          {currentTab.value === 'state' && <div
-            class="mt-5 flex-1 rounded-lg border border-border bg-card-item-bg p-2 shadow-sm overflow-y-auto"
-          >
-            
-            <Tree data={stateTree} gap={10} isHover={false} 
-            renderNode={$((node) => {
-              const label = node.label || node.name || '';
-              const isProperty = label.split(':')
-              // 分组节点大色块样式
-              if (label === 'useStore' || label === 'useSignal' || label === 'Computed' || label === 'Task' || label === 'Props' || label === 'Listens') {
+          {currentTab.value === 'state' && (
+            <div class="mt-5 flex-1 overflow-y-auto rounded-lg border border-border bg-card-item-bg p-2 shadow-sm">
+              <Tree
+                data={stateTree}
+                gap={10}
+                isHover={false}
+                renderNode={$((node) => {
+                  const label = node.label || node.name || '';
+                  const isProperty = label.split(':');
+                  // 分组节点大色块样式
+                  if (
+                    label === 'useStore' ||
+                    label === 'useSignal' ||
+                    label === 'Computed' ||
+                    label === 'Task' ||
+                    label === 'Props' ||
+                    label === 'Listens'
+                  ) {
+                    return (
+                      <span class="text-gray-500 dark:text-gray-300">
+                        {label}
+                      </span>
+                    );
+                  }
+
+                  return isProperty.length > 1 ? (
+                    <>
+                      <span class="text-red-300 dark:text-red-500">
+                        {isProperty[0]}
+                      </span>
+                      <span class="text-gray-400">: {isProperty[1]}</span>
+                    </>
+                  ) : (
+                    <span>{label}</span>
+                  );
+                })}
+              ></Tree>
+            </div>
+          )}
+
+          {currentTab.value === 'code' && (
+            <div class="mt-5 flex-1 overflow-y-auto rounded-lg border  border-border p-2 shadow-sm">
+              {codes.value.map((item) => {
                 return (
-                  <span class="text-gray-500 dark:text-gray-300">
-                    {label}
-                  </span>
+                  <>
+                    <div
+                      class="mb-4 rounded-xl p-4 shadow-lg"
+                      style={{
+                        background: 'var(--color-card)',
+                        border: '1px solid var(--color-border)',
+                      }}
+                    >
+                      <div
+                        class="mb-2 break-all text-base font-semibold"
+                        style={{
+                          color: 'var(--color-primary)',
+                        }}
+                      >
+                        {item.pathId}
+                      </div>
+                      <pre
+                        class="custom-scrollbar overflow-x-auto whitespace-pre-wrap break-words rounded-md p-3 font-mono text-sm"
+                        style={{
+                          background: 'var(--color-card-item-bg)',
+                          color: 'var(--color-foreground)',
+                          border: '1px solid var(--color-border)',
+                        }}
+                      >
+                        {item?.modules?.code}
+                      </pre>
+                    </div>
+                  </>
                 );
-              }
-
-              return (isProperty.length > 1 ? (<><span class="text-red-300 dark:text-red-500">{isProperty[0]}</span><span class="text-gray-400">: {isProperty[1]}</span></>) : <span>{label}</span>)
-      
-            })}></Tree>
-          </div>
-          }
-
-          {currentTab.value === 'code' && <div
-            class="mt-5 flex-1 rounded-lg border border-border bg-card-item-bg p-2 shadow-sm"
-          >
-            This is where the code view will be displayed. You can inspect the component source code here.
-          </div>
-          }
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>

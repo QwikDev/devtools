@@ -1,4 +1,4 @@
-import { _VNode as VNode, _TextVNode  } from '@qwik.dev/core/internal';
+import { _VNode as VNode, _TextVNode } from '@qwik.dev/core/internal';
 import {
   VNodeProps,
   VNodeFlags,

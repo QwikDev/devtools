@@ -5,7 +5,6 @@ import {
   useStyles$,
   useSignal,
   useVisibleTask$,
-  isServer,
 } from '@qwik.dev/core';
 import { tryCreateHotContext } from 'vite-hot-client';
 import {
@@ -49,10 +48,6 @@ function getClientRpcFunctions() {
 }
 
 export const QwikDevtools = component$(() => {
-  if (isServer) {
-    console.log(import.meta.dirname)
-  }
-
   useStyles$(globalCss);
   const state = useStore<State>({
     isOpen: useSignal(false),
@@ -76,7 +71,6 @@ export const QwikDevtools = component$(() => {
     track(() => {
       if (state.isOpen.value) {
         const rpc = getViteClientRpc();
-        console.log(rpc);
         rpc.getAssetsFromPublicDir().then((data) => {
           state.assets = data;
         });
@@ -106,9 +100,6 @@ export const QwikDevtools = component$(() => {
 
         rpc.getQwikPackages().then((data: NpmInfo) => {
           state.npmPackages = data;
-        });
-        rpc.getModulesById('/src/components/Button/Button.tsx_Button_component_4n7uUfcfzUA.js').then((data) => {
-          console.log(data);
         });
       }
     });
