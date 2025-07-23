@@ -69,7 +69,6 @@ export const RenderTree = component$(() => {
 
     if (node.props?.[QRENDERFN]) {
       formatData('Render', node.props[QRENDERFN]);
-      return;
     }
 
     if (node.props?.[QPROPS]) {
@@ -84,6 +83,7 @@ export const RenderTree = component$(() => {
     rpc?.getModulesByPathIds(findAllQrl()).then((res) => {
       codes.value = res.filter((item) => item.modules);
     });
+   
     stateTree.value = getData() as TreeNode[];
   });
 
@@ -168,29 +168,11 @@ export const RenderTree = component$(() => {
               {codes.value.map((item) => {
                 return (
                   <>
-                    <div
-                      class="mb-4 rounded-xl p-4 shadow-lg"
-                      style={{
-                        background: 'var(--color-card)',
-                        border: '1px solid var(--color-border)',
-                      }}
-                    >
-                      <div
-                        class="mb-2 break-all text-base font-semibold"
-                        style={{
-                          color: 'var(--color-primary)',
-                        }}
-                      >
+                    <div class="mb-4 p-4 rounded-xl shadow-lg bg-background border border-border">
+                      <div class="text-base font-semibold mb-2 break-all text-primary">
                         {item.pathId}
                       </div>
-                      <pre
-                        class="custom-scrollbar overflow-x-auto whitespace-pre-wrap break-words rounded-md p-3 font-mono text-sm"
-                        style={{
-                          background: 'var(--color-card-item-bg)',
-                          color: 'var(--color-foreground)',
-                          border: '1px solid var(--color-border)',
-                        }}
-                      >
+                      <pre class="rounded-md p-3 overflow-x-auto whitespace-pre-wrap break-words font-mono text-sm bg-card-item-bg text-foreground border border-border custom-scrollbar">
                         {item?.modules?.code}
                       </pre>
                     </div>
