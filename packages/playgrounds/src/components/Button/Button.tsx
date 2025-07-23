@@ -19,7 +19,6 @@ import {
 import { _getDomContainer, isServer, useVisibleTask$ } from '@qwik.dev/core/internal';
 import type { QRL } from '@qwik.dev/core';
 
-// 创建上下文
 const ButtonContext = createContextId<{ theme: string; size: string }>('button-context');
 
 interface ButtonProps {
@@ -28,25 +27,23 @@ interface ButtonProps {
 }
 
 export default component$<ButtonProps>(({ class: className = '', onClick$ }) => {
-  // 已有的hooks
+
   const store = useStore({
     count: 0,
   });
   const signal = useSignal('111');
   
-  // useTask$ - 已有
+
   useTask$(({ track }) => {
     track(() => store.count);
     signal.value = '33333'
   })
 
-  // useVisibleTask$ - 已有
   useVisibleTask$(({ track }) => {
     track(() => store.count);
     signal.value = '2227'
   })
 
-  // useComputed$ - 已有
   const qwikContainer = useComputed$(() => {
     try {
       if(isServer){
@@ -60,37 +57,28 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     }
   });
 
-  // 新增的hooks示例
-
-  // 模拟异步计算（useAsyncComputed$不存在，用useComputed$模拟）
   const asyncComputedValue = useComputed$(() => {
     return `Async computed: ${store.count}`;
   });
 
-  // useContext & useContextProvider
   useContextProvider(ButtonContext, {
     theme: 'primary',
     size: 'large'
   });
   const context = useContext(ButtonContext);
 
-  // useId
   const buttonId = useId();
 
-  // useOnDocument
   useOnDocument('keydown', $(() => {
     console.log('Document keydown event');
   }));
 
-  // useOnWindow
   useOnWindow('resize', $(() => {
     console.log('Window resized');
   }));
 
-  // useResource$
   const resourceData = useResource$(async ({ track }) => {
     track(() => store.count);
-    // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 200));
     return {
       message: `Resource data for count: ${store.count}`,
@@ -98,7 +86,6 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     };
   });
 
-  // useStyles$
   useStyles$(`
     .custom-button {
       background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
@@ -114,7 +101,6 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     }
   `);
 
-  // useStylesScoped$
   useStylesScoped$(`
     .scoped-button {
       background: linear-gradient(45deg, #667eea, #764ba2);
@@ -130,7 +116,6 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     store.count++;
     console.log('Button clicked! Count:', store.count);
     
-    // 调用用户传递的自定义点击事件
     if (onClick$) {
       await onClick$();
     }
@@ -146,7 +131,6 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
         Click me {store.count}{signal.value}{qwikContainer?.value?.qManifestHash}
       </button>
       
-      {/* 显示各种hooks的结果 */}
       <div style="margin-top: 10px; font-size: 12px; color: #666;">
         <div>Async Computed: {asyncComputedValue.value}</div>
         <div>Context: {context?.theme} - {context?.size}</div>
