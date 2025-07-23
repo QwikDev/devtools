@@ -49,7 +49,6 @@ export const RenderTree = component$(() => {
   });
 
   const onNodeClick = $((node: TreeNode) => {
-    // 假设 typeMap 已在文件顶部定义
     const typeMap = [
       { check: isPureSignal, type: 'UseSignal' },
       { check: isTask, type: 'Task' },
