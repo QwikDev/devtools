@@ -133,7 +133,6 @@ export const RenderTree = component$(() => {
                 renderNode={$((node) => {
                   const label = node.label || node.name || '';
                   const isProperty = label.split(':');
-                  // 分组节点大色块样式
                   if (
                     label === 'useStore' ||
                     label === 'useSignal' ||
