@@ -49,29 +49,34 @@ export const RenderTree = component$(() => {
   });
 
   const onNodeClick = $((node: TreeNode) => {
+    // 假设 typeMap 已在文件顶部定义
+    const typeMap = [
+      { check: isPureSignal, type: 'UseSignal' },
+      { check: isTask, type: 'Task' },
+      { check: isComputed, type: 'Computed' },
+      { check: isStore, type: 'UseStore', unwrap: true },
+    ];
+
     if (Array.isArray(node.props?.[QSEQ])) {
-      node.props?.[QSEQ].forEach((item: any) => {
-        if (isPureSignal(item)) {
-          formatData('UseSignal', item);
-        } else if (isTask(item)) {
-          formatData('Task', item);
-        } else if (isComputed(item)) {
-          formatData('Computed', item);
-        } else if (isStore(item)) {
-          formatData('UseStore', unwrapStore(item));
+      node.props[QSEQ].forEach((item: any) => {
+        for (const { check, type, unwrap } of typeMap) {
+          if (check(item)) {
+            formatData(type as any, unwrap ? unwrapStore(item) : item);
+            break;
+          }
         }
       });
     }
+
     if (node.props?.[QRENDERFN]) {
-      formatData('Render', node.props?.[QRENDERFN]);
-    } else if (node.props?.[QPROPS]) {
-      const props = unwrapStore(node.props?.[QPROPS]);
-      Object.keys(props).forEach((key: any) => {
-        if (isListen(key)) {
-          formatData('Listens', { [key]: props[key] });
-        } else {
-          formatData('Props', { [key]: props[key] });
-        }
+      formatData('Render', node.props[QRENDERFN]);
+      return;
+    }
+
+    if (node.props?.[QPROPS]) {
+      const props = unwrapStore(node.props[QPROPS]);
+      Object.entries(props).forEach(([key, value]) => {
+        formatData(isListen(key) ? 'Listens' : 'Props', { [key]: value });
       });
     }
 
