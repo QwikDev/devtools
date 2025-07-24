@@ -4,6 +4,7 @@ import {
   useComputed$,
   $,
   useSignal,
+  useStyles$
 } from '@qwik.dev/core';
 import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
@@ -21,8 +22,16 @@ import {
 import { findAllQrl, formatData, getData } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
 import { getViteClientRpc } from '@devtools/kit';
+import { createHighlighter } from 'shiki';
 
 export const RenderTree = component$(() => {
+
+  useStyles$(`
+    pre.shiki {
+      overflow: auto;
+      padding: 10px;
+    }
+  `);
   const codes = useSignal<{ pathId: string; modules: any; error?: string }[]>(
     [],
   );
@@ -37,6 +46,30 @@ export const RenderTree = component$(() => {
       console.error(error);
       return null;
     }
+  });
+
+  const highlightedCodes = useSignal<string[]>([]);
+
+  useVisibleTask$(async ({ track }) => {
+    track(() => codes.value);
+    if (!codes.value.length) {
+      highlightedCodes.value = [];
+      return;
+    }
+    const highlighter = await createHighlighter({
+      themes: ['nord'], // v1+ 需要数组
+      langs: ['tsx', 'js', 'ts', 'jsx'],
+    });
+    highlightedCodes.value = codes.value.map(item => {
+      let lang = 'tsx';
+      if (item.pathId.endsWith('.js')) lang = 'js';
+      if (item.pathId.endsWith('.ts')) lang = 'ts';
+      if (item.pathId.endsWith('.jsx')) lang = 'jsx';
+      if (item.pathId.endsWith('.tsx')) lang = 'tsx';
+      return item?.modules?.code
+        ? highlighter.codeToHtml(item.modules.code, { lang, theme: 'nord' })
+        : '';
+    });
   });
 
   useVisibleTask$(() => {
@@ -165,19 +198,19 @@ export const RenderTree = component$(() => {
 
           {currentTab.value === 'code' && (
             <div class="mt-5 flex-1 overflow-y-auto rounded-lg border  border-border p-2 shadow-sm">
-              {codes.value.map((item) => {
+              {codes.value.map((item, idx) => {
                 return (
                   <>
-                    <div class="mb-4 p-4 rounded-xl shadow-lg bg-background border border-border">
-                      <div class="text-base font-semibold mb-2 break-all text-primary">
-                        {item.pathId}
-                      </div>
-                      <pre class="rounded-md p-3 overflow-x-auto whitespace-pre-wrap break-words font-mono text-sm bg-card-item-bg text-foreground border border-border custom-scrollbar">
-                        {item?.modules?.code}
-                      </pre>
+                  <div class="mb-4 p-4 rounded-xl shadow-lg bg-background border border-border">
+                    <div class="text-base font-semibold mb-2 break-all text-primary">
+                      {item.pathId}
                     </div>
-                  </>
-                );
+                    <pre
+                     class="overflow-hidden"
+                      dangerouslySetInnerHTML={highlightedCodes.value[idx] || ''}
+                    />
+                  </div>
+                  </>                );
               })}
             </div>
           )}
