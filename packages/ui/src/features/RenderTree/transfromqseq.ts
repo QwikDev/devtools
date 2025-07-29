@@ -1,5 +1,6 @@
 import { isSignal, Signal } from '@qwik.dev/core';
 import { TreeNode } from '../../components/Tree/Tree';
+import { isComputed } from '../../utils/type';
 
 export const QSEQ = 'q:seq';
 export const QPROPS = 'q:props';
@@ -127,7 +128,8 @@ function createTreeNode(
  */
 export const signalToTree = (signal: Signal): TreeNode[] => {
   if (isSignal(signal)) {
-    const valueNode = createTreeNode(signal.value, 'value', 'value');
+    const value = isComputed(signal) ? 'UseComputed$' : 'UseSignal';
+    const valueNode = createTreeNode(signal.value, value, 'value');
     return valueNode ? [valueNode] : [];
   }
 
@@ -138,7 +140,7 @@ export const signalToTree = (signal: Signal): TreeNode[] => {
  * Convert task to tree structure
  */
 export const taskToTree = (task: any): TreeNode[] => {
-  const valueNode = createTreeNode(task, 'value', 'value');
+  const valueNode = createTreeNode(task, 'UseTask$', 'value');
   return valueNode ? [valueNode] : [];
 };
 

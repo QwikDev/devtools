@@ -8,11 +8,11 @@ import { TreeNode } from '../../components/Tree/Tree';
 
 const dataMap = {
   UseStore: { set: new Set(), toTree: objectToTree, display: true },
+  Props: { set: new Set(), toTree: objectToTree, display: true },
+  Listens: { set: new Set(), toTree: objectToTree, display: true },
   UseSignal: { set: new Set(), toTree: signalToTree, display: true },
   Computed: { set: new Set(), toTree: signalToTree, display: true },
   Task: { set: new Set(), toTree: taskToTree, display: true },
-  Props: { set: new Set(), toTree: objectToTree, display: true },
-  Listens: { set: new Set(), toTree: objectToTree, display: true },
   Render: { set: new Set(), toTree: taskToTree, display: false },
 } as const;
 

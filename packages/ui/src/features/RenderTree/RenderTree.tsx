@@ -167,8 +167,8 @@ export const RenderTree = component$(() => {
                   const label = node.label || node.name || '';
                   const isProperty = label.split(':');
                   if (
-                    label === 'useStore' ||
-                    label === 'useSignal' ||
+                    label === 'UseStore' ||
+                    label === 'UseSignal' ||
                     label === 'Computed' ||
                     label === 'Task' ||
                     label === 'Props' ||
