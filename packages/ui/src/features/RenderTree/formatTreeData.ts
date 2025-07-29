@@ -35,9 +35,9 @@ export function getData() {
 
 function getRawDataObj() {
   const result: Record<string, any[]> = {};
-  Object.entries(dataMap).forEach(([name, { set }]) => {
+  for (const [name, { set }] of Object.entries(dataMap)) {
     result[name] = [...set];
-  });
+  }
   return result;
 }
 
