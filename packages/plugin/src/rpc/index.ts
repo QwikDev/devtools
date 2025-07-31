@@ -4,7 +4,7 @@ import { ServerContext } from '../types';
 import { getRouteFunctions } from '../routes';
 import { getNpmFunctions } from '../npm';
 import { getComponentsFunctions } from '../components';
-import { getInspectFunctions } from '../inspect';
+import { getModulesContent } from '../inspect';
 
 export function getServerFunctions(ctx: ServerContext): ServerFunctions {
   return {
@@ -13,6 +13,6 @@ export function getServerFunctions(ctx: ServerContext): ServerFunctions {
     ...getComponentsFunctions(ctx),
     ...getRouteFunctions(ctx),
     ...getNpmFunctions(ctx),
-    ...getInspectFunctions(ctx),
+    ...getModulesContent(ctx),
   };
 }

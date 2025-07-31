@@ -14,13 +14,13 @@ const generate = _generate.default;
 
 export function qwikDevtools(): Plugin[] {
   let _config: ResolvedConfig;
+  const qwikData = new Map<string, any>();
   const qwikDevtoolsPlugin: Plugin = {
     name: 'vite-plugin-qwik-devtools',
     apply: 'serve',
     configResolved(viteConfig) {
       _config = viteConfig;
-    },
-  
+    }, 
     transform: {
       order: 'pre',
       handler(code, id) {
@@ -56,9 +56,9 @@ export function qwikDevtools(): Plugin[] {
       },
     },
     configureServer(server) {
-      setViteServerContext(server);
+      setViteServerContext(server as any);
 
-      const rpcFunctions = getServerFunctions({ server, config: _config });
+      const rpcFunctions = getServerFunctions({ server, config: _config, qwikData });
 
       createServerRpc(rpcFunctions);
     },

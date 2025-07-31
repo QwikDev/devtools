@@ -4,17 +4,17 @@ import {
   noSerialize,
   useStyles$,
   useSignal,
-  useTask$,
-  isBrowser,
+  useVisibleTask$,
 } from '@qwik.dev/core';
 import { tryCreateHotContext } from 'vite-hot-client';
 import {
   HiBoltOutline,
-  HiCubeOutline,
   HiPhotoOutline,
   HiCodeBracketMini,
   HiMegaphoneMini,
+  HiCubeOutline,
 } from '@qwikest/icons/heroicons';
+import { BsDiagram3 } from '@qwikest/icons/bootstrap';
 import { LuFolderTree } from '@qwikest/icons/lucide';
 import {
   createClientRpc,
@@ -32,6 +32,7 @@ import { State } from './types/state';
 import { Assets } from './features/Assets/Assets';
 import { Routes } from './features/Routes/Routes';
 import { TabTitle } from './components/TabTitle/TabTitle';
+import { RenderTree } from './features/RenderTree/RenderTree';
 import { DevtoolsButton } from './components/DevtoolsButton/DevtoolsButton';
 import { DevtoolsContainer } from './components/DevtoolsContainer/DevtoolsContainer';
 import { DevtoolsPanel } from './components/DevtoolsPanel/DevtoolsPanel';
@@ -48,7 +49,6 @@ function getClientRpcFunctions() {
 
 export const QwikDevtools = component$(() => {
   useStyles$(globalCss);
-
   const state = useStore<State>({
     isOpen: useSignal(false),
     activeTab: 'overview',
@@ -58,53 +58,51 @@ export const QwikDevtools = component$(() => {
     routes: undefined,
   });
 
-  useTask$(async ({ track }) => {
-    if (isBrowser) {
-      const hot = await tryCreateHotContext(undefined, ['/']);
+  useVisibleTask$(async ({ track }) => {
+    const hot = await tryCreateHotContext(undefined, ['/']);
 
-      if (!hot) {
-        throw new Error('Vite Hot Context not connected');
-      }
-
-      setViteClientContext(hot);
-      createClientRpc(getClientRpcFunctions());
-
-      track(() => {
-        if (state.isOpen.value) {
-          const rpc = getViteClientRpc();
-          rpc.getAssetsFromPublicDir().then((data) => {
-            state.assets = data;
-          });
-          rpc.getComponents().then((data) => {
-            state.components = data;
-          });
-          rpc.getRoutes().then((data: RoutesInfo) => {
-            const children: RoutesInfo[] = data.children || [];
-            const directories: RoutesInfo[] = children.filter(
-              (child) => child.type === 'directory',
-            );
-
-            const values: RoutesInfo[] = [
-              {
-                relativePath: '',
-                name: 'index',
-                type: RouteType.DIRECTORY,
-                path: '',
-                isSymbolicLink: false,
-                children: undefined,
-              },
-              ...directories,
-            ];
-
-            state.routes = noSerialize(values);
-          });
-
-          rpc.getQwikPackages().then((data: NpmInfo) => {
-            state.npmPackages = data;
-          });
-        }
-      });
+    if (!hot) {
+      throw new Error('Vite Hot Context not connected');
     }
+
+    setViteClientContext(hot);
+    createClientRpc(getClientRpcFunctions());
+
+    track(() => {
+      if (state.isOpen.value) {
+        const rpc = getViteClientRpc();
+        rpc.getAssetsFromPublicDir().then((data) => {
+          state.assets = data;
+        });
+        rpc.getComponents().then((data) => {
+          state.components = data;
+        });
+        rpc.getRoutes().then((data: RoutesInfo) => {
+          const children: RoutesInfo[] = data?.children || [];
+          const directories: RoutesInfo[] = children.filter(
+            (child) => child.type === 'directory',
+          );
+
+          const values: RoutesInfo[] = [
+            {
+              relativePath: '',
+              name: 'index',
+              type: RouteType.DIRECTORY,
+              path: '',
+              isSymbolicLink: false,
+              children: undefined,
+            },
+            ...directories,
+          ];
+
+          state.routes = noSerialize(values);
+        });
+
+        rpc.getQwikPackages().then((data: NpmInfo) => {
+          state.npmPackages = data;
+        });
+      }
+    });
   });
 
   return (
@@ -121,6 +119,9 @@ export const QwikDevtools = component$(() => {
               </Tab>
               <Tab state={state} id="packages" title="Packages">
                 <HiCubeOutline class="h-5 w-5" />
+              </Tab>
+              <Tab state={state} id="renderTree" title="renderTree">
+                <BsDiagram3 class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="routes" title="Routes">
                 <LuFolderTree class="h-5 w-5" />
@@ -197,6 +198,12 @@ export const QwikDevtools = component$(() => {
               {state.activeTab === 'inspect' && (
                 <TabContent>
                   <Inspect q:slot="content" />
+                </TabContent>
+              )}
+              {state.activeTab === 'renderTree' && (
+                <TabContent>
+                  <TabTitle title="render Tree" q:slot="title" />
+                  <RenderTree q:slot="content" />
                 </TabContent>
               )}
             </div>

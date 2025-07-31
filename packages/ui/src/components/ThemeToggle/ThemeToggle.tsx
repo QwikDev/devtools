@@ -1,9 +1,6 @@
 import { component$, event$, isServer, useStyles$ } from '@qwik.dev/core';
 import { themeStorageKey } from '../router-head/theme-script';
-import {
-  HiSunOutline,
-  HiMoonOutline,
-} from '@qwikest/icons/heroicons';
+import { HiSunOutline, HiMoonOutline } from '@qwikest/icons/heroicons';
 import { BsBrilliance } from '@qwikest/icons/bootstrap';
 import themeTogglecss from './themToggle.css?inline';
 
@@ -19,7 +16,7 @@ export const getTheme = (): ThemeName => {
   } catch {
     //
   }
-  return theme as ThemeName || 'auto'
+  return (theme as ThemeName) || 'auto';
 };
 
 export const setTheme = (theme: ThemeName) => {

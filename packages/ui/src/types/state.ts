@@ -8,7 +8,8 @@ export type TabName =
   | 'state'
   | 'assets'
   | 'components'
-  | 'inspect';
+  | 'inspect'
+  | 'renderTree';
 
 export interface State {
   isOpen: Signal<boolean>;

@@ -11,7 +11,7 @@ export function createServerRpc(functions: ServerFunctions) {
     post: (data) =>
       server.ws.send(DEVTOOLS_VITE_MESSAGING_EVENT, SuperJSON.stringify(data)),
     on: (fn) =>
-      server.ws.on(DEVTOOLS_VITE_MESSAGING_EVENT, (data) => {
+      server.ws.on(DEVTOOLS_VITE_MESSAGING_EVENT, (data: any) => {
         fn(SuperJSON.parse(data));
       }),
     timeout: 120_000,
