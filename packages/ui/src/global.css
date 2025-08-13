@@ -10,13 +10,14 @@
   --theme-name: 'light';
   --color-background: #ffffff;
   --color-foreground: #000000;
-  --color-primary: #3b82f6;
+  --color-primary: #10b981;
+  --color-primary-hover: #f2f2f2; /* green-600 */
+  --color-primary-active: #047857; /* green-700 */
   --color-secondary: #6b7280; /* Tailwind's secondary.light */
   --color-border: #e5e7eb;
   --color-card: #f3f4f6;
 
   /* Specific variables based on existing CSS (light theme equivalents) */
-  --color-text-muted: #4b5563; /* Equivalent for #a1a1aa */
 
   --color-card-item-bg: rgba(0, 0, 0, 0.02); /* For rgba(255,255,255,0.03) 1 */
   --color-card-item-hover-bg: rgba(
@@ -31,11 +32,8 @@
   --color-scrollbar-thumb-hover: #a1a1aa;
 
   /* Tailwind semantic variables */
-  --color-primary-foreground: #ffffff;
   --color-muted: #9ca3af; /* Similar to existing --color-text-subtle */
-  --color-muted-foreground: #4b5563; /* Similar to existing --color-text-muted */
   --color-accent: #10b981; /* Green accent */
-  --color-accent-foreground: #ffffff;
   --color-input: var(--color-border); /* Alias to border */
   --color-ring: var(--color-primary); /* Alias to primary */
 }
@@ -48,13 +46,14 @@
   --theme-name: 'dark';
   --color-background: #18181b;
   --color-foreground: #ffffff;
-  --color-primary: #2563eb; /* Tailwind's primary.dark */
+  --color-primary: #34d399; /* Tailwind's primary.dark */
+  --color-primary-hover: #10b981; /* green-500 */
+  --color-primary-active: #059669; /* green-600 */
   --color-secondary: #9ca3af; /* Tailwind's secondary.dark */
   --color-border: #374151;
   --color-card: #27272a;
 
   /* Specific variables based on existing CSS (dark theme) */
-  --color-text-muted: #a1a1aa;
   --color-card-item-bg: rgba(255, 255, 255, 0.03);
   --color-card-item-hover-bg: rgba(255, 255, 255, 0.05);
 
@@ -63,11 +62,9 @@
   --color-scrollbar-thumb-hover: #52525b;
 
   /* Tailwind semantic variables */
-  --color-primary-foreground: #ffffff;
   --color-muted: #374151; /* Similar to existing html.dark --color-border */
   --color-muted-foreground: #9ca3af; /* Similar to existing html.dark --color-secondary */
   --color-accent: #10b981; /* Matches existing html.dark --color-icon-accent */
-  --color-accent-foreground: #ffffff;
   --color-input: var(--color-border); /* Alias to border */
   --color-ring: var(--color-primary); /* Alias to primary */
 }
@@ -81,13 +78,12 @@
     --theme-name: 'dark';
     --color-background: #18181b;
     --color-foreground: #ffffff;
-    --color-primary: #2563eb; /* Tailwind's primary.dark */
+    --color-primary: #10b981; /* Tailwind's primary.dark */
     --color-secondary: #9ca3af; /* Tailwind's secondary.dark */
     --color-border: #374151;
     --color-card: #27272a;
 
     /* Specific variables based on existing CSS (dark theme) */
-    --color-text-muted: #a1a1aa;
     --color-card-item-bg: rgba(255, 255, 255, 0.03);
     --color-card-item-hover-bg: rgba(255, 255, 255, 0.05);
 
@@ -96,11 +92,9 @@
     --color-scrollbar-thumb-hover: #52525b;
 
     /* Tailwind semantic variables */
-    --color-primary-foreground: #ffffff;
     --color-muted: #374151; /* Similar to existing html.dark --color-border */
     --color-muted-foreground: #9ca3af; /* Similar to existing html.dark --color-secondary */
     --color-accent: #10b981; /* Matches existing html.dark --color-icon-accent */
-    --color-accent-foreground: #ffffff;
     --color-input: var(--color-border); /* Alias to border */
     --color-ring: var(--color-primary); /* Alias to primary */
   }

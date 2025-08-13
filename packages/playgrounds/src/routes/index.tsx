@@ -18,7 +18,9 @@ export default component$(() => {
       <div>
         <Link href="/blog">Blog</Link>
       </div>
-      <Button />
+      <Button  data-testid="button" class='bg-red-500' onClick$={() => {
+        console.log('Button clicked! Count:', count.value);
+      }}/>
     </>
   );
 });

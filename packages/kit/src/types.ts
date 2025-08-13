@@ -16,6 +16,11 @@ export interface ServerFunctions {
     packageName: string,
     isDev?: boolean,
   ) => Promise<{ success: boolean; error?: string }>;
+  getModulesByPathIds: (pathIds: string | string[]) => Promise<{
+    pathId: string;
+    modules: any;
+    error?: string;
+  }[]>;
 }
 
 export type ServerRpc = BirpcReturn<ClientFunctions, ServerFunctions>;
