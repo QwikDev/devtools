@@ -125,11 +125,11 @@ export const RenderTree = component$(() => {
   return (
     <div class="h-full w-full flex-1 overflow-hidden rounded-md border  border-border">
       <div class="flex h-full w-full">
-        <div class="w-[50%] overflow-hidden p-4">
+        <div class="w-1/2 overflow-hidden p-4" style={{minWidth: '400px'}}>
           <Tree data={data} onNodeClick={onNodeClick}></Tree>
         </div>
         <div class="border-l border-border"></div>
-        <div class="flex h-full w-[50%] flex-col p-4">
+        <div class="flex h-full w-1/2 flex-col p-4">
           <div class="border-b border-border">
             <div class="flex space-x-4 border-b border-border">
               <button
@@ -162,7 +162,9 @@ export const RenderTree = component$(() => {
               <Tree
                 data={stateTree}
                 gap={10}
-                isHover={false}
+                animate
+                animationDuration={200}
+                isHover
                 renderNode={$((node) => {
                   const label = node.label || node.name || '';
                   const isProperty = label.split(':');

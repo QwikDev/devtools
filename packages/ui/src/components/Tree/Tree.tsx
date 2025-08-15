@@ -23,6 +23,8 @@ const TreeNodeComponent = component$(
     expandLevel: number;
     onNodeClick: QRL<(node: TreeNode) => void>;
     renderNode?: QRL<(node: TreeNode) => JSXOutput>;
+    animate?: boolean;
+    animationDuration?: number;
   }) => {
     const isExpanded = useSignal(props.expandLevel <= props.level); // Default to expanded
     const hasChildren = props.node.children && props.node.children.length > 0;
@@ -50,10 +52,28 @@ const TreeNodeComponent = component$(
     const isActive = props.isHover
       ? props.node.id === props.activeNodeId
       : false;
+    const duration = props.animationDuration ?? 200;
+    const shouldShowChildren = hasChildren && !isExpanded.value;
+    const renderChildren = props.node.children?.map((child) => (
+      <TreeNodeComponent
+        isHover={props.isHover}
+        key={child.id}
+        node={child}
+        gap={props.gap}
+        expandLevel={props.expandLevel}
+        level={props.level + 1}
+        activeNodeId={props.activeNodeId}
+        onNodeClick={props.onNodeClick}
+        renderNode={props.renderNode}
+        animate={props.animate}
+        animationDuration={props.animationDuration}
+      />
+    ));
     return (
-      <div style={{ paddingLeft: `${props.level * props.gap}px` }}>
+      <div class="w-full">
         <div
-          class={`flex cursor-pointer items-center rounded-md p-1 transition-colors duration-150 
+          style={{ paddingLeft: `${props.level * props.gap}px` }}
+          class={`flex w-full cursor-pointer items-center rounded-md p-1 transition-colors duration-150 
                 ${
                   isActive
                     ? 'bg-primary  text-white '
@@ -68,31 +88,30 @@ const TreeNodeComponent = component$(
           ) : (
             <div class="mr-2 w-4 flex-shrink-0"></div>
           )}
-          <span class="text-sm">
+          <div class="text-sm whitespace-nowrap cursor-pointer">
             {props.renderNode ? (
               <>{props.renderNode(props.node)}</>
             ) : (
               `<${props.node.label || props.node.name} ${iterateProps(props.node.props! || {})}>`
             )}
-          </span>
+          </div>
         </div>
-        {!isExpanded.value && hasChildren && (
-          <>
-            {props.node.children?.map((child) => (
-              <TreeNodeComponent
-                isHover={props.isHover}
-                key={child.id}
-                node={child}
-                gap={props.gap}
-                expandLevel={props.expandLevel}
-                level={props.level + 1}
-                activeNodeId={props.activeNodeId}
-                onNodeClick={props.onNodeClick}
-                renderNode={props.renderNode}
-              />
-            ))}
-          </>
-        )}
+        {hasChildren ? (
+          props.animate ? (
+            <div
+              class={`overflow-hidden transition-all ease-in-out`}
+              style={{
+                maxHeight: shouldShowChildren ? '1000px' : '0px',
+                opacity: shouldShowChildren ? '1' : '0',
+                transition: `max-height ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`,
+              }}
+            >
+              {renderChildren}
+            </div>
+          ) : (
+            shouldShowChildren && <>{renderChildren}</>
+          )
+        ) : null}
       </div>
     );
   },
@@ -105,6 +124,9 @@ export const Tree = component$(
     renderNode?: QRL<(node: TreeNode) => JSXOutput>;
     gap?: number;
     isHover?: boolean;
+    animate?: boolean;
+    animationDuration?: number;
+    expandLevel?: number;
   }) => {
     const ref = useSignal<HTMLElement | undefined>();
     const store = props.data;
@@ -120,15 +142,17 @@ export const Tree = component$(
       <div class="h-full w-full overflow-x-auto overflow-y-auto" ref={ref}>
         {store.value.map((rootNode) => (
           <TreeNodeComponent
-            isHover={props.isHover ?? true}
+            isHover={props.isHover === false ? false : true}
             gap={props.gap || 20}
             key={rootNode.id}
             node={rootNode}
             level={0}
-            expandLevel={2}
+            expandLevel={props.expandLevel ?? 2}
             activeNodeId={activeNodeId.value}
             onNodeClick={setActiveNode}
             renderNode={props.renderNode}
+            animate={props.animate ?? true}
+            animationDuration={props.animationDuration}
           />
         ))}
       </div>
