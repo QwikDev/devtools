@@ -13,6 +13,7 @@ import { ISDEVTOOL } from '../../components/Tree/type';
 import { QPROPS, QRENDERFN, QSEQ } from './transfromqseq';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
 import {
+  isAsyncComputed,
   isComputed,
   isListen,
   isPureSignal,
@@ -82,11 +83,13 @@ export const RenderTree = component$(() => {
   });
 
   const onNodeClick = $((node: TreeNode) => {
+    console.log('current node', node);
     const typeMap = [
       { check: isPureSignal, type: 'UseSignal' },
       { check: isTask, type: 'Task' },
       { check: isComputed, type: 'Computed' },
       { check: isStore, type: 'UseStore', unwrap: true },
+      { check: isAsyncComputed, type: 'AsyncComputed' },
     ];
 
     if (Array.isArray(node.props?.[QSEQ])) {
@@ -174,7 +177,8 @@ export const RenderTree = component$(() => {
                     label === 'Computed' ||
                     label === 'Task' ||
                     label === 'Props' ||
-                    label === 'Listens'
+                    label === 'Listens'||
+                    label === 'AsyncComputed'
                   ) {
                     return (
                       <span class="text-gray-500 dark:text-gray-300">

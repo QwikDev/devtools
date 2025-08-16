@@ -14,7 +14,8 @@ import {
   useStyles$,
   useStylesScoped$,
   createContextId,
-  Resource
+  Resource,
+  useAsyncComputed$
 } from '@qwik.dev/core';
 import { _getDomContainer, isServer, useVisibleTask$ } from '@qwik.dev/core/internal';
 import type { QRL } from '@qwik.dev/core';
@@ -57,14 +58,15 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     }
   });
 
-  const asyncComputedValue = useComputed$(() => {
-    return `Async computed: ${store.count}`;
-  });
-
+  const asyncComputedValue =  useAsyncComputed$(({ track }) =>
+    Promise.resolve(track(signal) + 3),
+  );
+                                                                                                                                      
   useContextProvider(ButtonContext, {
     theme: 'primary',
     size: 'large'
   });
+
   const context = useContext(ButtonContext);
 
   const buttonId = useId();

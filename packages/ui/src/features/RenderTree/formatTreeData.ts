@@ -12,6 +12,7 @@ const dataMap = {
   Listens: { set: new Set(), toTree: objectToTree, display: true },
   UseSignal: { set: new Set(), toTree: signalToTree, display: true },
   Computed: { set: new Set(), toTree: signalToTree, display: true },
+  AsyncComputed: { set: new Set(), toTree: signalToTree, display: true },
   Task: { set: new Set(), toTree: taskToTree, display: true },
   Render: { set: new Set(), toTree: taskToTree, display: false },
 } as const;
