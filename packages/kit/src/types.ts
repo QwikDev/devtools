@@ -1,5 +1,6 @@
 import { BirpcReturn } from 'birpc';
 import { type Dree } from 'dree';
+import { HOOK_NAME_LIST } from './constants';
 export { Type as RouteType } from 'dree';
 
 export interface ClientFunctions {
@@ -21,6 +22,7 @@ export interface ServerFunctions {
     modules: any;
     error?: string;
   }[]>;
+  parseQwikCode: (code: string) => Promise<Omit<ParsedStructure, '__start__'>[]>;
 }
 
 export type ServerRpc = BirpcReturn<ClientFunctions, ServerFunctions>;
@@ -62,3 +64,14 @@ export interface Component {
   fileName: string;
   file: string;
 }
+
+export type Category = 'hook' | 'event'
+export type HookType = (typeof HOOK_NAME_LIST)[number]
+
+export interface ParsedStructure {
+  variableName: string
+  hookType: HookType
+  category: Category
+  __start__?: number
+}
+export { HOOK_NAME_LIST } from './constants'

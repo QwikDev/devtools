@@ -20,9 +20,9 @@ import {
   isStore,
   isTask,
 } from '../../utils/type';
-import { findAllQrl, formatData, getData } from './formatTreeData';
+import { findAllQrl, formatData, getData, getQrlPath } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
-import { getViteClientRpc } from '@devtools/kit';
+import { getViteClientRpc, ParsedStructure } from '@devtools/kit';
 import { createHighlighter } from 'shiki';
 
 export const RenderTree = component$(() => {
@@ -82,8 +82,10 @@ export const RenderTree = component$(() => {
     );
   });
 
-  const onNodeClick = $((node: TreeNode) => {
+  const onNodeClick = $(async (node: TreeNode) => {
     console.log('current node', node);
+    const rpc = getViteClientRpc();
+    let parsed: ParsedStructure[] = []
     const typeMap = [
       { check: isPureSignal, type: 'UseSignal' },
       { check: isTask, type: 'Task' },
@@ -92,8 +94,19 @@ export const RenderTree = component$(() => {
       { check: isAsyncComputed, type: 'AsyncComputed' },
     ];
 
+    if (node.props?.[QRENDERFN]) {
+      formatData('Render', node.props[QRENDERFN]);
+      const qrl = getQrlPath(node.props[QRENDERFN]).split('_').shift()
+      console.log('qrl', qrl);
+      parsed = await rpc?.parseQwikCode(qrl!)
+    }
+
+
+
     if (Array.isArray(node.props?.[QSEQ])) {
-      node.props[QSEQ].forEach((item: any) => {
+      const seqList = node.props[QSEQ].filter((item: any) => item.__brand !== 'resource' && item !== 1)
+      parsed.forEach((item: any, index:number) => {
+        debugger
         for (const { check, type, unwrap } of typeMap) {
           if (check(item)) {
             formatData(type as any, unwrap ? unwrapStore(item) : item);
@@ -103,9 +116,7 @@ export const RenderTree = component$(() => {
       });
     }
 
-    if (node.props?.[QRENDERFN]) {
-      formatData('Render', node.props[QRENDERFN]);
-    }
+    
 
     if (node.props?.[QPROPS]) {
       const props = unwrapStore(node.props[QPROPS]);
@@ -114,12 +125,11 @@ export const RenderTree = component$(() => {
       });
     }
 
-    const rpc = getViteClientRpc();
+    
     codes.value = [];
-    rpc?.getModulesByPathIds(findAllQrl()).then((res) => {
-      codes.value = res.filter((item) => item.modules);
-    });
-   
+    
+    const res = await rpc?.getModulesByPathIds(findAllQrl())
+    codes.value = res.filter((item) => item.modules);
     stateTree.value = getData() as TreeNode[];
   });
 

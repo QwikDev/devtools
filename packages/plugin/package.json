@@ -16,11 +16,13 @@
   "type": "module",
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown --watch"
+    "dev": "tsdown --watch",
+    "test": "vitest --run"
   },
   "dependencies": {
     "@babel/generator": "^7.26.5",
     "@babel/parser": "^7.26.7",
+    "oxc-parser": "^0.82.1",
     "@babel/traverse": "^7.26.7"
   },
   "devDependencies": {
@@ -39,7 +41,7 @@
     "fast-glob": "^3.3.2",
     "image-meta": "^0.2.1",
     "np": "^8.0.4",
-    "oxc-parser": "^0.82.1",
+    
     "prettier": "3.3.3",
     "typescript": "5.4.5",
     "vite": "7.0.4",

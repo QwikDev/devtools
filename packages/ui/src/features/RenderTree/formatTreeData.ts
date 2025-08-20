@@ -5,6 +5,11 @@ import {
   taskToTree,
 } from './transfromqseq';
 import { TreeNode } from '../../components/Tree/Tree';
+import { QRL } from '@qwik.dev/core';
+
+const qrlKey = '$qrl$';
+const computedQrlKey = '$computeQrl$';
+const chunkKey = '$chunk$';
 
 const dataMap = {
   UseStore: { set: new Set(), toTree: objectToTree, display: true },
@@ -49,9 +54,7 @@ export function findAllQrl() {
     'Listens',
     'Render',
   ];
-  const qrlKey = '$qrl$';
-  const computedQrlKey = '$computeQrl$';
-  const chunkKey = '$chunk$';
+
 
   const rawData = getRawDataObj();
 
@@ -60,13 +63,18 @@ export function findAllQrl() {
       if (item === 'Listens') {
         return Object.values(entry || {}).map((v: any) => v?.[chunkKey]);
       } else if (item === 'Render') {
-        return (entry as any)?.[chunkKey];
+        return getQrlPath(entry);
       } else {
         const qrlObj = (entry as any)[qrlKey] || (entry as any)[computedQrlKey];
-        return qrlObj?.[chunkKey];
+        return getQrlPath(qrlObj);
       }
     });
   });
-
+  console.log('findAllQrl', result.flat(2).filter(Boolean));
   return result.flat(2).filter(Boolean);
+}
+
+
+export function getQrlPath(qrl: QRL):string {
+  return (qrl as any)?.[chunkKey];
 }
