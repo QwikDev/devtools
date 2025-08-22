@@ -13,14 +13,9 @@ import { ISDEVTOOL } from '../../components/Tree/type';
 import { QPROPS, QRENDERFN, QSEQ } from './transfromqseq';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
 import {
-  isAsyncComputed,
-  isComputed,
   isListen,
-  isPureSignal,
-  isStore,
-  isTask,
 } from '../../utils/type';
-import { findAllQrl, formatData, getData, getQrlPath } from './formatTreeData';
+import { findAllQrl, formatData, getData, getQrlPath, normalizeData, QSeqsList } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
 import { getViteClientRpc, ParsedStructure } from '@devtools/kit';
 import { createHighlighter } from 'shiki';
@@ -86,33 +81,20 @@ export const RenderTree = component$(() => {
     console.log('current node', node);
     const rpc = getViteClientRpc();
     let parsed: ParsedStructure[] = []
-    const typeMap = [
-      { check: isPureSignal, type: 'UseSignal' },
-      { check: isTask, type: 'Task' },
-      { check: isComputed, type: 'Computed' },
-      { check: isStore, type: 'UseStore', unwrap: true },
-      { check: isAsyncComputed, type: 'AsyncComputed' },
-    ];
 
     if (node.props?.[QRENDERFN]) {
       formatData('Render', node.props[QRENDERFN]);
       const qrl = getQrlPath(node.props[QRENDERFN]).split('_').shift()
-      console.log('qrl', qrl);
+      //@ts-ignore
       parsed = await rpc?.parseQwikCode(qrl!)
     }
 
 
 
     if (Array.isArray(node.props?.[QSEQ])) {
-      const seqList = node.props[QSEQ].filter((item: any) => item.__brand !== 'resource' && item !== 1)
-      parsed.forEach((item: any, index:number) => {
-        debugger
-        for (const { check, type, unwrap } of typeMap) {
-          if (check(item)) {
-            formatData(type as any, unwrap ? unwrapStore(item) : item);
-            break;
-          }
-        }
+      const normalizedData = normalizeData(node.props[QSEQ], parsed)
+      normalizedData.forEach((item) => {
+        formatData(item.hookType as QSeqsList, item);
       });
     }
 
@@ -121,7 +103,7 @@ export const RenderTree = component$(() => {
     if (node.props?.[QPROPS]) {
       const props = unwrapStore(node.props[QPROPS]);
       Object.entries(props).forEach(([key, value]) => {
-        formatData(isListen(key) ? 'Listens' : 'Props', { [key]: value });
+          formatData(isListen(key) ? 'Listens' : 'Props', { data: value, ...(node.props as any) });
       });
     }
 
@@ -226,7 +208,7 @@ export const RenderTree = component$(() => {
                       dangerouslySetInnerHTML={highlightedCodes.value[idx] || ''}
                     />
                   </div>
-                  </>                );
+                  </> );
               })}
             </div>
           )}

@@ -1,6 +1,6 @@
 import { BirpcReturn } from 'birpc';
 import { type Dree } from 'dree';
-import { HOOK_NAME_LIST } from './constants';
+import { VARIABLE_DECLARATION_LIST, EXPRESSION_STATEMENT_LIST } from './constants';
 export { Type as RouteType } from 'dree';
 
 export interface ClientFunctions {
@@ -65,13 +65,17 @@ export interface Component {
   file: string;
 }
 
-export type Category = 'hook' | 'event'
-export type HookType = (typeof HOOK_NAME_LIST)[number]
+export type Category = 'variableDeclaration' | 'expressionStatement' | 'listener'
+export type HookType =
+  | (typeof VARIABLE_DECLARATION_LIST)[number]['hook']
+  | (typeof EXPRESSION_STATEMENT_LIST)[number]['hook']
 
 export interface ParsedStructure {
   variableName: string
   hookType: HookType
   category: Category
   __start__?: number
+  returnType: HookType
+  data?: any
 }
-export { HOOK_NAME_LIST } from './constants'
+export { VARIABLE_DECLARATION_LIST, EXPRESSION_STATEMENT_LIST } from './constants'

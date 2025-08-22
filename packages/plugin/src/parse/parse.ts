@@ -1,10 +1,13 @@
 import { parseSync } from 'oxc-parser'
-import { HOOK_NAME_LIST, HookType, ParsedStructure } from "@devtools/kit"
+import { VARIABLE_DECLARATION_LIST, EXPRESSION_STATEMENT_LIST,HookType, ParsedStructure } from "@devtools/kit"
 
 
 
-// Precompute for quick membership checks
-const HOOK_NAMES = new Set<string>(HOOK_NAME_LIST as readonly string[])
+// Precompute for quick membership checks (union of both lists)
+const ALL_HOOK_NAMES = new Set<string>([
+  ...((VARIABLE_DECLARATION_LIST) ?? []).map(item => item.hook),
+  ...((EXPRESSION_STATEMENT_LIST) ?? []).map(item => item.hook),
+])
 
 /**
  * Parse TSX source and extract Qwik hook declarations in source order.
@@ -35,7 +38,7 @@ export function parseQwikCode(code: string): ParsedStructure[] {
   }
 
   function isKnownHook(name: string): name is HookType {
-    return HOOK_NAMES.has(name)
+    return ALL_HOOK_NAMES.has(name)
   }
 
   function getNodeStart(node: unknown): number {
@@ -66,14 +69,36 @@ export function parseQwikCode(code: string): ParsedStructure[] {
               collected.push({
                 variableName,
                 hookType: hookName as HookType,
-                category: 'hook',
+                category: 'variableDeclaration',
                 __start__: getNodeStart(node),
+                returnType: VARIABLE_DECLARATION_LIST.find(item => item.hook === hookName)?.returnType as HookType,
               })
             }
           }
         }
       }
     }
+    if(node.type === 'ExpressionStatement'){
+      const expression = (node as any).expression
+      // Case 1: Direct call e.g. useHook$(...)
+      if (expression && isAstNodeLike(expression) && (expression as any).type === 'CallExpression') {
+        const callee = (expression as any).callee
+        if (callee && isAstNodeLike(callee) && (callee as any).type === 'Identifier') {
+          const rawName: string = (callee as any).name
+          const hookName = normalizeHookName(rawName)
+          if (isKnownHook(hookName)) {
+            collected.push({
+              variableName: hookName,
+              hookType: hookName as HookType,
+              category: 'expressionStatement',
+              __start__: getNodeStart(node),
+              returnType: EXPRESSION_STATEMENT_LIST.find(item => item.hook === hookName)?.returnType as HookType,
+            })
+          }
+        }
+      }
+    }
+    
 
     // Generic deep traversal
     for (const key of Object.keys(node as Record<string, unknown>)) {

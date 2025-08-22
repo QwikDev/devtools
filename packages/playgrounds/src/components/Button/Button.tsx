@@ -15,7 +15,12 @@ import {
   useStylesScoped$,
   createContextId,
   Resource,
-  useAsyncComputed$
+  useAsyncComputed$,
+  useSerializer$,
+  useConstant,
+  useOn,
+  useServerData,
+  useErrorBoundary
 } from '@qwik.dev/core';
 import { _getDomContainer, isServer, useVisibleTask$ } from '@qwik.dev/core/internal';
 import type { QRL } from '@qwik.dev/core';
@@ -31,8 +36,13 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
 
   const store = useStore({
     count: 0,
+    dd:12,
+    cc: 33
   });
   const signal = useSignal('111');
+  const constantValue = useConstant(() => 'CONST');
+  const serverData = useServerData<any>('demo-key');
+  const errorBoundary = useErrorBoundary();
   
 
   useTask$(({ track }) => {
@@ -79,6 +89,11 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     console.log('Window resized');
   }));
 
+  // Demo: useOn（给宿主元素注册事件）
+  useOn('click', $(() => {
+    console.log('Host clicked');
+  }));
+
   const resourceData = useResource$(async ({ track }) => {
     track(() => store.count);
     await new Promise(resolve => setTimeout(resolve, 200));
@@ -87,6 +102,15 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
       timestamp: Date.now()
     };
   });
+
+  // Demo: useSerializer$（最小示例，基于 signal 重建对象并用 update 同步）
+  const customSerialized = useSerializer$(() => ({
+    deserialize: () => ({ n: store.count }),
+    update: (current: { n: number }) => {
+      current.n = store.count;
+      return current;
+    }
+  }));
 
   useStyles$(`
     .custom-button {
@@ -137,6 +161,10 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
         <div>Async Computed: {asyncComputedValue.value}</div>
         <div>Context: {context?.theme} - {context?.size}</div>
         <div>Button ID: {buttonId}</div>
+        <div>Constant: {constantValue}</div>
+        {errorBoundary.error && <div>Error captured</div>}
+        <div>ServerData: {serverData ? JSON.stringify(serverData) : 'N/A'}</div>
+        <div>Serialized N: {customSerialized.value.n}</div>
         <Resource
           value={resourceData}
           onPending={() => <div>Loading resource...</div>}

@@ -126,10 +126,9 @@ function createTreeNode(
  * Convert signal or store objects to tree structure
  * Special handling for value property
  */
-export const signalToTree = (signal: Signal): TreeNode[] => {
+export const signalToTree = (signal: Signal, name: string): TreeNode[] => {
   if (isSignal(signal)) {
-    const value = isComputed(signal) ? 'UseComputed$' : 'UseSignal';
-    const valueNode = createTreeNode(signal.value, value, 'value');
+    const valueNode = createTreeNode(signal.value, 'sdsdsdsd', 'value');
     return valueNode ? [valueNode] : [];
   }
 
@@ -140,7 +139,7 @@ export const signalToTree = (signal: Signal): TreeNode[] => {
  * Convert task to tree structure
  */
 export const taskToTree = (task: any): TreeNode[] => {
-  const valueNode = createTreeNode(task, 'UseTask$', 'value');
+  const valueNode = createTreeNode(task, 'sdsdsdsdaaaaa', 'value');
   return valueNode ? [valueNode] : [];
 };
 
@@ -155,3 +154,5 @@ export const createTreeNodeObj = (
     children,
   };
 };
+
+
