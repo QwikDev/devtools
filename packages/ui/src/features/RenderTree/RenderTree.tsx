@@ -83,7 +83,7 @@ export const RenderTree = component$(() => {
     let parsed: ParsedStructure[] = []
 
     if (node.props?.[QRENDERFN]) {
-      formatData('Render', node.props[QRENDERFN]);
+      // formatData('render', node.props[QRENDERFN]);
       const qrl = getQrlPath(node.props[QRENDERFN]).split('_').shift()
       //@ts-ignore
       parsed = await rpc?.parseQwikCode(qrl!)
@@ -100,18 +100,18 @@ export const RenderTree = component$(() => {
 
     
 
-    if (node.props?.[QPROPS]) {
-      const props = unwrapStore(node.props[QPROPS]);
-      Object.entries(props).forEach(([key, value]) => {
-          formatData(isListen(key) ? 'Listens' : 'Props', { data: value, ...(node.props as any) });
-      });
-    }
+    // if (node.props?.[QPROPS]) {
+    //   const props = unwrapStore(node.props[QPROPS]);
+    //   Object.entries(props).forEach(([key, value]) => {
+    //       formatData(isListen(key) ? 'listens' : 'props', { data: value, ...(node.props as any) });
+    //   });
+    // }
 
     
     codes.value = [];
     
-    const res = await rpc?.getModulesByPathIds(findAllQrl())
-    codes.value = res.filter((item) => item.modules);
+    // const res = await rpc?.getModulesByPathIds(findAllQrl())
+    // codes.value = res.filter((item) => item.modules);
     stateTree.value = getData() as TreeNode[];
   });
 
@@ -165,12 +165,12 @@ export const RenderTree = component$(() => {
                   const isProperty = label.split(':');
                   if (
                     label === 'UseStore' ||
-                    label === 'UseSignal' ||
-                    label === 'Computed' ||
-                    label === 'Task' ||
-                    label === 'Props' ||
-                    label === 'Listens'||
-                    label === 'AsyncComputed'
+                    label === 'useSignal' ||
+                    label === 'useComputed' ||
+                    label === 'useTask' ||
+                    label === 'props' ||
+                    label === 'listens'||
+                    label === 'asyncComputed'
                   ) {
                     return (
                       <span class="text-gray-500 dark:text-gray-300">

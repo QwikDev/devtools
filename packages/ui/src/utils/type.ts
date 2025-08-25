@@ -39,5 +39,9 @@ export const isListen = (str: string) => {
 
 
 export const isValue = (value: any) => {
-  return 'untrackedValue' in value && 'value' in value;
+  try {
+    return 'untrackedValue' in value && 'value' in value;
+  } catch (error) {
+    return false;
+  }
 };

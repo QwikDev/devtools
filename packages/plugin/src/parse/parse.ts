@@ -1,13 +1,18 @@
-import { parseSync } from 'oxc-parser'
-import { VARIABLE_DECLARATION_LIST, EXPRESSION_STATEMENT_LIST,HookType, ParsedStructure } from "@devtools/kit"
+import { HookType, ParsedStructure } from "@devtools/kit"
+import { traverseQwik } from './traverse'
+import {
+  VARIABLE_RETURN_TYPE_BY_HOOK,
+  EXPRESSION_RETURN_TYPE_BY_HOOK,
+  isAstNodeLike,
+  normalizeHookName,
+  getNodeStart,
+  getVariableIdentifierName,
+  isKnownHook,
+} from './helpers'
 
 
 
-// Precompute for quick membership checks (union of both lists)
-const ALL_HOOK_NAMES = new Set<string>([
-  ...((VARIABLE_DECLARATION_LIST) ?? []).map(item => item.hook),
-  ...((EXPRESSION_STATEMENT_LIST) ?? []).map(item => item.hook),
-])
+// helpers & maps are imported from './helpers'
 
 /**
  * Parse TSX source and extract Qwik hook declarations in source order.
@@ -15,104 +20,70 @@ const ALL_HOOK_NAMES = new Set<string>([
 export function parseQwikCode(code: string): ParsedStructure[] {
   const collected: Array<ParsedStructure> = []
 
-  const parsed = parseSync('file.tsx', code, {
-    lang: 'tsx',
-    sourceType: 'module',
-    astType: 'ts',
-    range: true,
+  // Use traversal to collect hooks
+  traverseQwik(code, {
+    VariableDeclarator: (path) => {
+      const node = path.node as any
+      const init = node.init
+      if (!isAstNodeLike(init) || init.type !== 'CallExpression') return
+      const callee = (init as any).callee
+      if (!isAstNodeLike(callee) || callee.type !== 'Identifier') return
+      const hookName = normalizeHookName((callee as any).name as string)
+      if (!isKnownHook(hookName)) return
+      const variableName = getVariableIdentifierName(node.id)
+      if (!variableName) return
+      collected.push({
+        variableName,
+        hookType: hookName as HookType,
+        category: 'variableDeclaration',
+        __start__: getNodeStart(node),
+        returnType: VARIABLE_RETURN_TYPE_BY_HOOK.get(hookName) as HookType,
+      })
+    },
+    ExpressionStatement: (path) => {
+      const node = path.node as any
+      const expression = node.expression
+      if (!isAstNodeLike(expression) || expression.type !== 'CallExpression') return
+      const callee = (expression as any).callee
+      if (!isAstNodeLike(callee) || callee.type !== 'Identifier') return
+      const hookName = normalizeHookName((callee as any).name as string)
+      if (!isKnownHook(hookName)) return
+      collected.push({
+        variableName: hookName,
+        hookType: hookName as HookType,
+        category: 'expressionStatement',
+        __start__: getNodeStart(node),
+        returnType: EXPRESSION_RETURN_TYPE_BY_HOOK.get(hookName) as HookType,
+      })
+    }
   })
-
-  const program: unknown = parsed.program as unknown
-
-  function isAstNodeLike(value: unknown): value is { type: string } {
-    return Boolean(value) && typeof value === 'object' && 'type' in (value as Record<string, unknown>)
-  }
-
-  function getVariableIdentifierName(id: unknown): string | null {
-    if (!isAstNodeLike(id)) return null
-    return id.type === 'Identifier' ? (id as any).name as string : null
-  }
-
-  function normalizeHookName(raw: string): string {
-    return raw.endsWith('$') ? raw.slice(0, -1) : raw
-  }
-
-  function isKnownHook(name: string): name is HookType {
-    return ALL_HOOK_NAMES.has(name)
-  }
-
-  function getNodeStart(node: unknown): number {
-    if (node && typeof node === 'object') {
-      // oxc optionally emits `range: [start, end]`, else some nodes have `start`
-      const maybeRange = (node as any).range
-      if (Array.isArray(maybeRange)) return maybeRange[0] ?? 0
-      const maybeStart = (node as any).start
-      if (typeof maybeStart === 'number') return maybeStart
-    }
-    return 0
-  }
-
-  function visit(node: unknown): void {
-    if (!isAstNodeLike(node)) return
-
-    // Match: const <id> = useHook$(...)
-    if (node.type === 'VariableDeclarator') {
-      const init = (node as any).init
-      if (init && isAstNodeLike(init) && (init as any).type === 'CallExpression') {
-        const callee = (init as any).callee
-        if (callee && isAstNodeLike(callee) && (callee as any).type === 'Identifier') {
-          const rawName: string = (callee as any).name
-          const hookName = normalizeHookName(rawName)
-          if (isKnownHook(hookName)) {
-            const variableName = getVariableIdentifierName((node as any).id)
-            if (variableName) {
-              collected.push({
-                variableName,
-                hookType: hookName as HookType,
-                category: 'variableDeclaration',
-                __start__: getNodeStart(node),
-                returnType: VARIABLE_DECLARATION_LIST.find(item => item.hook === hookName)?.returnType as HookType,
-              })
-            }
-          }
-        }
-      }
-    }
-    if(node.type === 'ExpressionStatement'){
-      const expression = (node as any).expression
-      // Case 1: Direct call e.g. useHook$(...)
-      if (expression && isAstNodeLike(expression) && (expression as any).type === 'CallExpression') {
-        const callee = (expression as any).callee
-        if (callee && isAstNodeLike(callee) && (callee as any).type === 'Identifier') {
-          const rawName: string = (callee as any).name
-          const hookName = normalizeHookName(rawName)
-          if (isKnownHook(hookName)) {
-            collected.push({
-              variableName: hookName,
-              hookType: hookName as HookType,
-              category: 'expressionStatement',
-              __start__: getNodeStart(node),
-              returnType: EXPRESSION_STATEMENT_LIST.find(item => item.hook === hookName)?.returnType as HookType,
-            })
-          }
-        }
-      }
-    }
-    
-
-    // Generic deep traversal
-    for (const key of Object.keys(node as Record<string, unknown>)) {
-      const value = (node as any)[key]
-      if (Array.isArray(value)) {
-        for (const child of value) visit(child)
-      } else {
-        visit(value)
-      }
-    }
-  }
-
-  visit(program)
 
   collected.sort((a, b) => (a.__start__ ?? 0) - (b.__start__ ?? 0))
   return collected.map(({ __start__, ...rest }) => rest)
+}
+
+export interface QwikHookVisitor {
+  Hook?: (node: Omit<ParsedStructure, '__start__'>) => void
+  VariableDeclaration?: (node: Omit<ParsedStructure, '__start__'> & { category: 'variableDeclaration' }) => void
+  ExpressionStatement?: (node: Omit<ParsedStructure, '__start__'> & { category: 'expressionStatement' }) => void
+}
+
+/**
+ * Traverse parsed hooks with a visitor-like API.
+ * Similar to Babel traverse: pass callbacks in a visitor object.
+ */
+export function traverseQwikCode(
+  code: string,
+  visitor: QwikHookVisitor
+): void {
+  const items = parseQwikCode(code)
+  for (const item of items) {
+    // Generic hook callback
+    visitor.Hook?.(item)
+    if (item.category === 'variableDeclaration') {
+      visitor.VariableDeclaration?.(item as any)
+    } else if (item.category === 'expressionStatement') {
+      visitor.ExpressionStatement?.(item as any)
+    }
+  }
 }
