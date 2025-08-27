@@ -22,7 +22,11 @@ jobs:
           cache: 'pnpm'
           registry-url: https://registry.npmjs.org/
 
-      - run: corepack enable
+      - name: Use Latest Corepack
+        run: |          
+          pnpm install -g corepack@latest
+          corepack enable
+          pnpm --version
 
       - name: Install NPM Dependencies
         run: pnpm install --frozen-lockfile
