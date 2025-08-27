@@ -5,8 +5,6 @@ import {
 import { TreeNode } from '../../components/Tree/Tree';
 import { QRL } from '@qwik.dev/core';
 import { ParsedStructure } from '@devtools/kit';
-import { isStore, isTask, isValue } from '../../utils/type';
-import { unwrapStore } from '@qwik.dev/core/internal';
 
 const qrlKey = '$qrl$';
 const computedQrlKey = '$computeQrl$';
@@ -14,24 +12,14 @@ const chunkKey = '$chunk$';
 
 
 const schedule = (value: any) => {
-  // if(isStore(value)) {
-  //   return objectToTree(unwrapStore(value))
-  // } else if (isTask(value)) {
-  //   return taskToTree(value)
-  // } else if (isValue(value)) {
-  //   return signalToTree(value)
-  // } else {
-  //   return objectToTree(value)
-  // }
-
   return objectToTree(value)
 }
 
 export type QSeqsList = keyof typeof qSeqs
 
 const qSeqs = {
-  props: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
-  listens: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
+  props: { set: new Set<Record<string, any>>(), toTree: schedule, display: true },
+  listens: { set: new Set<Record<string, any>>(), toTree: schedule, display: true },
   useStore: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
   useSignal: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
   useContext: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
@@ -46,26 +34,65 @@ const qSeqs = {
   useErrorBoundary: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
   useServerData: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
   useSerializer: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
-  useResource: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
+  useResource: { set: new Set<ParsedStructure>(), toTree: schedule, display: false },
   useContextProvider: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
-  render: { set: new Set<ParsedStructure>(), toTree: schedule, display: false },
-} as const;
+  render: { set: new Set<Record<string, any>>(), toTree: schedule, display: false },
+};
 
 type DataType = keyof typeof qSeqs;
 
-export function formatData(type: DataType, data: ParsedStructure) {
-  qSeqs[type].set.add(data);
+export function formatData(type: 'props' | 'listens' | 'render', data: Record<string, any>): void
+export function formatData(type: Exclude<DataType, 'props' | 'listens' | 'render'>, data: ParsedStructure): void
+export function formatData(type: DataType, data: ParsedStructure | Record<string, any>) {
+  qSeqs[type].set.add(data as any);
 }
 
 export function getData() {
   return Object.entries(qSeqs)
     .map(([name, { set, toTree, display }]) => {
-      const arr = [...set].map((item) =>  toTree({[item?.variableName]: item.data})).flat();
-      set.clear();
+      const arr = [...set]
+        .map((item) => {
+          if (name === 'props' || name === 'listens' || name === 'render') {
+            return toTree((item as any).data);
+          } else {
+            return toTree({ [(item as any)?.variableName]: (item as any).data });
+          }
+        })
+        .flat();
       if (display === false) return null;
       return arr.length > 0 ? createTreeNodeObj(name, arr as TreeNode[]) : null;
     })
     .filter(Boolean);
+}
+
+// Build tree nodes without mutating sets. Useful for UI re-filtering after data collected
+export function buildTree() {
+  return getData();
+}
+
+// Clear all stored hook data
+export function clearAll() {
+  for (const key of Object.keys(qSeqs) as Array<keyof typeof qSeqs>) {
+    qSeqs[key].set.clear();
+  }
+}
+
+// Get filter list for UI
+export function getHookFilterList() {
+  return (Object.keys(qSeqs) as Array<keyof typeof qSeqs>).filter(usename => qSeqs[usename].set.size > 0).map((key) => ({
+    key,
+    display: qSeqs[key].display,
+  }));
+}
+
+// Update multiple hook display flags at once
+export function updateHookDisplays(map: Partial<Record<keyof typeof qSeqs, boolean>>) {
+  for (const [k, v] of Object.entries(map)) {
+    if (typeof v === 'boolean') {
+      // @ts-ignore
+      qSeqs[k as keyof typeof qSeqs].display = v;
+    }
+  }
 }
 
 function getRawDataObj() {
@@ -78,15 +105,14 @@ function getRawDataObj() {
 
 export function findAllQrl() {
   const list: Array<keyof typeof qSeqs> = [
+    'useTask',
+    'useVisibleTask',
     'useComputed',
     'useAsyncComputed',
-    'useErrorBoundary',
     'useServerData',
     'useSerializer',
-    'useResource',
-    'useContextProvider',
-    'listens',
     'render',
+    'listens',
   ];
 
 
@@ -95,11 +121,11 @@ export function findAllQrl() {
   const result = list.map((item) => {
     return rawData[item].map((entry) => {
       if (item === 'listens') {
-        return Object.values(entry || {}).map((v: any) => v?.[chunkKey]);
+        return Object.values(entry.data || entry).map((v: any) => v?.[chunkKey]);
       } else if (item === 'render') {
-        return getQrlPath(entry);
+        return getQrlPath(entry.data.render || entry);
       } else {
-        const qrlObj = (entry as any)[qrlKey] || (entry as any)[computedQrlKey];
+        const qrlObj = (entry.data || entry)[qrlKey] || (entry.data || entry)[computedQrlKey];
         return getQrlPath(qrlObj);
       }
     });

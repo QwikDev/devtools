@@ -37,7 +37,8 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
   const store = useStore({
     count: 0,
     dd:12,
-    cc: 33
+    cc: 33,
+    aa: [1,2,3  ]
   });
   const signal = useSignal('111');
   const constantValue = useConstant(() => 'CONST');

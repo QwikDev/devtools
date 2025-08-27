@@ -15,7 +15,8 @@ import { removeNodeFromTree } from '../../components/Tree/vnode';
 import {
   isListen,
 } from '../../utils/type';
-import { findAllQrl, formatData, getData, getQrlPath, normalizeData, QSeqsList } from './formatTreeData';
+import { findAllQrl, formatData, getQrlPath, normalizeData, buildTree, clearAll, getHookFilterList } from './formatTreeData';
+import type { QSeqsList } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
 import { getViteClientRpc, ParsedStructure } from '@devtools/kit';
 import { createHighlighter } from 'shiki';
@@ -34,6 +35,7 @@ export const RenderTree = component$(() => {
   const data = useSignal<TreeNode[]>([]);
 
   const stateTree = useSignal<TreeNode[]>([]);
+  const hookFilters = useSignal<{ key: QSeqsList; display: boolean }[]>([]);
 
   const qwikContainer = useComputed$(() => {
     try {
@@ -82,8 +84,11 @@ export const RenderTree = component$(() => {
     const rpc = getViteClientRpc();
     let parsed: ParsedStructure[] = []
 
+    // reset previous collected hook data before new node aggregation
+    clearAll();
+
     if (node.props?.[QRENDERFN]) {
-      // formatData('render', node.props[QRENDERFN]);
+      formatData('render', {data: {render: node.props[QRENDERFN]}});
       const qrl = getQrlPath(node.props[QRENDERFN]).split('_').shift()
       //@ts-ignore
       parsed = await rpc?.parseQwikCode(qrl!)
@@ -94,28 +99,30 @@ export const RenderTree = component$(() => {
     if (Array.isArray(node.props?.[QSEQ])) {
       const normalizedData = normalizeData(node.props[QSEQ], parsed)
       normalizedData.forEach((item) => {
-        formatData(item.hookType as QSeqsList, item);
+        formatData(item.hookType, item);
       });
     }
 
     
 
-    // if (node.props?.[QPROPS]) {
-    //   const props = unwrapStore(node.props[QPROPS]);
-    //   Object.entries(props).forEach(([key, value]) => {
-    //       formatData(isListen(key) ? 'listens' : 'props', { data: value, ...(node.props as any) });
-    //   });
-    // }
+    if (node.props?.[QPROPS]) {
+      const props = unwrapStore(node.props[QPROPS]);
+      Object.entries(props).forEach(([key, value]) => {
+          formatData(isListen(key) ? 'listens' : 'props', { data: {[key]: value} });
+      });
+    }
 
     
     codes.value = [];
     
-    // const res = await rpc?.getModulesByPathIds(findAllQrl())
-    // codes.value = res.filter((item) => item.modules);
-    stateTree.value = getData() as TreeNode[];
+    const res = await rpc?.getModulesByPathIds(findAllQrl())
+    codes.value = res.filter((item) => item.modules);
+    stateTree.value = buildTree() as TreeNode[]
+    hookFilters.value = getHookFilterList()
   });
 
   const currentTab = useSignal<'state' | 'code'>('state');
+
 
   return (
     <div class="h-full w-full flex-1 overflow-hidden rounded-md border  border-border">
@@ -124,7 +131,7 @@ export const RenderTree = component$(() => {
           <Tree data={data} onNodeClick={onNodeClick}></Tree>
         </div>
         <div class="border-l border-border"></div>
-        <div class="flex h-full w-1/2 flex-col p-4">
+        <div class="flex h-full w-1/2 flex-col p-4 min-h-0 overflow-hidden">
           <div class="border-b border-border">
             <div class="flex space-x-4 border-b border-border">
               <button
@@ -153,49 +160,78 @@ export const RenderTree = component$(() => {
           </div>
 
           {currentTab.value === 'state' && (
-            <div class="mt-5 flex-1 overflow-y-auto rounded-lg border border-border bg-card-item-bg p-2 shadow-sm">
-              <Tree
-                data={stateTree}
-                gap={10}
-                animate
-                animationDuration={200}
-                isHover
-                renderNode={$((node) => {
-                  const label = node.label || node.name || '';
-                  const isProperty = label.split(':');
-                  if (
-                    label === 'UseStore' ||
-                    label === 'useSignal' ||
-                    label === 'useComputed' ||
-                    label === 'useTask' ||
-                    label === 'props' ||
-                    label === 'listens'||
-                    label === 'asyncComputed'
-                  ) {
-                    return (
-                      <span class="text-gray-500 dark:text-gray-300">
-                        {label}
-                      </span>
-                    );
-                  }
+            <div class="mt-5 flex flex-1 min-h-0 flex-col rounded-lg border border-border bg-card-item-bg shadow-sm">
+              <div class="flex flex-wrap items-center gap-2 border-b border-border px-2 py-2">
+                <span class="text-xs text-muted-foreground">Hooks:</span>
+                {hookFilters.value.map((item, idx) => (
+                    <label class="flex items-center space-x-1 rounded border border-border px-2 py-1 text-xs" key={idx}>
+                      <input
+                        type="checkbox"
+                        checked={item.display}
+                        onChange$={(ev) => {
+                          const target = ev.target as HTMLInputElement;
+  
+                          hookFilters.value[idx].display = target.checked;
+                          
+                          stateTree.value = buildTree().filter((item) => hookFilters.value.some(hook => hook.key === item?.label && hook.display)) as TreeNode[]
+                        }}
+                      />
+                      <span>{item.key}</span>
+                    </label>
+                  ))}
+                <button
+                  class="ml-auto rounded border border-border px-2 py-1 text-xs"
+                  onClick$={$(() => {
 
-                  return isProperty.length > 1 ? (
-                    <>
-                      <span class="text-red-300 dark:text-red-500">
-                        {isProperty[0]}
-                      </span>
-                      <span class="text-gray-400">: {isProperty[1]}</span>
-                    </>
-                  ) : (
-                    <span>{label}</span>
-                  );
-                })}
-              ></Tree>
+                    hookFilters.value.forEach((item) => {
+                      item.display = true;
+                    })
+                    stateTree.value = buildTree().filter((item) => hookFilters.value.some(hook => hook.key === item?.label && hook.display)) as TreeNode[]
+
+                  })}
+                >
+                  Select all
+                </button>
+                <button
+                  class="rounded border border-border px-2 py-1 text-xs"
+                  onClick$={$(() => {
+                    hookFilters.value.forEach((item) => {
+                      item.display = false;
+                    })
+                    stateTree.value = buildTree().filter((item) => hookFilters.value.some(hook => hook.key === item?.label && hook.display)) as TreeNode[]
+                  })}
+                >
+                  Clear
+                </button>
+              </div>
+              <div class="flex-1 min-h-0 overflow-y-auto p-2">
+                <Tree
+                  data={stateTree}
+                  gap={10}
+                  animate
+                  animationDuration={200}
+                  isHover
+                  renderNode={$((node) => {
+                    const label = node.label || node.name || '';
+                    const isProperty = label.split(':');
+                    return isProperty.length > 1 ? (
+                      <>
+                        <span class="text-red-300 dark:text-red-500">
+                          {isProperty[0]}
+                        </span>
+                        <span class="text-gray-700 dark:text-white"> : {isProperty[1]}</span>
+                      </>
+                    ) : (
+                      <span>{label}</span>
+                    );
+                  })}
+                ></Tree>
+              </div>
             </div>
           )}
 
           {currentTab.value === 'code' && (
-            <div class="mt-5 flex-1 overflow-y-auto rounded-lg border  border-border p-2 shadow-sm">
+            <div class="mt-5 flex-1 min-h-0 overflow-y-auto rounded-lg border  border-border p-2 shadow-sm">
               {codes.value.map((item, idx) => {
                 return (
                   <>

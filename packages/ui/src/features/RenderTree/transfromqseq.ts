@@ -1,6 +1,6 @@
-import { isSignal, Signal } from '@qwik.dev/core';
+
 import { TreeNode } from '../../components/Tree/Tree';
-import { isComputed, isValue } from '../../utils/type';
+import { isValue } from '../../utils/type';
 
 export const QSEQ = 'q:seq';
 export const QPROPS = 'q:props';
