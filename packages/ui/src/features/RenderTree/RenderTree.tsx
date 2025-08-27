@@ -183,8 +183,9 @@ export const RenderTree = component$(() => {
                   class="ml-auto rounded border border-border px-2 py-1 text-xs"
                   onClick$={$(() => {
 
-                    hookFilters.value.forEach((item) => {
+                    hookFilters.value = hookFilters.value.map((item) => {
                       item.display = true;
+                      return item
                     })
                     stateTree.value = buildTree().filter((item) => hookFilters.value.some(hook => hook.key === item?.label && hook.display)) as TreeNode[]
 
@@ -195,8 +196,9 @@ export const RenderTree = component$(() => {
                 <button
                   class="rounded border border-border px-2 py-1 text-xs"
                   onClick$={$(() => {
-                    hookFilters.value.forEach((item) => {
+                    hookFilters.value = hookFilters.value.map((item) => {
                       item.display = false;
+                      return item
                     })
                     stateTree.value = buildTree().filter((item) => hookFilters.value.some(hook => hook.key === item?.label && hook.display)) as TreeNode[]
                   })}

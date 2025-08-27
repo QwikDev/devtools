@@ -55,7 +55,7 @@ export function getData() {
           if (name === 'props' || name === 'listens' || name === 'render') {
             return toTree((item as any).data);
           } else {
-            return toTree({ [(item as any)?.variableName]: (item as any).data });
+            return toTree({ [`let ${(item as any)?.variableName } =`]: (item as any).data });
           }
         })
         .flat();
