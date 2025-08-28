@@ -37,6 +37,11 @@ const qSeqs = {
   useResource: { set: new Set<ParsedStructure>(), toTree: schedule, display: false },
   useContextProvider: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
   render: { set: new Set<Record<string, any>>(), toTree: schedule, display: false },
+  useLocation: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
+  useNavigate: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
+  usePreventNavigate: { set: new Set<ParsedStructure>(), toTree: schedule, display: false },
+  useContent: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
+  useDocumentHead: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
 };
 
 type DataType = keyof typeof qSeqs;

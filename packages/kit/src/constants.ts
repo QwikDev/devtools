@@ -19,6 +19,11 @@ export const USE_HOOK_LIST = [
   'useStylesScoped',
   'useTask',
   'useVisibleTask',
+  'useLocation',
+  'useNavigate',
+  'usePreventNavigate',
+  'useContent',
+  'useDocumentHead',
 ] as const
 
 
@@ -70,6 +75,22 @@ export const VARIABLE_DECLARATION_LIST = [
     hook: 'useServerData',
     returnType: 'any'
   },
+  {
+    hook: 'useLocation',
+    returnType: 'object'
+  },
+  {
+    hook: 'useNavigate',
+    returnType: 'qrl'
+  },
+  {
+    hook: 'useContent',
+    returnType: 'proxy'
+  },
+  {
+    hook: 'useDocumentHead',
+    returnType: 'proxy'
+  }
 ] as const
 
 
@@ -90,6 +111,10 @@ export const EXPRESSION_STATEMENT_LIST = [
     hook: 'useContextProvider',
     returnType: 'number'
   },
+  {
+    hook: 'usePreventNavigate',
+    returnType: 'qrl'
+  }
 ] as const
 
 export const QSEQ = 'q:seq';

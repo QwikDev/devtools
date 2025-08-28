@@ -1,6 +1,21 @@
 import fs from 'node:fs/promises'
 import { parseQwikCode } from "../parse/parse";
 import { ServerContext } from "../types";
+const codeStringCache = new Map<string, ReturnType<typeof parseQwikCode>>()
+
+function parseCodeWithCache(code: string) {
+  const hit = codeStringCache.get(code)
+  if (hit) return hit
+  const parsed = parseQwikCode(code)
+  codeStringCache.set(code, parsed)
+  return parsed
+}
+
+function parseLoadedWithCache(loaded: any) {
+  if (typeof loaded === 'string') return parseCodeWithCache(loaded)
+  if (loaded && typeof (loaded as any).code === 'string') return parseCodeWithCache((loaded as any).code as string)
+  return null
+}
 
 export function getModulesContent(ctx: ServerContext) {
   let isAddRoot = (pathId: string) => pathId.includes(ctx.config.root) || pathId.includes('/@fs') ? pathId : `${ctx.config.root}${pathId}`
@@ -44,27 +59,44 @@ export function getModulesContent(ctx: ServerContext) {
       try {
         const id = isAddRoot(pathId)
         const resolved = await ctx.server.pluginContainer.resolveId(id)
+
         const rid = resolved?.id ?? id
         const mod = ctx.server.moduleGraph.getModuleById(rid)
 
-        // Prefer original file content if this maps to a real file
-        if (mod?.file) {
-          const raw = await fs.readFile(mod.file, 'utf-8')
-          return parseQwikCode(raw)
+        const tryReadOriginalFromVirtual = async (virtualId: string) => {
+          if (virtualId.includes('node_modules')) return null
+          const matchTsLike = virtualId.match(/^(.*?\.(?:tsx|ts|jsx|js|mjs|cjs))_/)
+          const sourceId = matchTsLike?.[1] ?? null
+          if (!sourceId) return null
+
+          try {
+            const sourceResolved = await ctx.server.pluginContainer.resolveId(sourceId)
+            let filePath = sourceResolved?.id ?? sourceId
+            if (filePath.startsWith('/@fs/')) filePath = filePath.slice(4)
+            filePath = filePath.replace(/\?[?#].*$/, '')
+            await fs.access(filePath)
+            const raw = await fs.readFile(filePath, 'utf-8')
+            return parseCodeWithCache(raw)
+          } catch (e) {
+            return null
+          }
         }
 
-        // For virtual modules, try the loader output (pre-transform)
+        const originalFromVirtual = await tryReadOriginalFromVirtual(rid)
+        if (originalFromVirtual) return originalFromVirtual
         const loaded = await ctx.server.pluginContainer.load(rid)
-        if (typeof loaded === 'string') {
-          return parseQwikCode(loaded)
-        }
-        if (loaded && typeof (loaded as any).code === 'string') {
-          return parseQwikCode((loaded as any).code as string)
+        const fromLoaded = parseLoadedWithCache(loaded)
+        if (fromLoaded) return fromLoaded
+
+        if (mod?.file) {
+          try {
+            await fs.access(mod.file)
+            const raw = await fs.readFile(mod.file, 'utf-8')
+            return parseCodeWithCache(raw)
+          } catch {}
         }
 
-        // Fallback: transformed code (may differ from original)
-        const transformed = await ctx.server.transformRequest(rid)
-        return parseQwikCode(transformed?.code ?? '')
+        return []
       } catch (error) {
         console.error(`Failed to parse qwik code for ${pathId}:`, error);
         return []

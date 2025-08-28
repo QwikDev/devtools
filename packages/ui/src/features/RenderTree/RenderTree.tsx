@@ -89,7 +89,7 @@ export const RenderTree = component$(() => {
 
     if (node.props?.[QRENDERFN]) {
       formatData('render', {data: {render: node.props[QRENDERFN]}});
-      const qrl = getQrlPath(node.props[QRENDERFN]).split('_').shift()
+      const qrl = getQrlPath(node.props[QRENDERFN])
       //@ts-ignore
       parsed = await rpc?.parseQwikCode(qrl!)
     }

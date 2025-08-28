@@ -23,17 +23,20 @@ import {
   useErrorBoundary
 } from '@qwik.dev/core';
 import { _getDomContainer, isServer, useVisibleTask$ } from '@qwik.dev/core/internal';
-import type { QRL } from '@qwik.dev/core';
-
+import type { QRL, Signal } from '@qwik.dev/core';
+import { useLocation, useNavigate, Link, usePreventNavigate$, useContent, useDocumentHead } from '@qwik.dev/router';
 const ButtonContext = createContextId<{ theme: string; size: string }>('button-context');
 
 interface ButtonProps {
   class?: string;
   onClick$?: QRL<() => void>;
+  testValue: Signal<string>;
 }
 
-export default component$<ButtonProps>(({ class: className = '', onClick$ }) => {
-
+export default component$<ButtonProps>((props) => {
+  const { class: className = '', onClick$ } = props;
+  const testValue2 = props.testValue
+  console.log('testValue', testValue2)
   const store = useStore({
     count: 0,
     dd:12,
@@ -44,6 +47,11 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
   const constantValue = useConstant(() => 'CONST');
   const serverData = useServerData<any>('demo-key');
   const errorBoundary = useErrorBoundary();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const content = useContent();
+  const head = useDocumentHead();
+
   
 
   useTask$(({ track }) => {
@@ -51,6 +59,7 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     signal.value = '33333'
   })
 
+  // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(({ track }) => {
     track(() => store.count);
     signal.value = '2227'
@@ -90,7 +99,6 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     console.log('Window resized');
   }));
 
-  // Demo: useOn（给宿主元素注册事件）
   useOn('click', $(() => {
     console.log('Host clicked');
   }));
@@ -148,6 +156,8 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
     }
   });
 
+  const handleGoAbout = $(() => navigate('/about'));
+
   return (
     <div>
       <button 
@@ -155,12 +165,30 @@ export default component$<ButtonProps>(({ class: className = '', onClick$ }) => 
         class={`${className} custom-button scoped-button`}
         onClick$={handleClick}
       >
-        Click me {store.count}{signal.value}{qwikContainer?.value?.qManifestHash}
+        Click me {store.count}{signal.value}{qwikContainer.value?.qManifestHash}
       </button>
+      <button 
+        class={`custom-button scoped-button`}
+        style="margin-left: 8px"
+        onClick$={handleGoAbout}
+      >
+        Go /about
+      </button>
+      <Link href="/blog" class={`scoped-button`} style="margin-left: 8px; padding: 8px 16px; display: inline-block; text-decoration: none;">
+        Go /blog
+      </Link>
       
       <div style="margin-top: 10px; font-size: 12px; color: #666;">
+        <div>Current Path: {location.url.pathname}</div>
+        <div>Is Navigating: {location.isNavigating ? 'true' : 'false'}</div>
+        <div>Params: {JSON.stringify(location.params)}</div>
+        <div>Prev URL: {location.prevUrl ? location.prevUrl.pathname : '—'}</div>
+        <div>Head Title: {head.title}</div>
+        <div>Head Metas: {head.meta.length}</div>
+        <div>Content Menu: {content.menu ? 'yes' : 'no'}</div>
+        <div>Content Headings: {content.headings ? content.headings.length : 0}</div>
         <div>Async Computed: {asyncComputedValue.value}</div>
-        <div>Context: {context?.theme} - {context?.size}</div>
+        <div>Context: {context.theme} - {context.size}</div>
         <div>Button ID: {buttonId}</div>
         <div>Constant: {constantValue}</div>
         {errorBoundary.error && <div>Error captured</div>}

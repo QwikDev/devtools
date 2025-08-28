@@ -29,15 +29,16 @@ export function parseQwikCode(code: string): ParsedStructure[] {
       const callee = (init as any).callee
       if (!isAstNodeLike(callee) || callee.type !== 'Identifier') return
       const hookName = normalizeHookName((callee as any).name as string)
-      if (!isKnownHook(hookName)) return
+      const isQrlName = hookName.endsWith('Qrl') ? hookName.slice(0, -3) : hookName
+      if (!isKnownHook(isQrlName)) return
       const variableName = getVariableIdentifierName(node.id)
       if (!variableName) return
       collected.push({
         variableName,
-        hookType: hookName as HookType,
+        hookType: isQrlName as HookType,
         category: 'variableDeclaration',
         __start__: getNodeStart(node),
-        returnType: VARIABLE_RETURN_TYPE_BY_HOOK.get(hookName) as HookType,
+        returnType: VARIABLE_RETURN_TYPE_BY_HOOK.get(isQrlName) as HookType,
       })
     },
     ExpressionStatement: (path) => {
@@ -47,13 +48,14 @@ export function parseQwikCode(code: string): ParsedStructure[] {
       const callee = (expression as any).callee
       if (!isAstNodeLike(callee) || callee.type !== 'Identifier') return
       const hookName = normalizeHookName((callee as any).name as string)
-      if (!isKnownHook(hookName)) return
+      const isQrlName = hookName.endsWith('Qrl') ? hookName.slice(0, -3) : hookName
+      if (!isKnownHook(isQrlName)) return
       collected.push({
-        variableName: hookName,
-        hookType: hookName as HookType,
+        variableName: isQrlName,
+        hookType: isQrlName as HookType,
         category: 'expressionStatement',
         __start__: getNodeStart(node),
-        returnType: EXPRESSION_RETURN_TYPE_BY_HOOK.get(hookName) as HookType,
+        returnType: EXPRESSION_RETURN_TYPE_BY_HOOK.get(isQrlName) as HookType,
       })
     }
   })
