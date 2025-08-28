@@ -13,16 +13,20 @@ jobs:
       - name: PNPM Install
         uses: pnpm/action-setup@v4
         with:
-          version: 9.14.2
+          version: 10.15.0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 23.5.0
+          node-version: 24.6.0
           cache: 'pnpm'
           registry-url: https://registry.npmjs.org/
 
-      - run: corepack enable
+      - name: Use Latest Corepack
+        run: |          
+          pnpm install -g corepack@latest
+          corepack enable
+          pnpm --version
 
       - name: Install NPM Dependencies
         run: pnpm install --frozen-lockfile
