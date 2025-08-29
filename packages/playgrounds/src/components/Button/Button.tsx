@@ -24,7 +24,8 @@ import {
 } from '@qwik.dev/core';
 import { _getDomContainer, isServer, useVisibleTask$ } from '@qwik.dev/core/internal';
 import type { QRL, Signal } from '@qwik.dev/core';
-import { useLocation, useNavigate, Link, usePreventNavigate$, useContent, useDocumentHead } from '@qwik.dev/router';
+import { useLocation, useNavigate, Link, useContent, useDocumentHead } from '@qwik.dev/router';
+import { useDebouncer } from './debounce';
 const ButtonContext = createContextId<{ theme: string; size: string }>('button-context');
 
 interface ButtonProps {
@@ -43,7 +44,7 @@ export default component$<ButtonProps>((props) => {
     cc: 33,
     aa: [1,2,3  ]
   });
-  const signal = useSignal('111');
+  const signal = useSignal<any>('111');
   const constantValue = useConstant(() => 'CONST');
   const serverData = useServerData<any>('demo-key');
   const errorBoundary = useErrorBoundary();
@@ -146,11 +147,18 @@ export default component$<ButtonProps>((props) => {
       cursor: pointer;
     }
   `);
+  const debounce = useDebouncer(
+    $((value: string) => {
+      signal.value = value;
+    }),
+    1000
+  );
+ 
 
   const handleClick = $(async () => {
     store.count++;
     console.log('Button clicked! Count:', store.count);
-    
+    debounce(store.count)
     if (onClick$) {
       await onClick$();
     }

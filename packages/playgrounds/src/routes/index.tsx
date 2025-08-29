@@ -10,10 +10,9 @@ export default component$( () => {
   const count = useSignal(0);
   const signal = useGetTime();
   const testValue = useSignal('111');
-  console.log('signal', signal)
   return (
     <>
-      <h1>Hi 👋</h1>
+      <h1>Hi 👋{signal.value.time.toLocaleTimeString()}</h1>
       <div>
         <Text />
       </div>
