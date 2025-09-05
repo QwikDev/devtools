@@ -20,16 +20,11 @@
     "test": "vitest --run"
   },
   "dependencies": {
-    "@babel/generator": "^7.26.5",
-    "@babel/parser": "^7.26.7",
-    "oxc-parser": "^0.82.1",
-    "@babel/traverse": "^7.26.7"
+    "oxc-parser": "^0.82.1"
   },
   "devDependencies": {
     "@babel/types": "^7.26.7",
     "@devtools/kit": "workspace:*",
-    "@types/babel__generator": "^7.6.8",
-    "@types/babel__traverse": "^7.20.6",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",
     "@typescript-eslint/eslint-plugin": "7.16.1",
@@ -41,7 +36,6 @@
     "fast-glob": "^3.3.2",
     "image-meta": "^0.2.1",
     "np": "^8.0.4",
-    
     "prettier": "3.3.3",
     "typescript": "5.4.5",
     "vite": "7.1.3",

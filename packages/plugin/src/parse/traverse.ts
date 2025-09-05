@@ -35,15 +35,17 @@ function callVisitor(visitor: Visitor | undefined, type: string, hook: 'enter' |
   }
 }
 
-export function traverseQwik(code: string, visitor: Visitor, state?: any): void {
+export function parseProgram(code: string): unknown {
   const parsed = parseSync('file.tsx', code, {
     lang: 'tsx',
     sourceType: 'module',
     astType: 'ts',
     range: true,
   })
-  const program: unknown = parsed.program as unknown
+  return parsed.program as unknown
+}
 
+export function traverseProgram(program: unknown, visitor: Visitor, state?: any): void {
   let shouldStopAll = false
   function inner(node: unknown, parent: unknown, key: string | number | null, index: number | null) {
     if (shouldStopAll) return
@@ -73,6 +75,60 @@ export function traverseQwik(code: string, visitor: Visitor, state?: any): void 
     callVisitor(visitor, 'exit', 'exit', path)
   }
   inner(program, null, null, null)
+}
+
+export function traverseQwik(code: string, visitor: Visitor, state?: any): void {
+  const program: unknown = parseProgram(code)
+  traverseProgram(program, visitor, state)
+}
+
+export function findDefaultComponentBodyInsertPosFromProgram(program: unknown): number | null {
+  let bodyInsertPos: number | null = null
+  traverseProgram(program, {
+    enter: (path) => {
+      const node: any = path.node as any
+      const decl = node.declaration
+      if (decl && decl.type === 'CallExpression') {
+        const callee = decl.callee
+        if (callee && callee.type === 'Identifier' && callee.name === 'component$') {
+          const firstArg = decl.arguments && decl.arguments[0]
+          if (firstArg && (firstArg.type === 'ArrowFunctionExpression' || firstArg.type === 'FunctionExpression')) {
+            const body = firstArg.body
+            if (body && body.type === 'BlockStatement' && Array.isArray(body.range)) {
+              bodyInsertPos = (body.range[0] as number) + 1
+              path.stop()
+            }
+          }
+        }
+      }
+    }
+  })
+  return bodyInsertPos
+}
+
+
+export function findFirstComponentBodyInsertPosFromProgram(program: unknown): number | null {
+  let bodyInsertPos: number | null = null
+  traverseProgram(program, {
+    enter: (path) => {
+      const node: any = path.node as any
+      if (!node) return
+      if (node.type === 'CallExpression') {
+        const callee = node.callee
+        if (callee && callee.type === 'Identifier' && callee.name === 'component$') {
+          const firstArg = node.arguments && node.arguments[0]
+          if (firstArg && (firstArg.type === 'ArrowFunctionExpression' || firstArg.type === 'FunctionExpression')) {
+            const body = firstArg.body
+            if (body && body.type === 'BlockStatement' && Array.isArray(body.range)) {
+              bodyInsertPos = (body.range[0] as number) + 1
+              path.stop()
+            }
+          }
+        }
+      }
+    }
+  })
+  return bodyInsertPos
 }
 
 

@@ -120,3 +120,7 @@ export const EXPRESSION_STATEMENT_LIST = [
 export const QSEQ = 'q:seq';
 export const QPROPS = 'q:props';
 export const QRENDERFN = 'q:renderFn';
+
+export const VIRTUAL_QWIK_DEVTOOLS_KEY = 'virtual-qwik-devtools.ts';
+
+export const INNER_USE_HOOK= 'useCollectHooks'
