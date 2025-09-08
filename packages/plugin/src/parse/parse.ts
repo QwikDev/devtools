@@ -30,7 +30,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
     type Task = { start: number; end: number; text: string }
     const tasks: Task[] = []
     for (let idx = 0; idx < allBodies.length; idx++) {
-      const { insertPos } = allBodies[idx]
+      const { insertPos, exportName } = allBodies[idx] as any
       // skip if this body already has init
       const lookahead = result.slice(insertPos, insertPos + 200)
       if (/const\s+collecthook\s*=\s*useCollectHooks\s*\(/.test(lookahead)) continue
@@ -44,7 +44,13 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
 
       const indent = readIndent(result, i)
       const baseArg = String(options?.path ?? '')
-      const arg = JSON.stringify(allBodies.length > 1 ? `${baseArg}_${idx + 1}` : baseArg)
+      let suffix = ''
+      if (exportName && typeof exportName === 'string') {
+        suffix = `_${exportName}`
+      } else if (allBodies.length > 1) {
+        suffix = `_${idx + 1}`
+      }
+      const arg = JSON.stringify(`${baseArg}${suffix}`)
       const initLine = `${prefixNewline}${indent}const collecthook = ${INNER_USE_HOOK}(${arg})\n`
       tasks.push({ start: insertIndex, end: insertIndex, text: initLine })
     }

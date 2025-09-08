@@ -82,7 +82,7 @@ export function traverseQwik(code: string, visitor: Visitor, state?: any): void 
   traverseProgram(program, visitor, state)
 }
 
-export interface ComponentBodyRange { insertPos: number; bodyStart: number; bodyEnd: number }
+export interface ComponentBodyRange { insertPos: number; bodyStart: number; bodyEnd: number; exportName?: string }
 
 export function findAllComponentBodyRangesFromProgram(program: unknown): ComponentBodyRange[] {
   const ranges: ComponentBodyRange[] = []
@@ -100,7 +100,18 @@ export function findAllComponentBodyRangesFromProgram(program: unknown): Compone
             if (body && body.type === 'BlockStatement' && Array.isArray(body.range)) {
               const start = (body.range[0] as number)
               const end = (body.range[1] as number)
-              ranges.push({ insertPos: start + 1, bodyStart: start, bodyEnd: end })
+              // detect export form to derive a name hint
+              let exportName: string | undefined
+              const parent: any = path.parent as any
+              if (parent && parent.type === 'ExportDefaultDeclaration') {
+                exportName = 'default'
+              } else if (parent && parent.type === 'VariableDeclarator') {
+                const id = (parent as any).id
+                if (id && id.type === 'Identifier' && typeof id.name === 'string') {
+                  exportName = id.name as string
+                }
+              }
+              ranges.push({ insertPos: start + 1, bodyStart: start, bodyEnd: end, exportName })
             }
           }
         }

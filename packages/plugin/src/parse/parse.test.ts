@@ -227,7 +227,7 @@ describe('injectCollectHooks', () => {
   it('injects initialization into component$ (import handled by plugin layer)', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: '/abs/path/Button.tsx?id=abc'})
-    expect(output).toContain('const collecthook = useCollectHooks("/abs/path/Button.tsx?id=abc")')
+    expect(output).toContain('const collecthook = useCollectHooks("/abs/path/Button.tsx?id=abc_default")')
   })
 
   it('does not inject virtual import here (plugin layer does it)', () => {
@@ -239,7 +239,7 @@ describe('injectCollectHooks', () => {
   it('inserts initialization at the very beginning of component$ body with proper indent', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: '/abs/path/Button.tsx?id=abc'})
-    const initLine = 'const collecthook = useCollectHooks("/abs/path/Button.tsx?id=abc")'
+    const initLine = 'const collecthook = useCollectHooks("/abs/path/Button.tsx?id=abc_default")'
     const firstBodyStmt = "const { class: className = '', onClick$ } = props;"
     const initIdx = output.indexOf(initLine)
     const firstStmtIdx = output.indexOf(firstBodyStmt)
@@ -270,13 +270,13 @@ describe('injectCollectHooks', () => {
   it('supports custom collecthook arg via options', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, { path: 'CUSTOM_PATH' })
-    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH")')
+    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_default")')
   })
 
   it('supports passing Vite transform id via options.collectArgValue', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, { path: "/abs/path/Button.tsx?id=abc" })
-    expect(output).toContain("const collecthook = useCollectHooks(\"/abs/path/Button.tsx?id=abc\")")
+    expect(output).toContain("const collecthook = useCollectHooks(\"/abs/path/Button.tsx?id=abc_default\")")
   })
 
   it('supports component$ with FunctionExpression (non-arrow) and injects correctly', () => {
@@ -346,10 +346,10 @@ export const RouterHead = component$(() => {
 });
 `
     const output = parseQwikCode(routerHead, { path: '/abs/path/router-head.tsx' })
-    expect(output).toContain('const collecthook = useCollectHooks(')
+    expect(output).toContain('const collecthook = useCollectHooks("/abs/path/router-head.tsx_RouterHead")')
   })
 
-  it('inserts init for every component$ with numbered args when multiple components exist', () => {
+  it('inserts init for every component$ with name-based args when named exports exist', () => {
     const src = `import { component$, useSignal } from '@qwik/dev';
 
 export const A = component$(() => {
@@ -365,13 +365,13 @@ export const B = component$(() => {
     const output = parseQwikCode(src, { path: 'CUSTOM_PATH' })
     const count = (s: string, sub: string) => (s.match(new RegExp(sub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length
     expect(count(output, 'const collecthook = useCollectHooks')).toBe(2)
-    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_1")')
-    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_2")')
+    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_A")')
+    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_B")')
     const aFirstStmt = 'const s1 = useSignal(0);'
     const bFirstStmt = 'const s2 = useSignal(1);'
-    const aInitIdx = output.indexOf('const collecthook = useCollectHooks("CUSTOM_PATH_1")')
+    const aInitIdx = output.indexOf('const collecthook = useCollectHooks("CUSTOM_PATH_A")')
     const aStmtIdx = output.indexOf(aFirstStmt)
-    const bInitIdx = output.indexOf('const collecthook = useCollectHooks("CUSTOM_PATH_2")')
+    const bInitIdx = output.indexOf('const collecthook = useCollectHooks("CUSTOM_PATH_B")')
     const bStmtIdx = output.indexOf(bFirstStmt)
     expect(aInitIdx).toBeGreaterThan(-1)
     expect(bInitIdx).toBeGreaterThan(-1)
