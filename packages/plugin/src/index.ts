@@ -1,6 +1,6 @@
 import { ResolvedConfig, type Plugin } from 'vite';
 import { getServerFunctions } from './rpc';
-import { createServerRpc, setViteServerContext, VIRTUAL_QWIK_DEVTOOLS_KEY } from '@devtools/kit';
+import { createServerRpc, setViteServerContext, VIRTUAL_QWIK_DEVTOOLS_KEY, INNER_USE_HOOK } from '@devtools/kit';
 import _traverse from '@babel/traverse';
 import _generate from '@babel/generator';
 import VueInspector from 'vite-plugin-inspect'
@@ -31,8 +31,12 @@ export function qwikDevtools(): Plugin[] {
       order: 'pre',
       handler(code, id) {
         const mode = process.env.MODE;
-        // Inject import for virtual module at top when a component$ is present
-        if (id.endsWith('.tsx') && code.includes('component$') && !code.includes('virtual-qwik-devtool')) {
+        // Ensure virtual import is present at the very top once when a component$ is present
+        if (id.endsWith('.tsx') && code.includes('component$')) {
+          if (!code.includes(VIRTUAL_QWIK_DEVTOOLS_KEY)) {
+            const importLine = `import { ${INNER_USE_HOOK} } from '${VIRTUAL_QWIK_DEVTOOLS_KEY}';\n`
+            code = importLine + code
+          }
           code = parseQwikCode(code, {path: id})
         }
         // Only transform the root component file

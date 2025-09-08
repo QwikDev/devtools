@@ -82,37 +82,15 @@ export function traverseQwik(code: string, visitor: Visitor, state?: any): void 
   traverseProgram(program, visitor, state)
 }
 
-export function findDefaultComponentBodyInsertPosFromProgram(program: unknown): number | null {
-  let bodyInsertPos: number | null = null
-  traverseProgram(program, {
-    enter: (path) => {
-      const node: any = path.node as any
-      const decl = node.declaration
-      if (decl && decl.type === 'CallExpression') {
-        const callee = decl.callee
-        if (callee && callee.type === 'Identifier' && callee.name === 'component$') {
-          const firstArg = decl.arguments && decl.arguments[0]
-          if (firstArg && (firstArg.type === 'ArrowFunctionExpression' || firstArg.type === 'FunctionExpression')) {
-            const body = firstArg.body
-            if (body && body.type === 'BlockStatement' && Array.isArray(body.range)) {
-              bodyInsertPos = (body.range[0] as number) + 1
-              path.stop()
-            }
-          }
-        }
-      }
-    }
-  })
-  return bodyInsertPos
-}
+export interface ComponentBodyRange { insertPos: number; bodyStart: number; bodyEnd: number }
 
-
-export function findFirstComponentBodyInsertPosFromProgram(program: unknown): number | null {
-  let bodyInsertPos: number | null = null
+export function findAllComponentBodyRangesFromProgram(program: unknown): ComponentBodyRange[] {
+  const ranges: ComponentBodyRange[] = []
   traverseProgram(program, {
     enter: (path) => {
       const node: any = path.node as any
       if (!node) return
+      // collect any component$ call expression
       if (node.type === 'CallExpression') {
         const callee = node.callee
         if (callee && callee.type === 'Identifier' && callee.name === 'component$') {
@@ -120,15 +98,24 @@ export function findFirstComponentBodyInsertPosFromProgram(program: unknown): nu
           if (firstArg && (firstArg.type === 'ArrowFunctionExpression' || firstArg.type === 'FunctionExpression')) {
             const body = firstArg.body
             if (body && body.type === 'BlockStatement' && Array.isArray(body.range)) {
-              bodyInsertPos = (body.range[0] as number) + 1
-              path.stop()
+              const start = (body.range[0] as number)
+              const end = (body.range[1] as number)
+              ranges.push({ insertPos: start + 1, bodyStart: start, bodyEnd: end })
             }
           }
         }
       }
     }
   })
-  return bodyInsertPos
+  // de-duplicate and sort by position ascending
+  const seen = new Set<number>()
+  const unique = ranges.filter(r => {
+    if (seen.has(r.insertPos)) return false
+    seen.add(r.insertPos)
+    return true
+  })
+  unique.sort((a, b) => a.insertPos - b.insertPos)
+  return unique
 }
 
 

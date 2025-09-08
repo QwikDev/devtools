@@ -31,8 +31,6 @@ import type { QRL, Signal } from '@qwik.dev/core';
 import { useLocation, useNavigate, Link, useContent, useDocumentHead } from '@qwik.dev/router';
 import { useDebouncer } from './debounce';
 import { useHooks } from './collectHooks';
-import { useCollectHooks } from 'virtual-qwik-devtools';
-
 const ButtonContext = createContextId<{ theme: string; size: string }>('button-context');
 
 interface ButtonProps {

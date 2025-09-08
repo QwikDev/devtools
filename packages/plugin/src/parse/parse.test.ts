@@ -224,22 +224,16 @@ export default component$<ButtonProps>((props) => {
 
 
 describe('injectCollectHooks', () => {
-  it('injects import and initialization into component$', () => {
+  it('injects initialization into component$ (import handled by plugin layer)', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: '/abs/path/Button.tsx?id=abc'})
-    expect(output).toContain("import { useCollectHooks } from 'virtual-qwik-devtools'")
     expect(output).toContain('const collecthook = useCollectHooks("/abs/path/Button.tsx?id=abc")')
   })
 
-  it('places virtual import after existing imports', () => {
+  it('does not inject virtual import here (plugin layer does it)', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: 'new URL(import.meta.url).pathname'})
-    const lastImport = "import { useDebouncer } from './debounce';"
-    const importInserted = "import { useCollectHooks } from 'virtual-qwik-devtools'"
-    const lastImportIdx = output.indexOf(lastImport)
-    const insertedIdx = output.indexOf(importInserted)
-    expect(lastImportIdx).toBeGreaterThan(-1)
-    expect(insertedIdx).toBeGreaterThan(lastImportIdx)
+    expect(output.includes("import { useCollectHooks } from 'virtual-qwik-devtools.ts'")).toBe(false)
   })
 
   it('inserts initialization at the very beginning of component$ body with proper indent', () => {
@@ -256,18 +250,20 @@ describe('injectCollectHooks', () => {
     expect(output).toContain(initLineWithIndent)
   })
 
-  it('is idempotent: running twice does not duplicate import or init', () => {
+  it('is idempotent: running twice does not duplicate init', () => {
     const input = sampleVarDecl
     const once = parseQwikCode(input, {path: 'CUSTOM_PATH'})
     const twice = parseQwikCode(once, {path: 'CUSTOM_PATH'})
     const count = (s: string, sub: string) => (s.match(new RegExp(sub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length
-    expect(count(twice, "virtual-qwik-devtools")).toBe(1)
+    // import injection is handled by plugin layer now
+    expect(count(twice, "virtual-qwik-devtools")).toBe(0)
     expect(count(twice, 'const collecthook = useCollectHooks')).toBe(1)
   })
 
   it('matches snapshot of transformed output', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: '/abs/path/Button.tsx?id=abc'})
+    // Snapshot still valid: only the added init and hook payloads are asserted
     expect(output).toMatchSnapshot()
   })
 
@@ -293,7 +289,7 @@ export default component$(function(props){
 });
 `
     const output = parseQwikCode(src, {path: 'CUSTOM_PATH'})
-    expect(output).toContain("import { useCollectHooks } from 'virtual-qwik-devtools'")
+    // import is handled by plugin layer; parseQwikCode only injects init and payloads
     expect(/component\$\(function\([^)]*\)\s*\{[\r\n]+\s*const collecthook = useCollectHooks\(/m.test(output)).toBe(true)
     const decl = 'const signal = useSignal(0);'
     const declIdx = output.indexOf(decl)
@@ -351,6 +347,38 @@ export const RouterHead = component$(() => {
 `
     const output = parseQwikCode(routerHead, { path: '/abs/path/router-head.tsx' })
     expect(output).toContain('const collecthook = useCollectHooks(')
+  })
+
+  it('inserts init for every component$ with numbered args when multiple components exist', () => {
+    const src = `import { component$, useSignal } from '@qwik/dev';
+
+export const A = component$(() => {
+  const s1 = useSignal(0);
+  return <div>{s1.value}</div>;
+});
+
+export const B = component$(() => {
+  const s2 = useSignal(1);
+  return <div>{s2.value}</div>;
+});
+`
+    const output = parseQwikCode(src, { path: 'CUSTOM_PATH' })
+    const count = (s: string, sub: string) => (s.match(new RegExp(sub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length
+    expect(count(output, 'const collecthook = useCollectHooks')).toBe(2)
+    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_1")')
+    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_2")')
+    const aFirstStmt = 'const s1 = useSignal(0);'
+    const bFirstStmt = 'const s2 = useSignal(1);'
+    const aInitIdx = output.indexOf('const collecthook = useCollectHooks("CUSTOM_PATH_1")')
+    const aStmtIdx = output.indexOf(aFirstStmt)
+    const bInitIdx = output.indexOf('const collecthook = useCollectHooks("CUSTOM_PATH_2")')
+    const bStmtIdx = output.indexOf(bFirstStmt)
+    expect(aInitIdx).toBeGreaterThan(-1)
+    expect(bInitIdx).toBeGreaterThan(-1)
+    expect(aStmtIdx).toBeGreaterThan(-1)
+    expect(bStmtIdx).toBeGreaterThan(-1)
+    expect(aInitIdx).toBeLessThan(aStmtIdx)
+    expect(bInitIdx).toBeLessThan(bStmtIdx)
   })
 })
 

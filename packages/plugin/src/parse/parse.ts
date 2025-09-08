@@ -1,4 +1,4 @@
-import {  parseProgram, findDefaultComponentBodyInsertPosFromProgram, traverseProgram, findFirstComponentBodyInsertPosFromProgram } from './traverse'
+import {  parseProgram, findAllComponentBodyRangesFromProgram, traverseProgram } from './traverse'
 import {
   EXPRESSION_RETURN_TYPE_BY_HOOK,
   VARIABLE_RETURN_TYPE_BY_HOOK,
@@ -15,68 +15,47 @@ import {
   trimStatementSemicolon,
   isCustomHook,
 } from './helpers'
-import { INNER_USE_HOOK, VIRTUAL_QWIK_DEVTOOLS_KEY } from '@devtools/kit'
+import { INNER_USE_HOOK } from '@devtools/kit'
 
 export interface InjectOptions { path?: string }
 export function parseQwikCode(code: string, options?: InjectOptions): string {
-  const alreadyHasImport = new RegExp(`from\\s+['\"]${VIRTUAL_QWIK_DEVTOOLS_KEY}['\"]`).test(code)
-  const alreadyHasInit = /const\s+collecthook\s*=\s*useCollectHooks\s*\(/g.test(code)
 
   const program: any = parseProgram(code) as any
 
-  let importInsertPos = 0
-  if (Array.isArray(program.body)) {
-    for (const stmt of program.body) {
-      if (stmt && stmt.type === 'ImportDeclaration' && Array.isArray(stmt.range)) {
-        importInsertPos = Math.max(importInsertPos, stmt.range[1] as number)
-      }
-    }
-  }
-
-  let bodyInsertPos: number | null = findDefaultComponentBodyInsertPosFromProgram(program)
-  if (bodyInsertPos == null) {
-    bodyInsertPos = findFirstComponentBodyInsertPosFromProgram(program)
-  }
+  const allBodies = findAllComponentBodyRangesFromProgram(program)
 
   let result = code
 
-  let importDelta = 0
-  if (bodyInsertPos != null && !alreadyHasImport) {
-    const importLine = `import { ${INNER_USE_HOOK} } from '${VIRTUAL_QWIK_DEVTOOLS_KEY}';\n`
-    const before = result.slice(0, importInsertPos)
-    const after = result.slice(importInsertPos)
-    const needsPrefixNewline = importInsertPos > 0 && before[before.length - 1] !== '\n'
-    const prefix = needsPrefixNewline ? '\n' : ''
-    const suffix = after.startsWith('\n') ? '' : '\n'
-    result = before + prefix + importLine + suffix + after
-    importDelta = (prefix + importLine + suffix).length
+  if (allBodies.length > 0) {
+    type Task = { start: number; end: number; text: string }
+    const tasks: Task[] = []
+    for (let idx = 0; idx < allBodies.length; idx++) {
+      const { insertPos } = allBodies[idx]
+      // skip if this body already has init
+      const lookahead = result.slice(insertPos, insertPos + 200)
+      if (/const\s+collecthook\s*=\s*useCollectHooks\s*\(/.test(lookahead)) continue
+
+      let i = insertPos
+      let insertIndex = insertPos
+      let prefixNewline = ''
+      if (result[i] === '\r' && result[i + 1] === '\n') { i += 2; insertIndex = i }
+      else if (result[i] === '\n') { i += 1; insertIndex = i }
+      else { prefixNewline = '\n' }
+
+      const indent = readIndent(result, i)
+      const baseArg = String(options?.path ?? '')
+      const arg = JSON.stringify(allBodies.length > 1 ? `${baseArg}_${idx + 1}` : baseArg)
+      const initLine = `${prefixNewline}${indent}const collecthook = ${INNER_USE_HOOK}(${arg})\n`
+      tasks.push({ start: insertIndex, end: insertIndex, text: initLine })
+    }
+    // apply from last to first to keep positions stable
+    tasks.sort((a, b) => b.start - a.start)
+    for (const t of tasks) {
+      result = result.slice(0, t.start) + t.text + result.slice(t.end)
+    }
   }
 
-  if ( bodyInsertPos != null && !alreadyHasInit) {
-    const absoluteInsert = bodyInsertPos + importDelta
-    let insertIndex = absoluteInsert
-    let i = absoluteInsert
-    let prefixNewline = ''
-    if (result[i] === '\r' && result[i + 1] === '\n') {
-      i += 2
-      insertIndex = i
-    } else if (result[i] === '\n') {
-      i += 1
-      insertIndex = i
-    } else {
-      prefixNewline = '\n'
-    }
-    let indent = ''
-    while (i < result.length) {
-      const ch = result[i]
-      if (ch === ' ' || ch === '\t') { indent += ch; i++ } else { break }
-    }
-    const arg = JSON.stringify(options?.path as string)
-    const initLine = `${prefixNewline}${indent}const collecthook = ${INNER_USE_HOOK}(${arg})\n`
-    result = result.slice(0, insertIndex) + initLine + result.slice(insertIndex)
-  }
-
-  if (bodyInsertPos != null) {
+  if (allBodies.length > 0) {
     const programForInjections: any = parseProgram(result) as any
     type InsertTask = { kind: 'insert'; pos: number; text: string }
     type ReplaceTask = { kind: 'replace'; start: number; end: number; text: string }
