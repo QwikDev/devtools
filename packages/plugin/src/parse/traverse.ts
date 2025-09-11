@@ -104,7 +104,7 @@ export function findAllComponentBodyRangesFromProgram(program: unknown): Compone
               let exportName: string | undefined
               const parent: any = path.parent as any
               if (parent && parent.type === 'ExportDefaultDeclaration') {
-                exportName = 'default'
+                exportName = ''
               } else if (parent && parent.type === 'VariableDeclarator') {
                 const id = (parent as any).id
                 if (id && id.type === 'Identifier' && typeof id.name === 'string') {

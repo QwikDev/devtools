@@ -25,6 +25,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
   const allBodies = findAllComponentBodyRangesFromProgram(program)
 
   let result = code
+  let index = 0
 
   if (allBodies.length > 0) {
     type Task = { start: number; end: number; text: string }
@@ -43,12 +44,24 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
       else { prefixNewline = '\n' }
 
       const indent = readIndent(result, i)
-      const baseArg = String(options?.path ?? '')
+      const rawArg = String(options?.path ?? '')
+      const baseArg = rawArg.split('?')[0].split('#')[0]
       let suffix = ''
+      
       if (exportName && typeof exportName === 'string') {
         suffix = `_${exportName}`
-      } else if (allBodies.length > 1) {
-        suffix = `_${idx + 1}`
+      }else {
+        if (baseArg.endsWith('index.tsx')) {
+          const parts = baseArg.split('/')
+          const parent = parts.length >= 2 ? parts[parts.length - 2] : 'index'
+          const safeParent = parent.replace(/-/g, '_')
+          suffix = `_${safeParent}`
+        } else {
+          const file = baseArg.split('/').pop() || ''
+          const name = file.replace(/\.[^.]+$/, '')
+          const safeName = name.replace(/-/g, '_')
+          suffix = name ? `_${safeName}` : ''
+        }
       }
       const arg = JSON.stringify(`${baseArg}${suffix}`)
       const initLine = `${prefixNewline}${indent}const collecthook = ${INNER_USE_HOOK}(${arg})\n`
@@ -93,7 +106,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
 
             const lineStart = findLineStart(result, declStart)
             const indent = readIndent(result, lineStart)
-            const payload = buildCollecthookPayload(indent, 'customhook', 'VariableDeclarator', 'qrl', variableId)
+            const payload = buildCollecthookPayload(indent, variableId, 'customhook', 'VariableDeclarator', 'qrl', variableId)
             if (hasCollecthookAfterByVariableId(result, declEnd, variableId)) return
             tasks.push({ kind: 'insert', pos: declEnd, text: '\n' + payload })
             return
@@ -109,7 +122,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
           const lineStart = findLineStart(result, declStart)
           const indent = readIndent(result, lineStart)
           const returnType = VARIABLE_RETURN_TYPE_BY_HOOK.get(isQrlName) as unknown as string
-          const payload = buildCollecthookPayload(indent, variableId, 'VariableDeclarator', String(returnType), variableId)
+          const payload = buildCollecthookPayload(indent, variableId, isQrlName, 'VariableDeclarator', String(returnType), variableId)
           if (hasCollecthookAfterByVariableId(result, declEnd, variableId)) return
           tasks.push({ kind: 'insert', pos: declEnd, text: '\n' + payload })
           return
@@ -132,7 +145,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
 
           if (isListed) {
             const returnType = EXPRESSION_RETURN_TYPE_BY_HOOK.get(isQrlName) as unknown as string
-            const payload = buildCollecthookPayload(indent, isQrlName, 'expressionStatement', String(returnType), 'undefined')
+            const payload = buildCollecthookPayload(indent, isQrlName, isQrlName, 'expressionStatement', String(returnType), 'undefined')
             if (hasCollecthookAfterByVariableName(result, stmtEnd, isQrlName)) return
             tasks.push({ kind: 'insert', pos: stmtEnd, text: '\n' + payload })
           } else if (isCustomHook(isQrlName)) {
@@ -143,8 +156,10 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
             const callSource = result.slice(stmtStart, stmtEnd)
             const lineStart2 = findLineStart(result, stmtStart)
             const indent2 = readIndent(result, lineStart2)
-            const declLine = `${indent2}let _customhook = ${trimStatementSemicolon(callSource)};\n`
-            const payload = buildCollecthookPayload(indent2, 'customhook', 'VariableDeclarator', 'qrl', '_customhook')
+            const variableName = `_customhook_${index}`
+            const declLine = `${indent2}let ${variableName} = ${trimStatementSemicolon(callSource)};\n`
+            const payload = buildCollecthookPayload(indent2, variableName, 'customhook', 'VariableDeclarator', 'qrl', variableName)
+            index++
             tasks.push({ kind: 'replace', start: stmtStart, end: stmtEnd, text: declLine + payload })
           }
         }

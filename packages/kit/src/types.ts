@@ -69,6 +69,7 @@ export type Category = 'variableDeclaration' | 'expressionStatement' | 'listener
 export type HookType =
   | (typeof VARIABLE_DECLARATION_LIST)[number]['hook']
   | (typeof EXPRESSION_STATEMENT_LIST)[number]['hook']
+  | 'customhook'
 
 export interface ParsedStructure {
   variableName: string

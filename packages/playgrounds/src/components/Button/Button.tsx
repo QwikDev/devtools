@@ -20,7 +20,7 @@ import {
   useConstant,
   useOn,
   useServerData,
-  useErrorBoundary
+  useErrorBoundary,
 } from '@qwik.dev/core';
 import { _getDomContainer, isServer, useVisibleTask$ } from '@qwik.dev/core/internal';
 import type { QRL, Signal } from '@qwik.dev/core';
@@ -154,6 +154,10 @@ export default component$<ButtonProps>((props) => {
     1000
   );
  
+  useDebouncer($((value: string) => {
+    signal.value = value;
+  }),
+  1000)
 
   const handleClick = $(async () => {
     store.count++;

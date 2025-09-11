@@ -65,6 +65,7 @@ export function readIndent(code: string, indexFrom: number): string {
 export function buildCollecthookPayload(
   indent: string,
   variableName: string,
+  hookType: string,
   category: 'VariableDeclarator' | 'expressionStatement',
   returnType: string,
   hookExpression: string | 'undefined',
@@ -73,16 +74,17 @@ export function buildCollecthookPayload(
   return (
 `${indent}collecthook({
 ${indent}  variableName: '${variableName}',
+${indent}  hookType: '${hookType}',
 ${indent}  category: '${category}',
 ${indent}  returnType: '${returnType}',
-${indent}  hook: ${hookLine}
+${indent}  data: ${hookLine}
 ${indent}});\n`
   )
 }
 
 export function hasCollecthookAfterByVariableId(code: string, fromIndex: number, variableId: string, maxLookahead = 600): boolean {
   const lookahead = code.slice(fromIndex, fromIndex + maxLookahead)
-  const alreadyInserted = new RegExp(`collecthook\\s*\\(\\s*\\{[\\s\\S]{0,300}?hook:\\s*${variableId}\\b`).test(lookahead)
+  const alreadyInserted = new RegExp(`collecthook\\s*\\(\\s*\\{[\\s\\S]{0,300}?data:\\s*${variableId}\\b`).test(lookahead)
   return alreadyInserted
 }
 

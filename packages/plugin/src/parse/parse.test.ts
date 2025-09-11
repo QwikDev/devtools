@@ -227,7 +227,7 @@ describe('injectCollectHooks', () => {
   it('injects initialization into component$ (import handled by plugin layer)', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: '/abs/path/Button.tsx?id=abc'})
-    expect(output).toContain('const collecthook = useCollectHooks("/abs/path/Button.tsx?id=abc_default")')
+    expect(output).toContain('const collecthook = useCollectHooks("/abs/path/Button.tsx_Button")')
   })
 
   it('does not inject virtual import here (plugin layer does it)', () => {
@@ -239,7 +239,7 @@ describe('injectCollectHooks', () => {
   it('inserts initialization at the very beginning of component$ body with proper indent', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: '/abs/path/Button.tsx?id=abc'})
-    const initLine = 'const collecthook = useCollectHooks("/abs/path/Button.tsx?id=abc_default")'
+    const initLine = 'const collecthook = useCollectHooks("/abs/path/Button.tsx_Button")'
     const firstBodyStmt = "const { class: className = '', onClick$ } = props;"
     const initIdx = output.indexOf(initLine)
     const firstStmtIdx = output.indexOf(firstBodyStmt)
@@ -260,23 +260,64 @@ describe('injectCollectHooks', () => {
     expect(count(twice, 'const collecthook = useCollectHooks')).toBe(1)
   })
 
+  it('contains expected hookType and data fields in transformed output', () => {
+    const input = sampleVarDecl
+    const output = parseQwikCode(input, {path: '/abs/path/Button.tsx?id=abc'})
+    expect(output).toContain("hookType: 'useStore'")
+    expect(output).toContain("hookType: 'useSignal'")
+    expect(output).toContain("hookType: 'useTask'")
+    expect(output).toContain("hookType: 'useVisibleTask'")
+    expect(output).toContain("hookType: 'customhook'")
+    expect(output).toContain("data: signal")
+  })
+
   it('matches snapshot of transformed output', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: '/abs/path/Button.tsx?id=abc'})
-    // Snapshot still valid: only the added init and hook payloads are asserted
     expect(output).toMatchSnapshot()
   })
 
   it('supports custom collecthook arg via options', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, { path: 'CUSTOM_PATH' })
-    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_default")')
+    expect(output).toContain('const collecthook = useCollectHooks("CUSTOM_PATH_CUSTOM_PATH")')
   })
 
   it('supports passing Vite transform id via options.collectArgValue', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, { path: "/abs/path/Button.tsx?id=abc" })
-    expect(output).toContain("const collecthook = useCollectHooks(\"/abs/path/Button.tsx?id=abc_default\")")
+    expect(output).toContain("const collecthook = useCollectHooks(\"/abs/path/Button.tsx_Button\")")
+  })
+
+  it('injects for custom expression (e.g. useHooks without assignment) and uses temp var', () => {
+    const input = sampleVarDecl
+    const output = parseQwikCode(input, {path: 'CUSTOM_PATH'})
+    // 生成临时变量 _customhook_0
+    expect(output).toMatch(/\n\s*let\s+_customhook_0\s*=\s*useHooks\('Button'\)\s*;/)
+    // 随后紧跟 payload，其中 variableName 为 _customhook_0，hookType 为 customhook
+    const re = /collecthook\(\s*\{[\s\S]*?variableName:\s*'_customhook_0'[\s\S]*?hookType:\s*'customhook'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?returnType:\s*'qrl'[\s\S]*?data:\s*_customhook_0[\s\S]*?\}\);/m
+    expect(re.test(output)).toBe(true)
+  })
+
+  it('is idempotent for custom expression replacement (no duplicate _customhook)', () => {
+    const input = sampleVarDecl
+    const once = parseQwikCode(input, {path: 'CUSTOM_PATH'})
+    const twice = parseQwikCode(once, {path: 'CUSTOM_PATH'})
+    const count = (s: string, sub: string) => (s.match(new RegExp(sub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length
+    expect(count(twice, 'let _customhook_')).toBe(1)
+    expect(count(twice, "variableName: '_customhook_0'")).toBe(1)
+  })
+
+  it('generates parent dir suffix for index.tsx (plain path)', () => {
+    const input = sampleVarDecl
+    const output = parseQwikCode(input, { path: "/abs/path/router/index.tsx" })
+    expect(output).toContain("const collecthook = useCollectHooks(\"/abs/path/router/index.tsx_router\")")
+  })
+
+  it('strips query/hash and uses parent dir for index.tsx', () => {
+    const input = sampleVarDecl
+    const output = parseQwikCode(input, { path: "/abs/path/router/index.tsx?id=abc#hash" })
+    expect(output).toContain("const collecthook = useCollectHooks(\"/abs/path/router/index.tsx_router\")")
   })
 
   it('supports component$ with FunctionExpression (non-arrow) and injects correctly', () => {
@@ -295,7 +336,7 @@ export default component$(function(props){
     const declIdx = output.indexOf(decl)
     expect(declIdx).toBeGreaterThan(-1)
     const after = output.slice(declIdx)
-    expect(/collecthook\(\s*\{[\s\S]*?hook:\s*signal[\s\S]*?\}\);/m.test(after)).toBe(true)
+    expect(/collecthook\(\s*\{[\s\S]*?data:\s*signal[\s\S]*?\}\);/m.test(after)).toBe(true)
   })
 
   it('injects collecthook after known hook declarations with correct payload', () => {
@@ -303,19 +344,19 @@ export default component$(function(props){
     const output = parseQwikCode(input, {path: 'CUSTOM_PATH'})
     const declIdx = output.indexOf("const signal = useSignal<any>('111');")
     expect(declIdx).toBeGreaterThan(-1)
-    const hookBlock = /collecthook\(\s*\{[\s\S]*?variableName:\s*'signal'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?returnType:\s*'[^']+'[\s\S]*?hook:\s*signal[\s\S]*?\}\);/m
+    const hookBlock = /collecthook\(\s*\{[\s\S]*?variableName:\s*'signal'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?returnType:\s*'[^']+'[\s\S]*?data:\s*signal[\s\S]*?\}\);/m
     const afterDecl = output.slice(declIdx)
     const match = afterDecl.match(hookBlock)
     expect(match).not.toBeNull()
     expect(output).toContain("\n  collecthook({")
-    expect(output).toContain("\n    hook: signal")
+    expect(output).toContain("\n    data: signal")
   })
 
   it('injects for custom use*-not-in-list (e.g. useDebouncer)', () => {
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: 'CUSTOM_PATH'})
-    // 断言针对 const debounce = useDebouncer(...) 已注入 customhook
-    const regex = /collecthook\(\s*\{[\s\S]*?variableName:\s*'customhook'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?returnType:\s*'qrl'[\s\S]*?hook:\s*debounce[\s\S]*?\}\);/m
+    // 断言针对 const debounce = useDebouncer(...) 已注入，variableName 为实际变量名
+    const regex = /collecthook\(\s*\{[\s\S]*?variableName:\s*'debounce'[\s\S]*?hookType:\s*'customhook'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?returnType:\s*'qrl'[\s\S]*?data:\s*debounce[\s\S]*?\}\);/m
     expect(regex.test(output)).toBe(true)
   })
 
@@ -324,7 +365,7 @@ export default component$(function(props){
     const once = parseQwikCode(input, {path: 'CUSTOM_PATH'})
     const twice = parseQwikCode(once, {path: 'CUSTOM_PATH'})
     const count = (s: string, sub: string) => (s.match(new RegExp(sub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length
-    expect(count(twice, "hook: signal")).toBe(1)
+    expect(count(twice, "data: signal")).toBe(1)
   })
 
   it('injects into named component$ (e.g., RouterHead)', () => {
@@ -347,6 +388,42 @@ export const RouterHead = component$(() => {
 `
     const output = parseQwikCode(routerHead, { path: '/abs/path/router-head.tsx' })
     expect(output).toContain('const collecthook = useCollectHooks("/abs/path/router-head.tsx_RouterHead")')
+  })
+
+  
+
+  it('injects with exportName for named component$ in index.tsx path', () => {
+    const routerHead = `import { useDocumentHead, useLocation } from "@qwik.dev/router";
+import { component$ } from "@qwik.dev/core";
+
+export const RouterHead = component$(() => {
+  const head = useDocumentHead();
+  const loc = useLocation();
+  return (
+    <>
+      <title>{head.title}</title>
+      <link rel="canonical" href={loc.url.href} />
+      {head.meta.map((m) => (
+        <meta key={m.key} {...m} />
+      ))}
+    </>
+  );
+});
+`
+    const output = parseQwikCode(routerHead, { path: '/abs/path/router/index.tsx' })
+    expect(output).toContain('const collecthook = useCollectHooks("/abs/path/router/index.tsx_RouterHead")')
+  })
+
+  it('replaces hyphen with underscore for file-based suffix', () => {
+    const input = sampleVarDecl
+    const output = parseQwikCode(input, { path: '/abs/path/my-button.tsx' })
+    expect(output).toContain('const collecthook = useCollectHooks("/abs/path/my-button.tsx_my_button")')
+  })
+
+  it('replaces hyphen with underscore for index.tsx parent dir suffix', () => {
+    const input = sampleVarDecl
+    const output = parseQwikCode(input, { path: '/abs/path/my-router/index.tsx' })
+    expect(output).toContain('const collecthook = useCollectHooks("/abs/path/my-router/index.tsx_my_router")')
   })
 
   it('inserts init for every component$ with name-based args when named exports exist', () => {

@@ -91,12 +91,14 @@ export const RenderTree = component$(() => {
       formatData('render', {data: {render: node.props[QRENDERFN]}});
       const qrl = getQrlPath(node.props[QRENDERFN])
       //@ts-ignore
-      parsed = await rpc?.parseQwikCode(qrl!)
+      const stateKeyPath = Object.keys(window.QWIK_DEVTOOLS_GLOBAL_STATE).find(key => key.endsWith(qrl!))
+      //@ts-ignore
+      const state = window.QWIK_DEVTOOLS_GLOBAL_STATE[stateKeyPath]
+      parsed = state
     }
+1
 
-
-
-    if (Array.isArray(node.props?.[QSEQ])) {
+    if (Array.isArray(node.props?.[QSEQ]) && parsed.length > 0) {
       const normalizedData = normalizeData(node.props[QSEQ], parsed)
       normalizedData.forEach((item) => {
         formatData(item.hookType, item);

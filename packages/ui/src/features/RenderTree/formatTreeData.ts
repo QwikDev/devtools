@@ -4,11 +4,9 @@ import {
 } from './transfromqseq';
 import { TreeNode } from '../../components/Tree/Tree';
 import { QRL } from '@qwik.dev/core';
-import { ParsedStructure } from '@devtools/kit';
+import { CHUNK_KEY, COMPUTED_QRL_KEY, ParsedStructure, QRL_KEY } from '@devtools/kit';
 
-const qrlKey = '$qrl$';
-const computedQrlKey = '$computeQrl$';
-const chunkKey = '$chunk$';
+
 
 
 const schedule = (value: any) => {
@@ -42,6 +40,7 @@ const qSeqs = {
   usePreventNavigate: { set: new Set<ParsedStructure>(), toTree: schedule, display: false },
   useContent: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
   useDocumentHead: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
+  customhook: { set: new Set<ParsedStructure>(), toTree: schedule, display: true },
 };
 
 type DataType = keyof typeof qSeqs;
@@ -126,11 +125,11 @@ export function findAllQrl() {
   const result = list.map((item) => {
     return rawData[item].map((entry) => {
       if (item === 'listens') {
-        return Object.values(entry.data || entry).map((v: any) => v?.[chunkKey]);
+        return Object.values(entry.data || entry).map((v: any) => v?.[CHUNK_KEY]);
       } else if (item === 'render') {
         return getQrlPath(entry.data.render || entry);
       } else {
-        const qrlObj = (entry.data || entry)[qrlKey] || (entry.data || entry)[computedQrlKey];
+        const qrlObj = (entry.data || entry)[QRL_KEY] || (entry.data || entry)[COMPUTED_QRL_KEY];
         return getQrlPath(qrlObj);
       }
     });
@@ -141,7 +140,8 @@ export function findAllQrl() {
 
 
 export function getQrlPath(qrl: QRL):string {
-  return (qrl as any)?.[chunkKey];
+  const splitPoint = '_component'
+  return (qrl as any)?.[CHUNK_KEY]?.split(splitPoint)?.[0];
 }
 
 

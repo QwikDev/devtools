@@ -40,7 +40,7 @@ interface ButtonProps {
 }
 
 export default component$<ButtonProps>((props) => {
-  const collecthook = useCollectHooks("/abs/path/Button.tsx?id=abc_default")
+  const collecthook = useCollectHooks("/abs/path/Button.tsx_Button")
   const { class: className = '', onClick$ } = props;
   const testValue2 = props.testValue
   console.log('testValue', testValue2)
@@ -52,73 +52,82 @@ export default component$<ButtonProps>((props) => {
   });
   collecthook({
     variableName: 'store',
+    hookType: 'useStore',
     category: 'VariableDeclarator',
     returnType: 'proxy',
-    hook: store
+    data: store
   });
 
   const signal = useSignal<any>('111');
   collecthook({
     variableName: 'signal',
+    hookType: 'useSignal',
     category: 'VariableDeclarator',
     returnType: 'qrl',
-    hook: signal
+    data: signal
   });
 
   const constantValue = useConstant(() => 'CONST');
   collecthook({
     variableName: 'constantValue',
+    hookType: 'useConstant',
     category: 'VariableDeclarator',
     returnType: 'any',
-    hook: constantValue
+    data: constantValue
   });
 
   const serverData = useServerData<any>('demo-key');
   collecthook({
     variableName: 'serverData',
+    hookType: 'useServerData',
     category: 'VariableDeclarator',
     returnType: 'any',
-    hook: serverData
+    data: serverData
   });
 
   const errorBoundary = useErrorBoundary();
   collecthook({
     variableName: 'errorBoundary',
+    hookType: 'useErrorBoundary',
     category: 'VariableDeclarator',
     returnType: 'object',
-    hook: errorBoundary
+    data: errorBoundary
   });
 
   const location = useLocation();
   collecthook({
     variableName: 'location',
+    hookType: 'useLocation',
     category: 'VariableDeclarator',
     returnType: 'object',
-    hook: location
+    data: location
   });
 
   const navigate = useNavigate();
   collecthook({
     variableName: 'navigate',
+    hookType: 'useNavigate',
     category: 'VariableDeclarator',
     returnType: 'qrl',
-    hook: navigate
+    data: navigate
   });
 
   const content = useContent();
   collecthook({
     variableName: 'content',
+    hookType: 'useContent',
     category: 'VariableDeclarator',
     returnType: 'proxy',
-    hook: content
+    data: content
   });
 
   const head = useDocumentHead();
   collecthook({
     variableName: 'head',
+    hookType: 'useDocumentHead',
     category: 'VariableDeclarator',
     returnType: 'proxy',
-    hook: head
+    data: head
   });
 
 
@@ -130,9 +139,10 @@ export default component$<ButtonProps>((props) => {
   })
   collecthook({
     variableName: 'useTask',
+    hookType: 'useTask',
     category: 'expressionStatement',
     returnType: 'qrl',
-    hook: undefined
+    data: undefined
   });
 
 
@@ -143,9 +153,10 @@ export default component$<ButtonProps>((props) => {
   })
   collecthook({
     variableName: 'useVisibleTask',
+    hookType: 'useVisibleTask',
     category: 'expressionStatement',
     returnType: 'qrl',
-    hook: undefined
+    data: undefined
   });
 
 
@@ -163,9 +174,10 @@ export default component$<ButtonProps>((props) => {
   });
   collecthook({
     variableName: 'qwikContainer',
+    hookType: 'useComputed',
     category: 'VariableDeclarator',
     returnType: 'qrl',
-    hook: qwikContainer
+    data: qwikContainer
   });
 
 
@@ -174,9 +186,10 @@ export default component$<ButtonProps>((props) => {
   );
   collecthook({
     variableName: 'asyncComputedValue',
+    hookType: 'useAsyncComputed',
     category: 'VariableDeclarator',
     returnType: 'qrl',
-    hook: asyncComputedValue
+    data: asyncComputedValue
   });
 
                                                                                                                                       
@@ -186,34 +199,38 @@ export default component$<ButtonProps>((props) => {
   });
   collecthook({
     variableName: 'useContextProvider',
+    hookType: 'useContextProvider',
     category: 'expressionStatement',
     returnType: 'number',
-    hook: undefined
+    data: undefined
   });
 
-    let _customhook = useHooks('Button');
+    let _customhook_0 = useHooks('Button');
   collecthook({
-    variableName: 'customhook',
+    variableName: '_customhook_0',
+    hookType: 'customhook',
     category: 'VariableDeclarator',
     returnType: 'qrl',
-    hook: _customhook
+    data: _customhook_0
   });
 
   const context = useContext(ButtonContext);
   collecthook({
     variableName: 'context',
+    hookType: 'useContext',
     category: 'VariableDeclarator',
     returnType: 'any',
-    hook: context
+    data: context
   });
 
 
   const buttonId = useId();
   collecthook({
     variableName: 'buttonId',
+    hookType: 'useId',
     category: 'VariableDeclarator',
     returnType: 'string',
-    hook: buttonId
+    data: buttonId
   });
 
 
@@ -222,10 +239,11 @@ export default component$<ButtonProps>((props) => {
   }));
   const dd = useHooks('Button1')
   collecthook({
-    variableName: 'customhook',
+    variableName: 'dd',
+    hookType: 'customhook',
     category: 'VariableDeclarator',
     returnType: 'qrl',
-    hook: dd
+    data: dd
   });
 
   useOnWindow('resize', $(() => {
@@ -246,9 +264,10 @@ export default component$<ButtonProps>((props) => {
   });
   collecthook({
     variableName: 'resourceData',
+    hookType: 'useResource',
     category: 'VariableDeclarator',
     returnType: 'undefined',
-    hook: resourceData
+    data: resourceData
   });
 
 
@@ -262,9 +281,10 @@ export default component$<ButtonProps>((props) => {
   }));
   collecthook({
     variableName: 'customSerialized',
+    hookType: 'useSerializer',
     category: 'VariableDeclarator',
     returnType: 'qrl',
-    hook: customSerialized
+    data: customSerialized
   });
 
 
@@ -284,9 +304,10 @@ export default component$<ButtonProps>((props) => {
   \`);
   collecthook({
     variableName: 'useStyles',
+    hookType: 'useStyles',
     category: 'expressionStatement',
     returnType: 'undefined',
-    hook: undefined
+    data: undefined
   });
 
 
@@ -302,9 +323,10 @@ export default component$<ButtonProps>((props) => {
   \`);
   collecthook({
     variableName: 'useStylesScoped',
+    hookType: 'useStylesScoped',
     category: 'expressionStatement',
     returnType: 'undefined',
-    hook: undefined
+    data: undefined
   });
 
   const debounce = useDebouncer(
@@ -314,10 +336,11 @@ export default component$<ButtonProps>((props) => {
     1000
   );
   collecthook({
-    variableName: 'customhook',
+    variableName: 'debounce',
+    hookType: 'customhook',
     category: 'VariableDeclarator',
     returnType: 'qrl',
-    hook: debounce
+    data: debounce
   });
 
  
