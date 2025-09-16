@@ -28,93 +28,31 @@ export const USE_HOOK_LIST = [
 
 
 export const VARIABLE_DECLARATION_LIST = [
-  {
-    hook: 'useStore',
-    returnType: 'proxy'
-  }, {
-    hook: 'useSignal',
-    returnType: 'qrl'
-  },
-  {
-    hook: 'useComputed',
-    returnType: 'qrl'
-  },
-  {
-    hook: 'useAsyncComputed',
-    returnType: 'qrl'
-  },
-  {
-    hook: 'useContext',
-    returnType: 'any'
-  },
-  {
-    hook: 'useId',
-    returnType: 'string'
-  },
-  {
-    hook: 'useStyles',
-    returnType: 'string'
-  },
-  {
-    hook: 'useStylesScoped',
-    returnType: 'string'
-  },
-  {
-    hook: 'useConstant',
-    returnType: 'any'
-  },
-  {
-    hook: 'useErrorBoundary',
-    returnType: 'object'
-  },
-  {
-    hook: 'useSerializer',
-    returnType: 'qrl'
-  },
-  {
-    hook: 'useServerData',
-    returnType: 'any'
-  },
-  {
-    hook: 'useLocation',
-    returnType: 'object'
-  },
-  {
-    hook: 'useNavigate',
-    returnType: 'qrl'
-  },
-  {
-    hook: 'useContent',
-    returnType: 'proxy'
-  },
-  {
-    hook: 'useDocumentHead',
-    returnType: 'proxy'
-  }
-] as const
+  'useStore',
+  'useSignal',
+  'useComputed',
+  'useAsyncComputed',
+  'useContext',
+  'useId',
+  'useStyles',
+  'useStylesScoped',
+  'useConstant',
+  'useErrorBoundary',
+  'useSerializer',
+  'useServerData',
+  'useLocation',
+  'useNavigate',
+  'useContent',
+  'useDocumentHead',
+] as  const
 
 
 export const EXPRESSION_STATEMENT_LIST = [
-  {
-    hook: 'useVisibleTask',
-    returnType: 'qrl'
-  },
-  {
-    hook: 'useTask',
-    returnType: 'qrl'
-  },
-  {
-    hook: 'useResource',
-    returnType: 'object'
-  },
-  {
-    hook: 'useContextProvider',
-    returnType: 'number'
-  },
-  {
-    hook: 'usePreventNavigate',
-    returnType: 'qrl'
-  }
+  'useVisibleTask',
+  'useTask',
+  'useResource',
+  'useContextProvider',
+  'usePreventNavigate',
 ] as const
 
 export const QSEQ = 'q:seq';
@@ -132,4 +70,4 @@ export const COMPUTED_QRL_KEY = '$computeQrl$';
 export const CHUNK_KEY = '$chunk$';
 export const CAPTURE_REF_KEY = '$captureRef$';
 
-export const NORETURN_HOOK = [ 'useVisibleTask', 'useTask']
+export const NORETURN_HOOK = [ 'useVisibleTask', 'useTask'] as const

@@ -67,8 +67,8 @@ export interface Component {
 
 export type Category = 'variableDeclaration' | 'expressionStatement' | 'listener'
 export type HookType =
-  | (typeof VARIABLE_DECLARATION_LIST)[number]['hook']
-  | (typeof EXPRESSION_STATEMENT_LIST)[number]['hook']
+  | (typeof VARIABLE_DECLARATION_LIST)[number]
+  | (typeof EXPRESSION_STATEMENT_LIST)[number]
   | 'customhook'
 
 export interface ParsedStructure {
@@ -76,7 +76,6 @@ export interface ParsedStructure {
   hookType: HookType
   category: Category
   __start__?: number
-  returnType: HookType
   data?: any
 }
 

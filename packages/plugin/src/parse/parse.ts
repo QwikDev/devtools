@@ -1,7 +1,5 @@
 import {  parseProgram, findAllComponentBodyRangesFromProgram, traverseProgram } from './traverse'
 import {
-  EXPRESSION_RETURN_TYPE_BY_HOOK,
-  VARIABLE_RETURN_TYPE_BY_HOOK,
   isAstNodeLike,
   normalizeHookName,
   getVariableIdentifierName,
@@ -106,7 +104,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
 
             const lineStart = findLineStart(result, declStart)
             const indent = readIndent(result, lineStart)
-            const payload = buildCollecthookPayload(indent, variableId, 'customhook', 'VariableDeclarator', 'qrl', variableId)
+            const payload = buildCollecthookPayload(indent, variableId, 'customhook', 'VariableDeclarator', variableId)
             if (hasCollecthookAfterByVariableId(result, declEnd, variableId)) return
             tasks.push({ kind: 'insert', pos: declEnd, text: '\n' + payload })
             return
@@ -121,8 +119,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
 
           const lineStart = findLineStart(result, declStart)
           const indent = readIndent(result, lineStart)
-          const returnType = VARIABLE_RETURN_TYPE_BY_HOOK.get(isQrlName) as unknown as string
-          const payload = buildCollecthookPayload(indent, variableId, isQrlName, 'VariableDeclarator', String(returnType), variableId)
+          const payload = buildCollecthookPayload(indent, variableId, isQrlName, 'VariableDeclarator', variableId)
           if (hasCollecthookAfterByVariableId(result, declEnd, variableId)) return
           tasks.push({ kind: 'insert', pos: declEnd, text: '\n' + payload })
           return
@@ -144,8 +141,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
           const indent = readIndent(result, lineStart)
 
           if (isListed) {
-            const returnType = EXPRESSION_RETURN_TYPE_BY_HOOK.get(isQrlName) as unknown as string
-            const payload = buildCollecthookPayload(indent, isQrlName, isQrlName, 'expressionStatement', String(returnType), 'undefined')
+            const payload = buildCollecthookPayload(indent, isQrlName, isQrlName, 'expressionStatement', 'undefined')
             if (hasCollecthookAfterByVariableName(result, stmtEnd, isQrlName)) return
             tasks.push({ kind: 'insert', pos: stmtEnd, text: '\n' + payload })
           } else if (isCustomHook(isQrlName)) {
@@ -158,7 +154,7 @@ export function parseQwikCode(code: string, options?: InjectOptions): string {
             const indent2 = readIndent(result, lineStart2)
             const variableName = `_customhook_${index}`
             const declLine = `${indent2}let ${variableName} = ${trimStatementSemicolon(callSource)};\n`
-            const payload = buildCollecthookPayload(indent2, variableName, 'customhook', 'VariableDeclarator', 'qrl', variableName)
+            const payload = buildCollecthookPayload(indent2, variableName, 'customhook', 'VariableDeclarator', variableName)
             index++
             tasks.push({ kind: 'replace', start: stmtStart, end: stmtEnd, text: declLine + payload })
           }

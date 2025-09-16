@@ -74,7 +74,6 @@ export function getData() {
 }
 
 
-
 export function findMatchVarfromScope(item: ParsedStructure){
   const targets = (item as any)?.data[CAPTURE_REF_KEY];
   const variableName:string[] = []

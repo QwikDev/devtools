@@ -113,7 +113,6 @@ export default component$<ButtonProps>((props) => {
     };
   });
 
-  // Demo: useSerializer$（最小示例，基于 signal 重建对象并用 update 同步）
   const customSerialized = useSerializer$(() => ({
     deserialize: () => ({ n: store.count }),
     update: (current: { n: number }) => {

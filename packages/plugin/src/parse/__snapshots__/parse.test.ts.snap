@@ -54,7 +54,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'store',
     hookType: 'useStore',
     category: 'VariableDeclarator',
-    returnType: 'proxy',
     data: store
   });
 
@@ -63,7 +62,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'signal',
     hookType: 'useSignal',
     category: 'VariableDeclarator',
-    returnType: 'qrl',
     data: signal
   });
 
@@ -72,7 +70,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'constantValue',
     hookType: 'useConstant',
     category: 'VariableDeclarator',
-    returnType: 'any',
     data: constantValue
   });
 
@@ -81,7 +78,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'serverData',
     hookType: 'useServerData',
     category: 'VariableDeclarator',
-    returnType: 'any',
     data: serverData
   });
 
@@ -90,7 +86,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'errorBoundary',
     hookType: 'useErrorBoundary',
     category: 'VariableDeclarator',
-    returnType: 'object',
     data: errorBoundary
   });
 
@@ -99,7 +94,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'location',
     hookType: 'useLocation',
     category: 'VariableDeclarator',
-    returnType: 'object',
     data: location
   });
 
@@ -108,7 +102,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'navigate',
     hookType: 'useNavigate',
     category: 'VariableDeclarator',
-    returnType: 'qrl',
     data: navigate
   });
 
@@ -117,7 +110,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'content',
     hookType: 'useContent',
     category: 'VariableDeclarator',
-    returnType: 'proxy',
     data: content
   });
 
@@ -126,7 +118,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'head',
     hookType: 'useDocumentHead',
     category: 'VariableDeclarator',
-    returnType: 'proxy',
     data: head
   });
 
@@ -141,7 +132,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'useTask',
     hookType: 'useTask',
     category: 'expressionStatement',
-    returnType: 'qrl',
     data: undefined
   });
 
@@ -155,7 +145,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'useVisibleTask',
     hookType: 'useVisibleTask',
     category: 'expressionStatement',
-    returnType: 'qrl',
     data: undefined
   });
 
@@ -176,7 +165,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'qwikContainer',
     hookType: 'useComputed',
     category: 'VariableDeclarator',
-    returnType: 'qrl',
     data: qwikContainer
   });
 
@@ -188,7 +176,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'asyncComputedValue',
     hookType: 'useAsyncComputed',
     category: 'VariableDeclarator',
-    returnType: 'qrl',
     data: asyncComputedValue
   });
 
@@ -201,7 +188,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'useContextProvider',
     hookType: 'useContextProvider',
     category: 'expressionStatement',
-    returnType: 'number',
     data: undefined
   });
 
@@ -210,7 +196,6 @@ export default component$<ButtonProps>((props) => {
     variableName: '_customhook_0',
     hookType: 'customhook',
     category: 'VariableDeclarator',
-    returnType: 'qrl',
     data: _customhook_0
   });
 
@@ -219,7 +204,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'context',
     hookType: 'useContext',
     category: 'VariableDeclarator',
-    returnType: 'any',
     data: context
   });
 
@@ -229,7 +213,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'buttonId',
     hookType: 'useId',
     category: 'VariableDeclarator',
-    returnType: 'string',
     data: buttonId
   });
 
@@ -237,22 +220,42 @@ export default component$<ButtonProps>((props) => {
   useOnDocument('keydown', $(() => {
     console.log('Document keydown event');
   }));
+  collecthook({
+    variableName: 'useOnDocument',
+    hookType: 'useOnDocument',
+    category: 'expressionStatement',
+    data: undefined
+  });
+
   const dd = useHooks('Button1')
   collecthook({
     variableName: 'dd',
     hookType: 'customhook',
     category: 'VariableDeclarator',
-    returnType: 'qrl',
     data: dd
   });
 
   useOnWindow('resize', $(() => {
     console.log('Window resized');
   }));
+  collecthook({
+    variableName: 'useOnWindow',
+    hookType: 'useOnWindow',
+    category: 'expressionStatement',
+    data: undefined
+  });
+
 
   useOn('click', $(() => {
     console.log('Host clicked');
   }));
+  collecthook({
+    variableName: 'useOn',
+    hookType: 'useOn',
+    category: 'expressionStatement',
+    data: undefined
+  });
+
 
   const resourceData = useResource$(async ({ track }) => {
     track(() => store.count);
@@ -266,12 +269,10 @@ export default component$<ButtonProps>((props) => {
     variableName: 'resourceData',
     hookType: 'useResource',
     category: 'VariableDeclarator',
-    returnType: 'undefined',
     data: resourceData
   });
 
 
-  // Demo: useSerializer$（最小示例，基于 signal 重建对象并用 update 同步）
   const customSerialized = useSerializer$(() => ({
     deserialize: () => ({ n: store.count }),
     update: (current: { n: number }) => {
@@ -283,7 +284,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'customSerialized',
     hookType: 'useSerializer',
     category: 'VariableDeclarator',
-    returnType: 'qrl',
     data: customSerialized
   });
 
@@ -306,7 +306,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'useStyles',
     hookType: 'useStyles',
     category: 'expressionStatement',
-    returnType: 'undefined',
     data: undefined
   });
 
@@ -325,7 +324,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'useStylesScoped',
     hookType: 'useStylesScoped',
     category: 'expressionStatement',
-    returnType: 'undefined',
     data: undefined
   });
 
@@ -339,7 +337,6 @@ export default component$<ButtonProps>((props) => {
     variableName: 'debounce',
     hookType: 'customhook',
     category: 'VariableDeclarator',
-    returnType: 'qrl',
     data: debounce
   });
 

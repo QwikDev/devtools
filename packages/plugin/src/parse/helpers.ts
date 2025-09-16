@@ -1,14 +1,7 @@
-import { VARIABLE_DECLARATION_LIST, EXPRESSION_STATEMENT_LIST, USE_HOOK_LIST, HookType } from '@devtools/kit'
+import { USE_HOOK_LIST, HookType } from '@devtools/kit'
 
-export const VARIABLE_RETURN_TYPE_BY_HOOK = new Map<string, HookType>(
-  (VARIABLE_DECLARATION_LIST ?? []).map(item => [item.hook, item.returnType as HookType])
-)
-export const EXPRESSION_RETURN_TYPE_BY_HOOK = new Map<string, HookType>(
-  (EXPRESSION_STATEMENT_LIST ?? []).map(item => [item.hook, item.returnType as HookType])
-)
 export const ALL_HOOK_NAMES = new Set<string>([
-  ...VARIABLE_RETURN_TYPE_BY_HOOK.keys(),
-  ...EXPRESSION_RETURN_TYPE_BY_HOOK.keys(),
+  ...USE_HOOK_LIST
 ])
 
 export function isAstNodeLike(value: unknown): value is { type: string } {
@@ -67,7 +60,6 @@ export function buildCollecthookPayload(
   variableName: string,
   hookType: string,
   category: 'VariableDeclarator' | 'expressionStatement',
-  returnType: string,
   hookExpression: string | 'undefined',
 ): string {
   const hookLine = hookExpression === 'undefined' ? 'undefined' : hookExpression
@@ -76,7 +68,6 @@ export function buildCollecthookPayload(
 ${indent}  variableName: '${variableName}',
 ${indent}  hookType: '${hookType}',
 ${indent}  category: '${category}',
-${indent}  returnType: '${returnType}',
 ${indent}  data: ${hookLine}
 ${indent}});\n`
   )

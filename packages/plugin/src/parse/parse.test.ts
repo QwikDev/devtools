@@ -118,7 +118,6 @@ export default component$<ButtonProps>((props) => {
     };
   });
 
-  // Demo: useSerializer$（最小示例，基于 signal 重建对象并用 update 同步）
   const customSerialized = useSerializer$(() => ({
     deserialize: () => ({ n: store.count }),
     update: (current: { n: number }) => {
@@ -295,7 +294,7 @@ describe('injectCollectHooks', () => {
     // 生成临时变量 _customhook_0
     expect(output).toMatch(/\n\s*let\s+_customhook_0\s*=\s*useHooks\('Button'\)\s*;/)
     // 随后紧跟 payload，其中 variableName 为 _customhook_0，hookType 为 customhook
-    const re = /collecthook\(\s*\{[\s\S]*?variableName:\s*'_customhook_0'[\s\S]*?hookType:\s*'customhook'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?returnType:\s*'qrl'[\s\S]*?data:\s*_customhook_0[\s\S]*?\}\);/m
+    const re = /collecthook\(\s*\{[\s\S]*?variableName:\s*'_customhook_0'[\s\S]*?hookType:\s*'customhook'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?data:\s*_customhook_0[\s\S]*?\}\);/m
     expect(re.test(output)).toBe(true)
   })
 
@@ -344,7 +343,7 @@ export default component$(function(props){
     const output = parseQwikCode(input, {path: 'CUSTOM_PATH'})
     const declIdx = output.indexOf("const signal = useSignal<any>('111');")
     expect(declIdx).toBeGreaterThan(-1)
-    const hookBlock = /collecthook\(\s*\{[\s\S]*?variableName:\s*'signal'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?returnType:\s*'[^']+'[\s\S]*?data:\s*signal[\s\S]*?\}\);/m
+    const hookBlock = /collecthook\(\s*\{[\s\S]*?variableName:\s*'signal'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?data:\s*signal[\s\S]*?\}\);/m
     const afterDecl = output.slice(declIdx)
     const match = afterDecl.match(hookBlock)
     expect(match).not.toBeNull()
@@ -356,7 +355,7 @@ export default component$(function(props){
     const input = sampleVarDecl
     const output = parseQwikCode(input, {path: 'CUSTOM_PATH'})
     // 断言针对 const debounce = useDebouncer(...) 已注入，variableName 为实际变量名
-    const regex = /collecthook\(\s*\{[\s\S]*?variableName:\s*'debounce'[\s\S]*?hookType:\s*'customhook'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?returnType:\s*'qrl'[\s\S]*?data:\s*debounce[\s\S]*?\}\);/m
+    const regex = /collecthook\(\s*\{[\s\S]*?variableName:\s*'debounce'[\s\S]*?hookType:\s*'customhook'[\s\S]*?category:\s*'VariableDeclarator'[\s\S]*?data:\s*debounce[\s\S]*?\}\);/m
     expect(regex.test(output)).toBe(true)
   })
 
