@@ -1,8 +1,12 @@
-import { QRL, useSignal, $, implicit$FirstArg } from "@qwik.dev/core";
+import { QRL, useSignal, $, useTask$ } from "@qwik.dev/core";
 
 export const useDebouncer = (fn: QRL<(args: any) => void>, delay: number) => {
   const timeoutId = useSignal<number>(11);
   const timeout = useSignal<number>(11);
+  useTask$(({ track }) => {
+    track(() => timeout.value);
+    
+  })
   return $((args: any) => {
     clearTimeout(timeoutId.value);
     console.log('timeout', timeout.value);

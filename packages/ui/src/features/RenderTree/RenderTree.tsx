@@ -15,11 +15,12 @@ import { removeNodeFromTree } from '../../components/Tree/vnode';
 import {
   isListen,
 } from '../../utils/type';
-import { findAllQrl, formatData, getQrlPath, normalizeData, buildTree, clearAll, getHookFilterList } from './formatTreeData';
+import { findAllQrl, formatData, buildTree, clearAll, getHookFilterList, getQrlChunkName } from './formatTreeData';
 import type { QSeqsList } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
 import { getViteClientRpc, ParsedStructure } from '@devtools/kit';
 import { createHighlighter } from 'shiki';
+import { getQwikState, returnQrlData } from './data';
 
 export const RenderTree = component$(() => {
 
@@ -89,17 +90,14 @@ export const RenderTree = component$(() => {
 
     if (node.props?.[QRENDERFN]) {
       formatData('render', {data: {render: node.props[QRENDERFN]}});
-      const qrl = getQrlPath(node.props[QRENDERFN])
-      //@ts-ignore
-      const stateKeyPath = Object.keys(window.QWIK_DEVTOOLS_GLOBAL_STATE).find(key => key.endsWith(qrl!))
-      //@ts-ignore
-      const state = window.QWIK_DEVTOOLS_GLOBAL_STATE[stateKeyPath]
-      parsed = state
+      const qrl = getQrlChunkName(node.props[QRENDERFN])
+      parsed = getQwikState(qrl)
     }
 1
 
     if (Array.isArray(node.props?.[QSEQ]) && parsed.length > 0) {
-      const normalizedData = normalizeData(node.props[QSEQ], parsed)
+      const normalizedData = [...parsed,...returnQrlData(node.props?.[QSEQ])]
+      //@ts-ignore
       normalizedData.forEach((item) => {
         formatData(item.hookType, item);
       });
@@ -257,3 +255,4 @@ export const RenderTree = component$(() => {
     </div>
   );
 });
+

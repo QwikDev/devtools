@@ -130,3 +130,6 @@ export const QWIK_DEVTOOLS_GLOBAL_STATE = 'QWIK_DEVTOOLS_GLOBAL_STATE'
 export const QRL_KEY = '$qrl$';
 export const COMPUTED_QRL_KEY = '$computeQrl$';
 export const CHUNK_KEY = '$chunk$';
+export const CAPTURE_REF_KEY = '$captureRef$';
+
+export const NORETURN_HOOK = [ 'useVisibleTask', 'useTask']

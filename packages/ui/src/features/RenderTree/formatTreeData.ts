@@ -4,7 +4,7 @@ import {
 } from './transfromqseq';
 import { TreeNode } from '../../components/Tree/Tree';
 import { QRL } from '@qwik.dev/core';
-import { CHUNK_KEY, COMPUTED_QRL_KEY, ParsedStructure, QRL_KEY } from '@devtools/kit';
+import { CAPTURE_REF_KEY, CHUNK_KEY, COMPUTED_QRL_KEY, ParsedStructure, QRL_KEY } from '@devtools/kit';
 
 
 
@@ -58,7 +58,11 @@ export function getData() {
         .map((item) => {
           if (name === 'props' || name === 'listens' || name === 'render') {
             return toTree((item as any).data);
-          } else {
+          } else if(name === 'useTask' || name === 'useVisibleTask'){
+            return toTree({ [`let ${(item as any)?.variableName } =`]: findMatchVarfromScope(item as ParsedStructure) });
+          }else if(name === 'customhook') {
+            return toTree({ [`let ${(item as any)?.variableName } = Scope `]: (item as any).data[CAPTURE_REF_KEY] });
+          }else {
             return toTree({ [`let ${(item as any)?.variableName } =`]: (item as any).data });
           }
         })
@@ -68,6 +72,26 @@ export function getData() {
     })
     .filter(Boolean);
 }
+
+
+
+export function findMatchVarfromScope(item: ParsedStructure){
+  const targets = (item as any)?.data[CAPTURE_REF_KEY];
+  const variableName:string[] = []
+  if (!targets) return []
+
+  for (const { set } of Object.values(qSeqs) as Array<{ set: Set<any> }>) {
+    for (const entry of set as Set<any>) {
+      const data = (entry as any)?.data ?? entry;
+      if (!data) continue;
+      const varName = targets.find((target:any) => target === data)
+      varName && variableName.push(entry?.variableName)
+    }
+  }
+
+  return `Scope [${variableName.join(', ')}]`
+}
+
 
 // Build tree nodes without mutating sets. Useful for UI re-filtering after data collected
 export function buildTree() {
@@ -83,7 +107,7 @@ export function clearAll() {
 
 // Get filter list for UI
 export function getHookFilterList() {
-  return (Object.keys(qSeqs) as Array<keyof typeof qSeqs>).filter(usename => qSeqs[usename].set.size > 0).map((key) => ({
+  return (Object.keys(qSeqs) as Array<keyof typeof qSeqs>).filter(usename => qSeqs[usename].set.size > 0 && qSeqs[usename].display).map((key) => ({
     key,
     display: qSeqs[key].display,
   }));
@@ -138,8 +162,11 @@ export function findAllQrl() {
   return result.flat(2).filter(Boolean);
 }
 
+export function getQrlPath(qrl: QRL) {
+  return (qrl as any)?.[CHUNK_KEY]
+}
 
-export function getQrlPath(qrl: QRL):string {
+export function getQrlChunkName(qrl: QRL):string {
   const splitPoint = '_component'
   return (qrl as any)?.[CHUNK_KEY]?.split(splitPoint)?.[0];
 }
