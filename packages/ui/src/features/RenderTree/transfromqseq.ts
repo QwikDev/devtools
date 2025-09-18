@@ -2,10 +2,6 @@
 import { TreeNode } from '../../components/Tree/Tree';
 import { isValue } from '../../utils/type';
 
-export const QSEQ = 'q:seq';
-export const QPROPS = 'q:props';
-export const QRENDERFN = 'q:renderFn';
-
 let nodeIdCounter = 0;
 
 /**

@@ -10,7 +10,6 @@ import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
 import { ISDEVTOOL } from '../../components/Tree/type';
-import { QPROPS, QRENDERFN, QSEQ } from './transfromqseq';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
 import {
   isListen,
@@ -18,7 +17,7 @@ import {
 import { findAllQrl, formatData, buildTree, clearAll, getHookFilterList, getQrlChunkName } from './formatTreeData';
 import type { QSeqsList } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
-import { getViteClientRpc, ParsedStructure } from '@devtools/kit';
+import { getViteClientRpc, ParsedStructure, QPROPS, QRENDERFN, QSEQ } from '@devtools/kit';
 import { createHighlighter } from 'shiki';
 import { getQwikState, returnQrlData } from './data';
 
