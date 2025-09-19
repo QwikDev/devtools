@@ -1,6 +1,4 @@
-
 import { TreeNode } from './Tree';
-
 
 export function normalizeName(str: string) {
   const array = str.split('_');

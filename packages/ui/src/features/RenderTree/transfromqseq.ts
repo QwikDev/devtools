@@ -1,4 +1,3 @@
-
 import { TreeNode } from '../../components/Tree/Tree';
 import { isValue } from '../../utils/type';
 
@@ -100,8 +99,10 @@ function createTreeNode(
     if (value.constructor.name !== 'Object') {
       node.label = `${key}: Class {${value.constructor.name}}`;
       node.elementType = 'object';
-      if(isValue(value)) {
-        node.children = [createTreeNode(value.value, 'value', 'value')] as TreeNode[];
+      if (isValue(value)) {
+        node.children = [
+          createTreeNode(value.value, 'value', 'value'),
+        ] as TreeNode[];
       }
     } else {
       const keys = Object.keys(value);
@@ -133,5 +134,3 @@ export const createTreeNodeObj = (
     children,
   };
 };
-
-
