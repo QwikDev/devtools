@@ -1,10 +1,6 @@
-import { isSignal, Signal } from '@qwik.dev/core';
-import { TreeNode } from '../../components/Tree/Tree';
-import { isComputed } from '../../utils/type';
 
-export const QSEQ = 'q:seq';
-export const QPROPS = 'q:props';
-export const QRENDERFN = 'q:renderFn';
+import { TreeNode } from '../../components/Tree/Tree';
+import { isValue } from '../../utils/type';
 
 let nodeIdCounter = 0;
 
@@ -104,6 +100,9 @@ function createTreeNode(
     if (value.constructor.name !== 'Object') {
       node.label = `${key}: Class {${value.constructor.name}}`;
       node.elementType = 'object';
+      if(isValue(value)) {
+        node.children = [createTreeNode(value.value, 'value', 'value')] as TreeNode[];
+      }
     } else {
       const keys = Object.keys(value);
       node.label = `${key}: Object {${keys.length}}`;
@@ -122,27 +121,6 @@ function createTreeNode(
 
   return null;
 }
-/**
- * Convert signal or store objects to tree structure
- * Special handling for value property
- */
-export const signalToTree = (signal: Signal): TreeNode[] => {
-  if (isSignal(signal)) {
-    const value = isComputed(signal) ? 'UseComputed$' : 'UseSignal';
-    const valueNode = createTreeNode(signal.value, value, 'value');
-    return valueNode ? [valueNode] : [];
-  }
-
-  return objectToTree(signal);
-};
-
-/**
- * Convert task to tree structure
- */
-export const taskToTree = (task: any): TreeNode[] => {
-  const valueNode = createTreeNode(task, 'UseTask$', 'value');
-  return valueNode ? [valueNode] : [];
-};
 
 export const createTreeNodeObj = (
   label: string,
@@ -155,3 +133,5 @@ export const createTreeNodeObj = (
     children,
   };
 };
+
+
