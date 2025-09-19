@@ -92,7 +92,6 @@ export const RenderTree = component$(() => {
       const qrl = getQrlChunkName(node.props[QRENDERFN])
       parsed = getQwikState(qrl)
     }
-1
 
     if (Array.isArray(node.props?.[QSEQ]) && parsed.length > 0) {
       const normalizedData = [...parsed,...returnQrlData(node.props?.[QSEQ])]
