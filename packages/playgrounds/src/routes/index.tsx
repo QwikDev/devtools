@@ -1,13 +1,21 @@
-import { Link, type DocumentHead } from '@qwik.dev/router';
-import { component$, useSignal } from '@qwik.dev/core';
+import { Link, routeLoader$, type DocumentHead } from '@qwik.dev/router';
+import { component$, useSignal} from '@qwik.dev/core';
 import Button from '../components/Button/Button';
 import Text from '../components/Text/Text';
-export default component$(() => {
+import { ExportCom, ExportCom2 } from '../components/ExportCom';
+import ExportCom3 from '../components/test-com';
+export const useGetTime = routeLoader$(async () => {
+  return { time: new Date() }
+});
+export default component$( () => {
   const count = useSignal(0);
-
+  const signal = useGetTime();
+  const testValue = useSignal('111');
   return (
     <>
-      <h1>Hi 👋</h1>
+      <h1>Hi 👋{signal.value.time.toLocaleTimeString()}</h1>
+      <ExportCom />
+      <ExportCom2 />
       <div>
         <Text />
       </div>
@@ -18,7 +26,9 @@ export default component$(() => {
       <div>
         <Link href="/blog">Blog</Link>
       </div>
-      <Button  data-testid="button" class='bg-red-500' onClick$={() => {
+
+      <ExportCom3 />
+      <Button testValue={testValue}  data-testid="button" class='bg-red-500' onClick$={() => {
         console.log('Button clicked! Count:', count.value);
       }}/>
     </>
