@@ -1,9 +1,6 @@
-
-
 export const isListen = (str: string) => {
   return /^on.*\$/.test(str);
 };
-
 
 export const isValue = (value: any) => {
   try {
