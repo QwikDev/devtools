@@ -4,25 +4,35 @@ import {
   useComputed$,
   $,
   useSignal,
-  useStyles$
+  useStyles$,
 } from '@qwik.dev/core';
 import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
 import { ISDEVTOOL } from '../../components/Tree/type';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
+import { isListen } from '../../utils/type';
 import {
-  isListen,
-} from '../../utils/type';
-import { findAllQrl, formatData, buildTree, clearAll, getHookFilterList, getQrlChunkName } from './formatTreeData';
+  findAllQrl,
+  formatData,
+  buildTree,
+  clearAll,
+  getHookFilterList,
+  getQrlChunkName,
+} from './formatTreeData';
 import type { QSeqsList } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
-import { getViteClientRpc, ParsedStructure, QPROPS, QRENDERFN, QSEQ } from '@devtools/kit';
+import {
+  getViteClientRpc,
+  ParsedStructure,
+  QPROPS,
+  QRENDERFN,
+  QSEQ,
+} from '@devtools/kit';
 import { createHighlighter } from 'shiki';
 import { getQwikState, returnQrlData } from './data';
 
 export const RenderTree = component$(() => {
-
   useStyles$(`
     pre.shiki {
       overflow: auto;
@@ -58,7 +68,7 @@ export const RenderTree = component$(() => {
       themes: ['nord'], // v1+ 需要数组
       langs: ['tsx', 'js', 'ts', 'jsx'],
     });
-    highlightedCodes.value = codes.value.map(item => {
+    highlightedCodes.value = codes.value.map((item) => {
       let lang = 'tsx';
       if (item.pathId.endsWith('.js')) lang = 'js';
       if (item.pathId.endsWith('.ts')) lang = 'ts';
@@ -82,55 +92,53 @@ export const RenderTree = component$(() => {
   const onNodeClick = $(async (node: TreeNode) => {
     console.log('current node', node);
     const rpc = getViteClientRpc();
-    let parsed: ParsedStructure[] = []
+    let parsed: ParsedStructure[] = [];
 
     // reset previous collected hook data before new node aggregation
     clearAll();
 
     if (node.props?.[QRENDERFN]) {
-      formatData('render', {data: {render: node.props[QRENDERFN]}});
-      const qrl = getQrlChunkName(node.props[QRENDERFN])
-      parsed = getQwikState(qrl)
+      formatData('render', { data: { render: node.props[QRENDERFN] } });
+      const qrl = getQrlChunkName(node.props[QRENDERFN]);
+      parsed = getQwikState(qrl);
     }
-1
+    1;
 
     if (Array.isArray(node.props?.[QSEQ]) && parsed.length > 0) {
-      const normalizedData = [...parsed,...returnQrlData(node.props?.[QSEQ])]
+      const normalizedData = [...parsed, ...returnQrlData(node.props?.[QSEQ])];
       //@ts-ignore
       normalizedData.forEach((item) => {
         formatData(item.hookType, item);
       });
     }
 
-    
-
     if (node.props?.[QPROPS]) {
       const props = unwrapStore(node.props[QPROPS]);
       Object.entries(props).forEach(([key, value]) => {
-          formatData(isListen(key) ? 'listens' : 'props', { data: {[key]: value} });
+        formatData(isListen(key) ? 'listens' : 'props', {
+          data: { [key]: value },
+        });
       });
     }
 
-    
     codes.value = [];
-    
-    const res = await rpc?.getModulesByPathIds(findAllQrl())
+
+    const res = await rpc?.getModulesByPathIds(findAllQrl());
     codes.value = res.filter((item) => item.modules);
-    stateTree.value = buildTree() as TreeNode[]
-    hookFilters.value = getHookFilterList()
+    stateTree.value = buildTree() as TreeNode[];
+    hookFilters.value = getHookFilterList();
   });
 
   const currentTab = useSignal<'state' | 'code'>('state');
 
-
   return (
     <div class="h-full w-full flex-1 overflow-hidden rounded-md border  border-border">
       <div class="flex h-full w-full">
-        <div class="w-1/2 overflow-hidden p-4" style={{minWidth: '400px'}}>
+        <div class="w-1/2 overflow-hidden p-4" style={{ minWidth: '400px' }}>
           <Tree data={data} onNodeClick={onNodeClick}></Tree>
         </div>
         <div class="border-l border-border"></div>
-        <div class="flex h-full w-1/2 flex-col p-4 min-h-0 overflow-hidden">
+        <div class="flex h-full min-h-0 w-1/2 flex-col overflow-hidden p-4">
           <div class="border-b border-border">
             <div class="flex space-x-4 border-b border-border">
               <button
@@ -159,35 +167,44 @@ export const RenderTree = component$(() => {
           </div>
 
           {currentTab.value === 'state' && (
-            <div class="mt-5 flex flex-1 min-h-0 flex-col rounded-lg border border-border bg-card-item-bg shadow-sm">
+            <div class="mt-5 flex min-h-0 flex-1 flex-col rounded-lg border border-border bg-card-item-bg shadow-sm">
               <div class="flex flex-wrap items-center gap-2 border-b border-border px-2 py-2">
                 <span class="text-xs text-muted-foreground">Hooks:</span>
                 {hookFilters.value.map((item, idx) => (
-                    <label class="flex items-center space-x-1 rounded border border-border px-2 py-1 text-xs" key={idx}>
-                      <input
-                        type="checkbox"
-                        checked={item.display}
-                        onChange$={(ev) => {
-                          const target = ev.target as HTMLInputElement;
-  
-                          hookFilters.value[idx].display = target.checked;
-                          
-                          stateTree.value = buildTree().filter((item) => hookFilters.value.some(hook => hook.key === item?.label && hook.display)) as TreeNode[]
-                        }}
-                      />
-                      <span>{item.key}</span>
-                    </label>
-                  ))}
+                  <label
+                    class="flex items-center space-x-1 rounded border border-border px-2 py-1 text-xs"
+                    key={idx}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={item.display}
+                      onChange$={(ev) => {
+                        const target = ev.target as HTMLInputElement;
+
+                        hookFilters.value[idx].display = target.checked;
+
+                        stateTree.value = buildTree().filter((item) =>
+                          hookFilters.value.some(
+                            (hook) => hook.key === item?.label && hook.display,
+                          ),
+                        ) as TreeNode[];
+                      }}
+                    />
+                    <span>{item.key}</span>
+                  </label>
+                ))}
                 <button
                   class="ml-auto rounded border border-border px-2 py-1 text-xs"
                   onClick$={$(() => {
-
                     hookFilters.value = hookFilters.value.map((item) => {
                       item.display = true;
-                      return item
-                    })
-                    stateTree.value = buildTree().filter((item) => hookFilters.value.some(hook => hook.key === item?.label && hook.display)) as TreeNode[]
-
+                      return item;
+                    });
+                    stateTree.value = buildTree().filter((item) =>
+                      hookFilters.value.some(
+                        (hook) => hook.key === item?.label && hook.display,
+                      ),
+                    ) as TreeNode[];
                   })}
                 >
                   Select all
@@ -197,15 +214,19 @@ export const RenderTree = component$(() => {
                   onClick$={$(() => {
                     hookFilters.value = hookFilters.value.map((item) => {
                       item.display = false;
-                      return item
-                    })
-                    stateTree.value = buildTree().filter((item) => hookFilters.value.some(hook => hook.key === item?.label && hook.display)) as TreeNode[]
+                      return item;
+                    });
+                    stateTree.value = buildTree().filter((item) =>
+                      hookFilters.value.some(
+                        (hook) => hook.key === item?.label && hook.display,
+                      ),
+                    ) as TreeNode[];
                   })}
                 >
                   Clear
                 </button>
               </div>
-              <div class="flex-1 min-h-0 overflow-y-auto p-2">
+              <div class="min-h-0 flex-1 overflow-y-auto p-2">
                 <Tree
                   data={stateTree}
                   gap={10}
@@ -220,7 +241,10 @@ export const RenderTree = component$(() => {
                         <span class="text-red-300 dark:text-red-500">
                           {isProperty[0]}
                         </span>
-                        <span class="text-gray-700 dark:text-white"> : {isProperty[1]}</span>
+                        <span class="text-gray-700 dark:text-white">
+                          {' '}
+                          : {isProperty[1]}
+                        </span>
                       </>
                     ) : (
                       <span>{label}</span>
@@ -232,20 +256,23 @@ export const RenderTree = component$(() => {
           )}
 
           {currentTab.value === 'code' && (
-            <div class="mt-5 flex-1 min-h-0 overflow-y-auto rounded-lg border  border-border p-2 shadow-sm">
+            <div class="mt-5 min-h-0 flex-1 overflow-y-auto rounded-lg border  border-border p-2 shadow-sm">
               {codes.value.map((item, idx) => {
                 return (
                   <>
-                  <div class="mb-4 p-4 rounded-xl shadow-lg bg-background border border-border">
-                    <div class="text-base font-semibold mb-2 break-all text-primary">
-                      {item.pathId}
+                    <div class="mb-4 rounded-xl border border-border bg-background p-4 shadow-lg">
+                      <div class="mb-2 break-all text-base font-semibold text-primary">
+                        {item.pathId}
+                      </div>
+                      <pre
+                        class="overflow-hidden"
+                        dangerouslySetInnerHTML={
+                          highlightedCodes.value[idx] || ''
+                        }
+                      />
                     </div>
-                    <pre
-                     class="overflow-hidden"
-                      dangerouslySetInnerHTML={highlightedCodes.value[idx] || ''}
-                    />
-                  </div>
-                  </> );
+                  </>
+                );
               })}
             </div>
           )}
@@ -254,4 +281,3 @@ export const RenderTree = component$(() => {
     </div>
   );
 });
-

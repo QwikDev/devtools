@@ -1,9 +1,9 @@
-import { 
-  component$, 
+import {
+  component$,
   useStore,
-  useSignal, 
-  useTask$, 
-  useComputed$, 
+  useSignal,
+  useTask$,
+  useComputed$,
   $,
   useContext,
   useContextProvider,
@@ -22,11 +22,23 @@ import {
   useServerData,
   useErrorBoundary,
 } from '@qwik.dev/core';
-import { _getDomContainer, isServer, useVisibleTask$ } from '@qwik.dev/core/internal';
+import {
+  _getDomContainer,
+  isServer,
+  useVisibleTask$,
+} from '@qwik.dev/core/internal';
 import type { QRL, Signal } from '@qwik.dev/core';
-import { useLocation, useNavigate, Link, useContent, useDocumentHead } from '@qwik.dev/router';
+import {
+  useLocation,
+  useNavigate,
+  Link,
+  useContent,
+  useDocumentHead,
+} from '@qwik.dev/router';
 import { useDebouncer } from './debounce';
-const ButtonContext = createContextId<{ theme: string; size: string }>('button-context');
+const ButtonContext = createContextId<{ theme: string; size: string }>(
+  'button-context',
+);
 
 interface ButtonProps {
   class?: string;
@@ -36,13 +48,13 @@ interface ButtonProps {
 
 export default component$<ButtonProps>((props) => {
   const { class: className = '', onClick$ } = props;
-  const testValue2 = props.testValue
-  console.log('testValue', testValue2)
+  const testValue2 = props.testValue;
+  console.log('testValue', testValue2);
   const store = useStore({
     count: 0,
-    dd:12,
+    dd: 12,
     cc: 33,
-    aa: [1,2,3  ]
+    aa: [1, 2, 3],
   });
   const signal = useSignal<any>('111');
   const constantValue = useConstant(() => 'CONST');
@@ -53,23 +65,21 @@ export default component$<ButtonProps>((props) => {
   const content = useContent();
   const head = useDocumentHead();
 
-  
-
   useTask$(({ track }) => {
     track(() => store.count);
-    signal.value = '33333'
-  })
+    signal.value = '33333';
+  });
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(({ track }) => {
     track(() => store.count);
-    signal.value = '2227'
-  })
+    signal.value = '2227';
+  });
 
   const qwikContainer = useComputed$(() => {
     try {
-      if(isServer){
-        return null
+      if (isServer) {
+        return null;
       }
       const htmlElement = document.documentElement;
       return _getDomContainer(htmlElement);
@@ -79,37 +89,46 @@ export default component$<ButtonProps>((props) => {
     }
   });
 
-  const asyncComputedValue =  useAsyncComputed$(({ track }) =>
+  const asyncComputedValue = useAsyncComputed$(({ track }) =>
     Promise.resolve(track(signal) + 3),
   );
-                                                                                                                                      
+
   useContextProvider(ButtonContext, {
     theme: 'primary',
-    size: 'large'
+    size: 'large',
   });
 
   const context = useContext(ButtonContext);
 
   const buttonId = useId();
 
-  useOnDocument('keydown', $(() => {
-    console.log('Document keydown event');
-  }));
+  useOnDocument(
+    'keydown',
+    $(() => {
+      console.log('Document keydown event');
+    }),
+  );
 
-  useOnWindow('resize', $(() => {
-    console.log('Window resized');
-  }));
+  useOnWindow(
+    'resize',
+    $(() => {
+      console.log('Window resized');
+    }),
+  );
 
-  useOn('click', $(() => {
-    console.log('Host clicked');
-  }));
+  useOn(
+    'click',
+    $(() => {
+      console.log('Host clicked');
+    }),
+  );
 
   const resourceData = useResource$(async ({ track }) => {
     track(() => store.count);
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     return {
       message: `Resource data for count: ${store.count}`,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   });
 
@@ -118,7 +137,7 @@ export default component$<ButtonProps>((props) => {
     update: (current: { n: number }) => {
       current.n = store.count;
       return current;
-    }
+    },
   }));
 
   useStyles$(`
@@ -150,18 +169,20 @@ export default component$<ButtonProps>((props) => {
     $((value: string) => {
       signal.value = value;
     }),
-    1000
+    1000,
   );
- 
-  useDebouncer($((value: string) => {
-    signal.value = value;
-  }),
-  1000)
+
+  useDebouncer(
+    $((value: string) => {
+      signal.value = value;
+    }),
+    1000,
+  );
 
   const handleClick = $(async () => {
     store.count++;
     console.log('Button clicked! Count:', store.count);
-    debounce(store.count)
+    debounce(store.count);
     if (onClick$) {
       await onClick$();
     }
@@ -171,35 +192,47 @@ export default component$<ButtonProps>((props) => {
 
   return (
     <div>
-      <button 
+      <button
         id={buttonId}
         class={`${className} custom-button scoped-button`}
         onClick$={handleClick}
       >
-        Click me {store.count}{signal.value}{qwikContainer.value?.qManifestHash}
+        Click me {store.count}
+        {signal.value}
+        {qwikContainer.value?.qManifestHash}
       </button>
-      <button 
+      <button
         class={`custom-button scoped-button`}
         style="margin-left: 8px"
         onClick$={handleGoAbout}
       >
         Go /about
       </button>
-      <Link href="/blog" class={`scoped-button`} style="margin-left: 8px; padding: 8px 16px; display: inline-block; text-decoration: none;">
+      <Link
+        href="/blog"
+        class={`scoped-button`}
+        style="margin-left: 8px; padding: 8px 16px; display: inline-block; text-decoration: none;"
+      >
         Go /blog
       </Link>
-      
+
       <div style="margin-top: 10px; font-size: 12px; color: #666;">
         <div>Current Path: {location.url.pathname}</div>
         <div>Is Navigating: {location.isNavigating ? 'true' : 'false'}</div>
         <div>Params: {JSON.stringify(location.params)}</div>
-        <div>Prev URL: {location.prevUrl ? location.prevUrl.pathname : '—'}</div>
+        <div>
+          Prev URL: {location.prevUrl ? location.prevUrl.pathname : '—'}
+        </div>
         <div>Head Title: {head.title}</div>
         <div>Head Metas: {head.meta.length}</div>
         <div>Content Menu: {content.menu ? 'yes' : 'no'}</div>
-        <div>Content Headings: {content.headings ? content.headings.length : 0}</div>
+        <div>
+          Content Headings: {content.headings ? content.headings.length : 0}
+        </div>
         <div>Async Computed: {asyncComputedValue.value}</div>
-        <div>Context: {context.theme} - {context.size}</div>
+        <div>
+          Context: {context.theme} - {context.size}
+        </div>
         <div>Button ID: {buttonId}</div>
         <div>Constant: {constantValue}</div>
         {errorBoundary.error && <div>Error captured</div>}
@@ -211,7 +244,9 @@ export default component$<ButtonProps>((props) => {
           onResolved={(data) => <div>Resource: {data.message}</div>}
           onRejected={(error) => <div>Error: {error.message}</div>}
         />
-        <div>Count: {store.count}, Signal: {signal.value}</div>
+        <div>
+          Count: {store.count}, Signal: {signal.value}
+        </div>
       </div>
     </div>
   );
