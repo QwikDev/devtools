@@ -21,9 +21,11 @@
     "README.md"
   ],
   "peerDependencies": {
-    "vite": "7.1.3",
     "@qwik.dev/core": "2.0.0-beta.9",
-    "@qwik.dev/router": "2.0.0-beta.9"
+    "@qwik.dev/router": "2.0.0-beta.9",
+    "oxc-parser": "^0.82.1",
+    "vite-plugin-inspect":"^11.0.0",
+    "vite": "7.1.3"
   },
   "dependencies": {
     "birpc": "^0.2.19",
