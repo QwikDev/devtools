@@ -3,10 +3,9 @@ export const useCollectHooks = (src) => {
   const hooksList = useSignal([])
   useVisibleTask$(({ track }) => {
     const newdata  = track(() => hooksList.value);
-  
     if(!window.QWIK_DEVTOOLS_GLOBAL_STATE) {
       window.QWIK_DEVTOOLS_GLOBAL_STATE = {}
-      window.QWIK_DEVTOOLS_GLOBAL_STATE[src] = []
+      window.QWIK_DEVTOOLS_GLOBAL_STATE[src] = newdata || []
     }else {
       window.QWIK_DEVTOOLS_GLOBAL_STATE[src] = newdata
     }

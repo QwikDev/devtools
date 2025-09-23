@@ -38,6 +38,8 @@ export default defineConfig(() => {
         external: [
           'stream',
           'util',
+          '@qwik.dev/core',
+          '@qwik.dev/router',
           /^node:.*/,
           ...excludeAll(peerDependencies),
           ...excludeAll(dependencies),
