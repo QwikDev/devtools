@@ -88,7 +88,7 @@ const TreeNodeComponent = component$(
           ) : (
             <div class="mr-2 w-4 flex-shrink-0"></div>
           )}
-          <div class="text-sm whitespace-nowrap cursor-pointer">
+          <div class="cursor-pointer whitespace-nowrap text-sm">
             {props.renderNode ? (
               <>{props.renderNode(props.node)}</>
             ) : (

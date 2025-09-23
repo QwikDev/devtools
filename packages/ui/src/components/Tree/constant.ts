@@ -6,5 +6,5 @@ export const ignoreTags = [
   'body',
   'html',
   'Qwikrouterprovider',
-  'Root'
+  'Root',
 ] as const;
