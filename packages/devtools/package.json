@@ -7,7 +7,7 @@
   "qwik": "./dist/ui/index.qwik.mjs",
   "exports": {
     ".": {
-      "import": "./dist/plugin/index.mjs",
+      "import": "./dist/plugin/index.js",
       "types": "./dist/plugin/index.d.ts"
     },
     "./ui": {
@@ -22,8 +22,8 @@
   ],
   "peerDependencies": {
     "vite": "7.1.3",
-    "@qwik.dev/core": "2.0.0-beta.8",
-    "@qwik.dev/router": "2.0.0-beta.8"
+    "@qwik.dev/core": "2.0.0-beta.9",
+    "@qwik.dev/router": "2.0.0-beta.9"
   },
   "dependencies": {
     "birpc": "^0.2.19",
@@ -32,7 +32,9 @@
     "@qwikest/icons": "^0.0.13",
     "vite-hot-client": "^0.2.4"
   },
+  "type": "module",
   "devDependencies": {
+    "oxc-parser": "^0.82.1",
     "tsx": "^4.19.2",
     "@types/node": "^22.10.5",
     "@changesets/cli": "^2.27.11",
