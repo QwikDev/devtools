@@ -23,26 +23,24 @@
   "peerDependencies": {
     "@qwik.dev/core": "2.0.0-beta.9",
     "@qwik.dev/router": "2.0.0-beta.9",
-    "oxc-parser": "^0.82.1",
-    "vite-plugin-inspect":"^11.0.0",
     "vite": "7.1.3"
   },
   "dependencies": {
-    "birpc": "^0.2.19",
-    "superjson": "^2.2.2",
-    "dree": "^5.1.5",
     "@qwikest/icons": "^0.0.13",
-    "vite-hot-client": "^0.2.4"
+    "birpc": "^0.2.19",
+    "dree": "^5.1.5",
+    "oxc-parser": "^0.82.1",
+    "superjson": "^2.2.2",
+    "vite-hot-client": "^0.2.4",
+    "vite-plugin-inspect":"^11.0.0"
   },
   "type": "module",
   "devDependencies": {
-    "oxc-parser": "^0.82.1",
     "tsx": "^4.19.2",
     "@types/node": "^22.10.5",
     "@changesets/cli": "^2.27.11",
     "@changesets/get-github-info": "^0.6.0",
-    "@changesets/types": "^6.0.0",
-    "vite-plugin-inspect":"^11.0.0"
+    "@changesets/types": "^6.0.0"
   },
   "private": false,
   "keywords": [
