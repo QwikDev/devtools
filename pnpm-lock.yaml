@@ -33,11 +33,11 @@ importers:
   packages/devtools:
     dependencies:
       '@qwik.dev/core':
-        specifier: 2.0.0-beta.8
-        version: 2.0.0-beta.8(prettier@3.3.3)(vite@7.1.3(@types/node@22.10.5)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@22.10.5)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
       '@qwik.dev/router':
-        specifier: 2.0.0-beta.8
-        version: 2.0.0-beta.8(acorn@8.14.0)(rollup@4.45.0)(typescript@5.4.5)
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(acorn@8.14.0)(rollup@4.45.0)(typescript@5.4.5)
       '@qwikest/icons':
         specifier: ^0.0.13
         version: 0.0.13(@builder.io/qwik@1.11.0(vite@7.1.3(@types/node@22.10.5)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0)))
@@ -47,6 +47,9 @@ importers:
       dree:
         specifier: ^5.1.5
         version: 5.1.5
+      oxc-parser:
+        specifier: ^0.82.1
+        version: 0.82.1
       superjson:
         specifier: ^2.2.2
         version: 2.2.2
@@ -56,6 +59,9 @@ importers:
       vite-hot-client:
         specifier: ^0.2.4
         version: 0.2.4(vite@7.1.3(@types/node@22.10.5)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
+      vite-plugin-inspect:
+        specifier: ^11.0.0
+        version: 11.0.0(vite@7.1.3(@types/node@22.10.5)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.11
@@ -72,9 +78,6 @@ importers:
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
-      vite-plugin-inspect:
-        specifier: ^11.0.0
-        version: 11.0.0(vite@7.1.3(@types/node@22.10.5)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
 
   packages/kit:
     dependencies:
@@ -110,8 +113,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       eslint-plugin-qwik:
-        specifier: 2.0.0-beta.8
-        version: 2.0.0-beta.8(eslint@8.57.0)(typescript@5.4.5)
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(eslint@8.57.0)(typescript@5.4.5)
       np:
         specifier: ^8.0.4
         version: 8.0.4(typescript@5.4.5)
@@ -134,11 +137,11 @@ importers:
         specifier: workspace:*
         version: link:../ui
       '@qwik.dev/core':
-        specifier: 2.0.0-beta.8
-        version: 2.0.0-beta.8(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
       '@qwik.dev/router':
-        specifier: 2.0.0-beta.8
-        version: 2.0.0-beta.8(acorn@8.14.0)(rollup@4.45.0)(typescript@5.4.5)
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(acorn@8.14.0)(rollup@4.45.0)(typescript@5.4.5)
       '@types/eslint':
         specifier: 8.56.10
         version: 8.56.10
@@ -155,8 +158,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       eslint-plugin-qwik:
-        specifier: 2.0.0-beta.8
-        version: 2.0.0-beta.8(eslint@8.57.0)(typescript@5.4.5)
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(eslint@8.57.0)(typescript@5.4.5)
       prettier:
         specifier: 3.3.3
         version: 3.3.3
@@ -172,15 +175,6 @@ importers:
 
   packages/plugin:
     dependencies:
-      '@babel/generator':
-        specifier: ^7.26.5
-        version: 7.26.5
-      '@babel/parser':
-        specifier: ^7.26.7
-        version: 7.26.7
-      '@babel/traverse':
-        specifier: ^7.26.7
-        version: 7.26.7
       oxc-parser:
         specifier: ^0.82.1
         version: 0.82.1
@@ -191,12 +185,9 @@ importers:
       '@devtools/kit':
         specifier: workspace:*
         version: link:../kit
-      '@types/babel__generator':
-        specifier: ^7.6.8
-        version: 7.6.8
-      '@types/babel__traverse':
-        specifier: ^7.20.6
-        version: 7.20.6
+      '@qwik.dev/core':
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
       '@types/eslint':
         specifier: 8.56.10
         version: 8.56.10
@@ -249,15 +240,15 @@ importers:
         specifier: workspace:*
         version: link:../plugin
       '@qwik.dev/core':
-        specifier: 2.0.0-beta.8
-        version: 2.0.0-beta.8(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
     devDependencies:
       '@devtools/kit':
         specifier: workspace:*
         version: link:../kit
       '@qwik.dev/react':
-        specifier: 2.0.0-beta.8
-        version: 2.0.0-beta.8(@qwik.dev/core@2.0.0-beta.8(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4))(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
+        specifier: 2.0.0-beta.9
+        version: 2.0.0-beta.9(@qwik.dev/core@2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4))(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
       '@qwikest/icons':
         specifier: ^0.0.13
         version: 0.0.13(@builder.io/qwik@1.11.0(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0)))
@@ -353,10 +344,6 @@ packages:
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/generator@7.26.5':
-    resolution: {integrity: sha512-2caSP6fN9I7HOe6nqhtft7V4g7/V/gfDsC3Ag4W7kEzzvRGKqiv0pu0HogPiZ3KaVSoNDhUws6IJjDjpfmYIXw==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/helper-string-parser@7.25.9':
     resolution: {integrity: sha512-4A/SCr/2KLd5jrtOMFzaKjVtAei3+2r/NChoBNoZ3EyP/+GlhoaEGoWOZUmFmoITP7zOJyHIMm+DYRd8o3PvHA==}
     engines: {node: '>=6.9.0'}
@@ -365,21 +352,8 @@ packages:
     resolution: {integrity: sha512-Ed61U6XJc3CVRfkERJWDz4dJwKe7iLmmJsbOGu9wSloNSFttHV0I8g6UAgb7qnK5ly5bGLPd4oXZlxCdANBOWQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/parser@7.26.7':
-    resolution: {integrity: sha512-kEvgGGgEjRUutvdVvZhbn/BxVt+5VSpwXz1j3WYXQbXDo8KzFOPNG2GQbdAiNq8g6wn1yKk7C/qrke03a84V+w==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-
   '@babel/runtime@7.26.0':
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/template@7.25.9':
-    resolution: {integrity: sha512-9DGttpmPvIxBb/2uwpVo3dqJ+O6RooAFOS+lB+xDqoE2PVCE8nfoHMdZLpfCQRLwvohzXISPZcgxt80xLfsuwg==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/traverse@7.26.7':
-    resolution: {integrity: sha512-1x1sgeyRLC3r5fQOM0/xtQKsYjyxmFjaOrLJNtZ81inNjyJHGIolTULPiSc/2qe1/qfpFLisLQYFnnZl7QoedA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.26.7':
@@ -462,9 +436,6 @@ packages:
 
   '@emnapi/runtime@1.4.3':
     resolution: {integrity: sha512-pBPWdu6MLKROBX05wSNKcNb++m5Er+KQ9QkB+WVM+pW2Kx9hoSrVTnu3BdkI5eBLZoKu/J6mW/B6i6bJB2ytXQ==}
-
-  '@emnapi/runtime@1.4.4':
-    resolution: {integrity: sha512-hHyapA4A3gPaDCNfiqyZUStTMqIkKRshqPIuDOXv1hcBnD4U3l8cP0T1HMCfGRxQ6V64TGCcoswChANyOAwbQg==}
 
   '@emnapi/runtime@1.4.5':
     resolution: {integrity: sha512-++LApOtY0pEEz1zrd9vy1/zXVaVJJ/EbAF3u0fXIzPJEDtnITsBGbbK0EkM72amhl/R5b+5xx0Y/QhcVOpuulg==}
@@ -1282,8 +1253,8 @@ packages:
     resolution: {integrity: sha512-ezIadUb1aFhwJLd++WVqVpi9rnlX8vnd4ju7saPhwLHJN1mJgOv0puePTGV+FbtSnWtwoHDT8lAm4kagDZmpCg==}
     engines: {node: '>=20.0.0'}
 
-  '@qwik.dev/core@2.0.0-beta.8':
-    resolution: {integrity: sha512-vKOCFsz+jTCbAir9cagVAwJNXXcIV0a6H6/QfmIBGASq0Etvn4n7Y4zX3gqm6m5vDxP563s3oAKHx7wen6sxBQ==}
+  '@qwik.dev/core@2.0.0-beta.9':
+    resolution: {integrity: sha512-MemsRTsLbqF17c/rfTWAojZTCpdKg6tWXs/xjpgeMcCzcmDwoqm3KrQ3GqgrBNu+7gMBPSWK0cb7hrd7q9uTQg==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     hasBin: true
     peerDependencies:
@@ -1296,19 +1267,19 @@ packages:
       vitest:
         optional: true
 
-  '@qwik.dev/react@2.0.0-beta.8':
-    resolution: {integrity: sha512-7S1c0chh7vQ/Uzqqp3seUKxND4lb9dee9JPfmdxLIWD6j3xOGwW/VHEXse8/EudnA27Nepr+mvdJhsOEusOAvg==}
+  '@qwik.dev/react@2.0.0-beta.9':
+    resolution: {integrity: sha512-vfZ3SNpgY2eAEaNNFq6ePXAsgvf5FVb1qkZD0ggWYFzx9r/MfCPLjA0lK518hNq/sRXGoQJxJEEdoEN1GDzJzQ==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     peerDependencies:
-      '@qwik.dev/core': ^2.0.0-beta.8
+      '@qwik.dev/core': ^2.0.0-beta.9
       '@types/react': ^18
       '@types/react-dom': ^18
       react: ^18
       react-dom: ^18
       vite: '>=5 <8'
 
-  '@qwik.dev/router@2.0.0-beta.8':
-    resolution: {integrity: sha512-UMIzo4Nro6oA65L4SQP2PlgEO3U+0ODzT3/F1qaGcW15TJL8nDNEweo+dz8hWQU+iJ+5C1g7T/4/TD3Q7Kud5Q==}
+  '@qwik.dev/router@2.0.0-beta.9':
+    resolution: {integrity: sha512-lLNZov52LTGUZaC+ZWxdnFxd6FBf10gM1ZFhI0rvJwtWAuE0GlqG5ILa63jkvmDsg7cPTmbsCZnazCFxSqbAng==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
 
   '@qwikest/icons@0.0.13':
@@ -1642,12 +1613,6 @@ packages:
 
   '@types/acorn@4.0.6':
     resolution: {integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==}
-
-  '@types/babel__generator@7.6.8':
-    resolution: {integrity: sha512-ASsj+tpEDsEiFr1arWrlN6V3mdfjRMZt6LtK/Vp/kreFLnr5QH5+DhvD5nINYZXzwJvXeGq+05iUXcAzVrqWtw==}
-
-  '@types/babel__traverse@7.20.6':
-    resolution: {integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==}
 
   '@types/cacheable-request@6.0.3':
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
@@ -2645,8 +2610,8 @@ packages:
     resolution: {integrity: sha512-kwbw8cYd+IVFl3o1XhguIMzK7LMnvaqVU8/zKcIgq6nlCVpdXMKGPXCq/XhKq2iN5I2BaRHmAgDLNKnTQevuwg==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
 
-  eslint-plugin-qwik@2.0.0-beta.8:
-    resolution: {integrity: sha512-4nN80Kw+rFlCF0mRXYHfNcIhTY7naz5J2KfN2WHUTEh8YUWfoMmQngiXD4GLc89O0R7umqUDcNKL4VqbMKynVg==}
+  eslint-plugin-qwik@2.0.0-beta.9:
+    resolution: {integrity: sha512-tjzJ1AfCHts9eChr4B4kMksoxkM4aeHDU9IumJgsz97OwhiNP6uMa2vI1n5aykI0iABqFRXivLEeQp63tAEDTw==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
@@ -2918,10 +2883,6 @@ packages:
   global-dirs@3.0.1:
     resolution: {integrity: sha512-NBcGGFbBA9s1VzD41QXDG+3++t9Mn5t1FpLdhESY6oKY4gYTFpX4wO3sqGUa0Srjtbfj3szX0RnemmrVRUdULA==}
     engines: {node: '>=10'}
-
-  globals@11.12.0:
-    resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
-    engines: {node: '>=4'}
 
   globals@13.24.0:
     resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
@@ -3426,11 +3387,6 @@ packages:
 
   js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
-    hasBin: true
-
-  jsesc@3.1.0:
-    resolution: {integrity: sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==}
-    engines: {node: '>=6'}
     hasBin: true
 
   json-buffer@3.0.1:
@@ -5331,43 +5287,13 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
-  '@babel/generator@7.26.5':
-    dependencies:
-      '@babel/parser': 7.26.7
-      '@babel/types': 7.26.7
-      '@jridgewell/gen-mapping': 0.3.8
-      '@jridgewell/trace-mapping': 0.3.25
-      jsesc: 3.1.0
-
   '@babel/helper-string-parser@7.25.9': {}
 
   '@babel/helper-validator-identifier@7.25.9': {}
 
-  '@babel/parser@7.26.7':
-    dependencies:
-      '@babel/types': 7.26.7
-
   '@babel/runtime@7.26.0':
     dependencies:
       regenerator-runtime: 0.14.1
-
-  '@babel/template@7.25.9':
-    dependencies:
-      '@babel/code-frame': 7.26.2
-      '@babel/parser': 7.26.7
-      '@babel/types': 7.26.7
-
-  '@babel/traverse@7.26.7':
-    dependencies:
-      '@babel/code-frame': 7.26.2
-      '@babel/generator': 7.26.5
-      '@babel/parser': 7.26.7
-      '@babel/template': 7.25.9
-      '@babel/types': 7.26.7
-      debug: 4.4.0(supports-color@5.5.0)
-      globals: 11.12.0
-    transitivePeerDependencies:
-      - supports-color
 
   '@babel/types@7.26.7':
     dependencies:
@@ -5552,11 +5478,6 @@ snapshots:
     optional: true
 
   '@emnapi/runtime@1.4.3':
-    dependencies:
-      tslib: 2.8.1
-    optional: true
-
-  '@emnapi/runtime@1.4.4':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -5837,7 +5758,7 @@ snapshots:
 
   '@img/sharp-wasm32@0.34.3':
     dependencies:
-      '@emnapi/runtime': 1.4.4
+      '@emnapi/runtime': 1.4.5
     optional: true
 
   '@img/sharp-win32-arm64@0.34.3':
@@ -6126,7 +6047,7 @@ snapshots:
     dependencies:
       quansync: 0.2.10
 
-  '@qwik.dev/core@2.0.0-beta.8(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)':
+  '@qwik.dev/core@2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)':
     dependencies:
       csstype: 3.1.3
       rollup: 4.45.0
@@ -6135,7 +6056,7 @@ snapshots:
       prettier: 3.3.3
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@20.14.11)(@vitest/ui@3.2.4)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0)
 
-  '@qwik.dev/core@2.0.0-beta.8(prettier@3.3.3)(vite@7.1.3(@types/node@22.10.5)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)':
+  '@qwik.dev/core@2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@22.10.5)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)':
     dependencies:
       csstype: 3.1.3
       rollup: 4.45.0
@@ -6144,16 +6065,16 @@ snapshots:
       prettier: 3.3.3
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.10.5)(@vitest/ui@3.2.4)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0)
 
-  '@qwik.dev/react@2.0.0-beta.8(@qwik.dev/core@2.0.0-beta.8(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4))(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))':
+  '@qwik.dev/react@2.0.0-beta.9(@qwik.dev/core@2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4))(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))':
     dependencies:
-      '@qwik.dev/core': 2.0.0-beta.8(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
+      '@qwik.dev/core': 2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
       '@types/react': 18.3.18
       '@types/react-dom': 18.3.5(@types/react@18.3.18)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       vite: 7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0)
 
-  '@qwik.dev/router@2.0.0-beta.8(acorn@8.14.0)(rollup@4.45.0)(typescript@5.4.5)':
+  '@qwik.dev/router@2.0.0-beta.9(acorn@8.14.0)(rollup@4.45.0)(typescript@5.4.5)':
     dependencies:
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       '@types/mdx': 2.0.13
@@ -6220,7 +6141,7 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.8
       estree-walker: 2.0.2
-      picomatch: 4.0.2
+      picomatch: 4.0.3
     optionalDependencies:
       rollup: 4.45.0
 
@@ -6410,14 +6331,6 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.8
 
-  '@types/babel__generator@7.6.8':
-    dependencies:
-      '@babel/types': 7.26.7
-
-  '@types/babel__traverse@7.20.6':
-    dependencies:
-      '@babel/types': 7.26.7
-
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
@@ -6534,7 +6447,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/tsconfig-utils': 8.41.0(typescript@5.4.5)
       '@typescript-eslint/types': 8.41.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -6611,7 +6524,7 @@ snapshots:
       '@typescript-eslint/tsconfig-utils': 8.41.0(typescript@5.4.5)
       '@typescript-eslint/types': 8.41.0
       '@typescript-eslint/visitor-keys': 8.41.0
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1
       fast-glob: 3.3.2
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -7590,7 +7503,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-qwik@2.0.0-beta.8(eslint@8.57.0)(typescript@5.4.5):
+  eslint-plugin-qwik@2.0.0-beta.9(eslint@8.57.0)(typescript@5.4.5):
     dependencies:
       '@typescript-eslint/utils': 8.41.0(eslint@8.57.0)(typescript@5.4.5)
       eslint: 8.57.0
@@ -7932,8 +7845,6 @@ snapshots:
   global-dirs@3.0.1:
     dependencies:
       ini: 2.0.0
-
-  globals@11.12.0: {}
 
   globals@13.24.0:
     dependencies:
@@ -8465,8 +8376,6 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jsesc@3.1.0: {}
-
   json-buffer@3.0.1: {}
 
   json-parse-even-better-errors@2.3.1: {}
@@ -8920,7 +8829,7 @@ snapshots:
   micromark@4.0.1:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.4.0(supports-color@5.5.0)
+      debug: 4.4.1
       decode-named-character-reference: 1.0.2
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.2

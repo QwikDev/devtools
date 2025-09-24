@@ -22,9 +22,10 @@ export const getQwikState = (qrl: string) => {
   const stateKeyPath = Object.keys(window.QWIK_DEVTOOLS_GLOBAL_STATE)?.find(
     (key) => key.endsWith(qrl!),
   );
-  //@ts-ignore
+
   return (
     (
+      //@ts-ignore
       window.QWIK_DEVTOOLS_GLOBAL_STATE?.[stateKeyPath] as ParsedStructure[]
     )?.filter((item) => !!item.data) || []
   );

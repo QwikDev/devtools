@@ -34,6 +34,9 @@ export default defineConfig({
     tsconfigPaths(),
     qwikDevtools(), // 👈 Add the plugin here
   ],
+  ssr: {
+    noExternal: ['@qwik.dev/devtools']; // 👈 Add the plugin here
+  }
 });
 ```
 
@@ -63,4 +66,3 @@ Join our vibrant community:
 - [⭐️ Qwik GitHub](https://github.com/QwikDev/qwik)
 - [🐦 @QwikDev](https://twitter.com/QwikDev)
 - [⚡️ Vite](https://vitejs.dev/)
-

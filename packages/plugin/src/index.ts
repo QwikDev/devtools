@@ -1,8 +1,6 @@
 import { ResolvedConfig, type Plugin } from 'vite';
 import { getServerFunctions } from './rpc';
 import { createServerRpc, setViteServerContext, VIRTUAL_QWIK_DEVTOOLS_KEY, INNER_USE_HOOK } from '@devtools/kit';
-import _traverse from '@babel/traverse';
-import _generate from '@babel/generator';
 import VueInspector from 'vite-plugin-inspect'
 import useCollectHooksSource from './utils/useCollectHooks'
 import { parseQwikCode } from './parse/parse';
@@ -15,13 +13,28 @@ export function qwikDevtools(): Plugin[] {
     name: 'vite-plugin-qwik-devtools',
     apply: 'serve',
     resolveId(id) {
-      if (id === VIRTUAL_QWIK_DEVTOOLS_KEY) {
-        return id;
+      // Normalize to a stable, absolute-like id so Qwik can generate runtime chunks
+      const clean = id.split('?')[0].split('#')[0];
+      if (
+        clean === VIRTUAL_QWIK_DEVTOOLS_KEY ||
+        clean === `/${VIRTUAL_QWIK_DEVTOOLS_KEY}` ||
+        clean === `\u0000${VIRTUAL_QWIK_DEVTOOLS_KEY}` ||
+        clean === `/@id/${VIRTUAL_QWIK_DEVTOOLS_KEY}`
+      ) {
+        return `/${VIRTUAL_QWIK_DEVTOOLS_KEY}`;
       }
     },
     load(id) {
-      if (id === VIRTUAL_QWIK_DEVTOOLS_KEY) {
-        return useCollectHooksSource;
+      if (
+        id === `/${VIRTUAL_QWIK_DEVTOOLS_KEY}` ||
+        id === VIRTUAL_QWIK_DEVTOOLS_KEY ||
+        id === `\u0000${VIRTUAL_QWIK_DEVTOOLS_KEY}` ||
+        id === `/@id/${VIRTUAL_QWIK_DEVTOOLS_KEY}`
+      ) {
+        return {
+          code: useCollectHooksSource,
+          map: null,
+        };
       }
     },
     configResolved(viteConfig) {
@@ -49,14 +62,11 @@ export function qwikDevtools(): Plugin[] {
             code = `import { QwikDevtools } from '${importPath}';\n${code}`;
           }
 
-          // Find the closing body tag and inject the QwikDevtools component before it
+          // Find the closing body tag and append QwikDevtools at the end of body
           const match = code.match(/<body[^>]*>([\s\S]*?)<\/body>/);
           if (match) {
             const bodyContent = match[1];
-            const newBodyContent = bodyContent.replace(
-              /{!isDev && <ServiceWorkerRegister \/>}/,
-              `{!isDev && <ServiceWorkerRegister />}\n        {isDev && <QwikDevtools />}`,
-            );
+            const newBodyContent = `${bodyContent}\n        <QwikDevtools />`;
             code = code.replace(bodyContent, newBodyContent);
           }
 
