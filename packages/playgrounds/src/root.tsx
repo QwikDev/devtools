@@ -17,7 +17,7 @@ export default component$(() => {
    */
 
   return (
-    <QwikRouterProvider>
+    <QwikRouterProvider viewTransition={true}>
       <head>
         <meta charset="utf-8" />
         {!isDev && (
@@ -26,10 +26,10 @@ export default component$(() => {
             href={`${import.meta.env.BASE_URL}manifest.json`}
           />
         )}
-        <RouterHead />
+        <RouterHead   />
       </head>
       <body lang="en">
-        <RouterOutlet />
+        <RouterOutlet  />
         {!isDev && <ServiceWorkerRegister />}
       </body>
     </QwikRouterProvider>
