@@ -10,7 +10,6 @@ import { tryCreateHotContext } from 'vite-hot-client';
 import {
   HiBoltOutline,
   HiPhotoOutline,
-  HiCodeBracketMini,
   HiMegaphoneMini,
   HiCubeOutline,
 } from '@qwikest/icons/heroicons';
@@ -37,7 +36,6 @@ import { DevtoolsButton } from './components/DevtoolsButton/DevtoolsButton';
 import { DevtoolsContainer } from './components/DevtoolsContainer/DevtoolsContainer';
 import { DevtoolsPanel } from './components/DevtoolsPanel/DevtoolsPanel';
 import { Packages } from './features/Packages/Packages';
-import { Components } from './features/Components/Components';
 import { Inspect } from './features/inspect/Inspect';
 import { ThemeToggle } from './components/ThemeToggle/ThemeToggle';
 import { ThemeScript } from './components/ThemeToggle/theme-script';
@@ -129,9 +127,6 @@ export const QwikDevtools = component$(() => {
               <Tab state={state} id="assets" title="Assets">
                 <HiPhotoOutline class="h-5 w-5" />
               </Tab>
-              <Tab state={state} id="components" title="Components Tree">
-                <HiCodeBracketMini class="h-5 w-5" />
-              </Tab>
               <Tab state={state} id="inspect" title="inspect">
                 <HiMegaphoneMini class="h-5 w-5" />
               </Tab>
@@ -187,12 +182,6 @@ export const QwikDevtools = component$(() => {
                 <TabContent>
                   <TabTitle title="Application Routes" q:slot="title" />
                   <Routes state={state} q:slot="content" />
-                </TabContent>
-              )}
-              {state.activeTab === 'components' && (
-                <TabContent>
-                  <TabTitle title="Components Tree" q:slot="title" />
-                  <Components q:slot="content" />
                 </TabContent>
               )}
               {state.activeTab === 'inspect' && (

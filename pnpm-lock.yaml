@@ -246,9 +246,6 @@ importers:
       '@devtools/kit':
         specifier: workspace:*
         version: link:../kit
-      '@qwik.dev/react':
-        specifier: 2.0.0-beta.9
-        version: 2.0.0-beta.9(@qwik.dev/core@2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4))(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))
       '@qwikest/icons':
         specifier: ^0.0.13
         version: 0.0.13(@builder.io/qwik@1.11.0(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0)))
@@ -1266,17 +1263,6 @@ packages:
         optional: true
       vitest:
         optional: true
-
-  '@qwik.dev/react@2.0.0-beta.9':
-    resolution: {integrity: sha512-vfZ3SNpgY2eAEaNNFq6ePXAsgvf5FVb1qkZD0ggWYFzx9r/MfCPLjA0lK518hNq/sRXGoQJxJEEdoEN1GDzJzQ==}
-    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
-    peerDependencies:
-      '@qwik.dev/core': ^2.0.0-beta.9
-      '@types/react': ^18
-      '@types/react-dom': ^18
-      react: ^18
-      react-dom: ^18
-      vite: '>=5 <8'
 
   '@qwik.dev/router@2.0.0-beta.9':
     resolution: {integrity: sha512-lLNZov52LTGUZaC+ZWxdnFxd6FBf10gM1ZFhI0rvJwtWAuE0GlqG5ILa63jkvmDsg7cPTmbsCZnazCFxSqbAng==}
@@ -6064,15 +6050,6 @@ snapshots:
     optionalDependencies:
       prettier: 3.3.3
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.10.5)(@vitest/ui@3.2.4)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0)
-
-  '@qwik.dev/react@2.0.0-beta.9(@qwik.dev/core@2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4))(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))':
-    dependencies:
-      '@qwik.dev/core': 2.0.0-beta.9(prettier@3.3.3)(vite@7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.2.4)
-      '@types/react': 18.3.18
-      '@types/react-dom': 18.3.5(@types/react@18.3.18)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      vite: 7.1.3(@types/node@20.14.11)(jiti@2.4.2)(tsx@4.19.2)(yaml@2.7.0)
 
   '@qwik.dev/router@2.0.0-beta.9(acorn@8.14.0)(rollup@4.45.0)(typescript@5.4.5)':
     dependencies:
