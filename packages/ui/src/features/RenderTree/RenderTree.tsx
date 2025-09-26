@@ -31,6 +31,28 @@ import {
 } from '@devtools/kit';
 import { createHighlighter } from 'shiki';
 import { getQwikState, returnQrlData } from './data';
+import { HiChevronUpMini } from '@qwikest/icons/heroicons';
+
+function getValueColorClass(node: TreeNode, valueText: string): string {
+  switch (node.elementType) {
+    case 'string':
+      return 'text-red-400';
+    case 'number':
+      return 'text-green-400';
+    case 'boolean':
+      return 'text-amber-400';
+    case 'function':
+      return 'text-purple-400';
+    case 'array':
+      return 'text-muted-foreground';
+    case 'object':
+      return /(Array\[|Object\s\{|Class\s\{)/.test(valueText)
+        ? 'text-muted-foreground'
+        : 'text-foreground';
+    default:
+      return 'text-foreground';
+  }
+}
 
 export const RenderTree = component$(() => {
   useStyles$(`
@@ -46,6 +68,7 @@ export const RenderTree = component$(() => {
 
   const stateTree = useSignal<TreeNode[]>([]);
   const hookFilters = useSignal<{ key: QSeqsList; display: boolean }[]>([]);
+  const hooksOpen = useSignal(true);
 
   const qwikContainer = useComputed$(() => {
     try {
@@ -132,7 +155,7 @@ export const RenderTree = component$(() => {
   const currentTab = useSignal<'state' | 'code'>('state');
 
   return (
-    <div class="h-full w-full flex-1 overflow-hidden rounded-md border  border-border">
+    <div class="h-full w-full flex-1 overflow-hidden rounded-md border border-border bg-background">
       <div class="flex h-full w-full">
         <div class="w-1/2 overflow-hidden p-4" style={{ minWidth: '400px' }}>
           <Tree data={data} onNodeClick={onNodeClick}></Tree>
@@ -148,7 +171,7 @@ export const RenderTree = component$(() => {
                     ? { borderBottom: '2px solid var(--color-primary-active)' }
                     : {}
                 }
-                class="border-b-2 border-b-transparent px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out"
+                class="border-b-2 border-b-transparent px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out text-muted-foreground hover:text-foreground"
               >
                 State
               </button>
@@ -159,7 +182,7 @@ export const RenderTree = component$(() => {
                     ? { borderBottom: '2px solid var(--color-primary-active)' }
                     : {}
                 }
-                class="border-b-2 border-b-transparent px-4 py-3 text-sm font-medium  transition-all duration-300 ease-in-out"
+                class="border-b-2 border-b-transparent px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out text-muted-foreground hover:text-foreground"
               >
                 Code
               </button>
@@ -167,22 +190,74 @@ export const RenderTree = component$(() => {
           </div>
 
           {currentTab.value === 'state' && (
-            <div class="mt-5 flex min-h-0 flex-1 flex-col rounded-lg border border-border bg-card-item-bg shadow-sm">
-              <div class="flex flex-wrap items-center gap-2 border-b border-border px-2 py-2">
-                <span class="text-xs text-muted-foreground">Hooks:</span>
-                {hookFilters.value.map((item, idx) => (
-                  <label
-                    class="flex items-center space-x-1 rounded border border-border px-2 py-1 text-xs"
-                    key={idx}
+            <div class="mt-5 flex min-h-0 flex-1 flex-col">
+              <div class="rounded-lg border border-border bg-card-item-bg shadow-sm">
+                <div class="flex items-center justify-between border-b border-border px-2 py-2">
+                <span class="text-xs font-medium text-muted-foreground">Hooks</span>
+                <div class="flex items-center space-x-2">
+                  <button
+                    class="text-xs text-primary hover:underline px-2 py-1"
+                    onClick$={$(() => {
+                      hookFilters.value = hookFilters.value.map((item) => {
+                        item.display = true;
+                        return item;
+                      });
+                      stateTree.value = buildTree().filter((item) =>
+                        hookFilters.value.some(
+                          (hook) => hook.key === item?.label && hook.display,
+                        ),
+                      ) as TreeNode[];
+                    })}
                   >
+                    Select all
+                  </button>
+                  <button
+                    class="text-xs text-muted-foreground hover:text-foreground hover:underline px-2 py-1"
+                    onClick$={$(() => {
+                      hookFilters.value = hookFilters.value.map((item) => {
+                        item.display = false;
+                        return item;
+                      });
+                      stateTree.value = buildTree().filter((item) =>
+                        hookFilters.value.some(
+                          (hook) => hook.key === item?.label && hook.display,
+                        ),
+                      ) as TreeNode[];
+                    })}
+                  >
+                    Clear
+                  </button>
+                  <button
+                    aria-label="toggle hooks"
+                    onClick$={$(() => (hooksOpen.value = !hooksOpen.value))}
+                    class="rounded p-1 text-muted-foreground hover:text-foreground"
+                  >
+                    <HiChevronUpMini
+                      class={`h-4 w-4 transition-transform duration-200 ${
+                        hooksOpen.value ? 'rotate-180' : '-rotate-90'
+                      }`}
+                    />
+                  </button>
+                </div>
+                </div>
+                <div
+                class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3 px-3 py-2 text-sm overflow-hidden"
+                style={{
+                  maxHeight: hooksOpen.value ? '800px' : '0px',
+                  opacity: hooksOpen.value ? '1' : '0',
+                  transition: 'max-height 200ms ease, opacity 200ms ease',
+                }}
+              >
+                {hookFilters.value.map((item, idx) => (
+                  <label key={idx} class="flex items-center">
                     <input
+                      class="h-4 w-4 rounded-full border-border focus:ring-primary-active focus:ring-offset-0 dark:bg-[#1F2937] dark:border-[#374151]"
+                      style={{ accentColor: 'var(--color-primary-active)' }}
                       type="checkbox"
                       checked={item.display}
                       onChange$={(ev) => {
                         const target = ev.target as HTMLInputElement;
-
                         hookFilters.value[idx].display = target.checked;
-
                         stateTree.value = buildTree().filter((item) =>
                           hookFilters.value.some(
                             (hook) => hook.key === item?.label && hook.display,
@@ -190,43 +265,12 @@ export const RenderTree = component$(() => {
                         ) as TreeNode[];
                       }}
                     />
-                    <span>{item.key}</span>
+                    <span class="ml-2 select-none">{item.key}</span>
                   </label>
                 ))}
-                <button
-                  class="ml-auto rounded border border-border px-2 py-1 text-xs"
-                  onClick$={$(() => {
-                    hookFilters.value = hookFilters.value.map((item) => {
-                      item.display = true;
-                      return item;
-                    });
-                    stateTree.value = buildTree().filter((item) =>
-                      hookFilters.value.some(
-                        (hook) => hook.key === item?.label && hook.display,
-                      ),
-                    ) as TreeNode[];
-                  })}
-                >
-                  Select all
-                </button>
-                <button
-                  class="rounded border border-border px-2 py-1 text-xs"
-                  onClick$={$(() => {
-                    hookFilters.value = hookFilters.value.map((item) => {
-                      item.display = false;
-                      return item;
-                    });
-                    stateTree.value = buildTree().filter((item) =>
-                      hookFilters.value.some(
-                        (hook) => hook.key === item?.label && hook.display,
-                      ),
-                    ) as TreeNode[];
-                  })}
-                >
-                  Clear
-                </button>
               </div>
-              <div class="min-h-0 flex-1 overflow-y-auto p-2">
+              </div>
+              <div class="min-h-0 flex-1 overflow-y-auto p-2 mt-4">
                 <Tree
                   data={stateTree}
                   gap={10}
@@ -235,20 +279,23 @@ export const RenderTree = component$(() => {
                   isHover
                   renderNode={$((node) => {
                     const label = node.label || node.name || '';
-                    const isProperty = label.split(':');
-                    return isProperty.length > 1 ? (
-                      <>
-                        <span class="text-red-300 dark:text-red-500">
-                          {isProperty[0]}
-                        </span>
-                        <span class="text-gray-700 dark:text-white">
-                          {' '}
-                          : {isProperty[1]}
-                        </span>
-                      </>
-                    ) : (
-                      <span>{label}</span>
-                    );
+                    const parts = label.split(':');
+                    if (node.children && parts.length === 1) {
+                      return <span class="font-semibold text-pink-400">{label}</span>;
+                    }
+                    if (parts.length > 1) {
+                      const key = parts[0];
+                      const value = parts.slice(1).join(':').trim();
+                      const valueClass = getValueColorClass(node, value);
+                      return (
+                        <>
+                          <span class="text-blue-400">{key}</span>
+                          <span class="text-foreground/70"> : </span>
+                          <span class={valueClass}>{value}</span>
+                        </>
+                      );
+                    }
+                    return <span>{label}</span>;
                   })}
                 ></Tree>
               </div>
@@ -256,11 +303,11 @@ export const RenderTree = component$(() => {
           )}
 
           {currentTab.value === 'code' && (
-            <div class="mt-5 min-h-0 flex-1 overflow-y-auto rounded-lg border  border-border p-2 shadow-sm">
+            <div class="mt-5 min-h-0 flex-1 overflow-y-auto rounded-lg border border-border p-2 shadow-sm">
               {codes.value.map((item, idx) => {
                 return (
                   <>
-                    <div class="mb-4 rounded-xl border border-border bg-background p-4 shadow-lg">
+                    <div class="mb-4 rounded-xl border border-border bg-card-item-bg p-4 shadow-sm hover:bg-card-item-hover-bg transition-colors">
                       <div class="mb-2 break-all text-base font-semibold text-primary">
                         {item.pathId}
                       </div>

@@ -73,27 +73,40 @@ const TreeNodeComponent = component$(
       <div class="w-full">
         <div
           style={{ paddingLeft: `${props.level * props.gap}px` }}
-          class={`flex w-full cursor-pointer items-center rounded-md p-1 transition-colors duration-150 
-                ${
-                  isActive
-                    ? 'bg-primary  text-white '
-                    : 'hover:bg-primary-hover '
-                }`}
+          class={`flex w-full cursor-pointer items-center p-1 ${
+            isActive
+              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/40 font-semibold'
+              : ''
+          }`}
           onClick$={handleNodeClick}
         >
-          {hasChildren ? (
-            <HiChevronUpMini
-              class={`mr-2 h-4 w-4 flex-shrink-0 transition-transform duration-200 ${isExpanded.value ? 'rotate-90' : 'rotate-180'}`}
-            />
-          ) : (
-            <div class="mr-2 w-4 flex-shrink-0"></div>
-          )}
-          <div class="cursor-pointer whitespace-nowrap text-sm">
-            {props.renderNode ? (
-              <>{props.renderNode(props.node)}</>
+          <div
+            class={`inline-flex items-center rounded-md  px-2 py-1`}
+          >
+            {hasChildren ? (
+              <HiChevronUpMini
+                class={`mr-2 h-4 w-4 flex-shrink-0 text-muted-foreground transition-transform duration-200 ${
+                  isExpanded.value ? 'rotate-90' : 'rotate-180'
+                }`}
+              />
             ) : (
-              `<${props.node.label || props.node.name} ${iterateProps(props.node.props! || {})}>`
+              <div class="mr-2 w-4 flex-shrink-0"></div>
             )}
+            <div class="cursor-pointer whitespace-nowrap text-sm">
+              {props.renderNode ? (
+                <>{props.renderNode(props.node)}</>
+              ) : (
+                <>
+                  <span class="text-foreground/70">&lt;</span>
+                  <span class="text-violet-400 dark:text-violet-300">
+                    {props.node.label || props.node.name}
+                  </span>
+                  <span class="text-muted-foreground">
+                    {` ${iterateProps(props.node.props! || {})}`}&gt;
+                  </span>
+                </>
+              )}
+            </div>
           </div>
         </div>
         {hasChildren ? (
