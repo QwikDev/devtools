@@ -2,7 +2,6 @@ import { qwikVite } from '@qwik.dev/core/optimizer';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import pkg from './package.json';
-import { qwikReact } from '@qwik.dev/react/vite';
 import { qwikDevtools } from '@devtools/plugin';
 import { createRequire } from 'module';
 const { dependencies = {}, peerDependencies = {} } = pkg as any;
@@ -46,6 +45,6 @@ export default defineConfig(() => {
         ],
       },
     },
-    plugins: [qwikVite(), tsconfigPaths(), qwikReact(), qwikDevtools()],
+    plugins: [qwikVite(), tsconfigPaths(), qwikDevtools()],
   };
 });
