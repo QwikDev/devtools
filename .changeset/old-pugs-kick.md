@@ -1,5 +1,5 @@
 ---
-'@qwik.dev/devtools': major
+'@qwik.dev/devtools': minor
 ---
 
-feat: integrate vite-plugin-inspect
+FEAT: integrate vite-plugin-inspect
