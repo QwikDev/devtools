@@ -12,7 +12,7 @@
     "src"
   ],
   "types": "./dist/index.d.ts",
-  "private": false,
+  "private": true,
   "type": "module",
   "scripts": {
     "build": "tsdown "
