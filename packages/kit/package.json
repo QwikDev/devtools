@@ -1,6 +1,5 @@
 {
   "name": "@devtools/kit",
-  "version": "1.0.1",
   "description": "Qwik devtools package",
   "main": "./src/index.ts",
   "exports": {
