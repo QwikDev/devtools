@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.1
+
+### Patch Changes
+
+- d89480c: FEAT: test release process
+
 ## 0.2.0
 
 ### Minor Changes
