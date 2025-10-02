@@ -8,7 +8,7 @@
     "build": "tsx scripts/build-devtools.ts",
     "change": "changeset",
     "release": "changeset version",
-    "release.pkg-pr-new": "cd package/devtools && pnpm dlx pkg-pr-new publish"
+    "release.pkg-pr-new": "cd packages/devtools && pnpm dlx pkg-pr-new publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
