@@ -1,6 +1,6 @@
 {
   "name": "@qwik.dev/devtools",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "./dist/plugin/index.mjs",
   "description": "Qwik devtools package",
@@ -32,7 +32,7 @@
     "oxc-parser": "^0.82.1",
     "superjson": "^2.2.2",
     "vite-hot-client": "^0.2.4",
-    "vite-plugin-inspect":"^11.0.0"
+    "vite-plugin-inspect": "^11.0.0"
   },
   "type": "module",
   "devDependencies": {
