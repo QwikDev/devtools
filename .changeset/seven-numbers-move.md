@@ -1,5 +1,5 @@
 ---
-'@qwik.dev/devtools': patch
+'@qwik.dev/devtools': minor
 ---
 
 FEAT: new devtool version
