@@ -1,19 +1,5 @@
 # @qwik.dev/devtools
 
-## 0.2.1
-
-### Patch Changes
-
-- d89480c: FEAT: test release process
-
-## 0.2.0
-
-### Minor Changes
-
-- 290452b: FEAT: new devtool version
-- a56f8ef: FEAT: integrate vite-plugin-inspect
-- a9a8688: FEAT: new devtool version
-
 ## 0.1.1
 
 ### Patch Changes
