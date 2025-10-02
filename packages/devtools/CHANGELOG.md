@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.0
+
+### Minor Changes
+
+- d3af90d: FEAT: new UI and features
+
 ## 0.1.1
 
 ### Patch Changes
