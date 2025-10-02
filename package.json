@@ -7,7 +7,7 @@
     "playground": "MODE=dev pnpm --filter playground dev",
     "build": "tsx scripts/build-devtools.ts",
     "change": "changeset",
-    "release": "changeset version",
+    "release": "changeset publish",
     "release.pkg-pr-new": "cd packages/devtools && pnpm dlx pkg-pr-new publish"
   },
   "devDependencies": {
