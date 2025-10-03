@@ -19,7 +19,7 @@
     "tsx": "^4.19.2",
     "vitest": "^3.2.4"
   },
-  "private": true,
+  "private": false,
   "keywords": [
     "qwik",
     "devtools",
