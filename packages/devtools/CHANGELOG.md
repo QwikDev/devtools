@@ -4,6 +4,12 @@
 
 ### Minor Changes
 
+- 981a2c3: FEAT: new UI new features
+
+## 0.2.0
+
+### Minor Changes
+
 - d3af90d: FEAT: new UI and features
 
 ## 0.1.1
