@@ -4,11 +4,13 @@ import { createServerRpc, setViteServerContext, VIRTUAL_QWIK_DEVTOOLS_KEY, INNER
 import VueInspector from 'vite-plugin-inspect'
 import useCollectHooksSource from './utils/useCollectHooks'
 import { parseQwikCode } from './parse/parse';
+import { startPreloading } from './npm/index';
 
 
 export function qwikDevtools(): Plugin[] {
   let _config: ResolvedConfig;
   const qwikData = new Map<string, any>();
+  let preloadStarted = false;
   const qwikDevtoolsPlugin: Plugin = {
     name: 'vite-plugin-qwik-devtools',
     apply: 'serve',
@@ -39,6 +41,14 @@ export function qwikDevtools(): Plugin[] {
     },
     configResolved(viteConfig) {
       _config = viteConfig;
+      
+      // Start preloading as early as possible, right after config is resolved
+      if (!preloadStarted) {
+        preloadStarted = true;
+        startPreloading({ config: _config }).catch((err) => {
+          console.error('[Qwik DevTools] Failed to start preloading:', err);
+        });
+      }
     }, 
     transform: {
       order: 'pre',
@@ -88,6 +98,8 @@ export function qwikDevtools(): Plugin[] {
       const rpcFunctions = getServerFunctions({ server, config: _config, qwikData });
 
       createServerRpc(rpcFunctions);
+      
+      // Preloading should have already started in configResolved
     },
   }
   return [

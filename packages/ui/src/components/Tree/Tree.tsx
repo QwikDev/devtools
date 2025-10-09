@@ -75,14 +75,12 @@ const TreeNodeComponent = component$(
           style={{ paddingLeft: `${props.level * props.gap}px` }}
           class={`flex w-full cursor-pointer items-center p-1 ${
             isActive
-              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/40 font-semibold'
+              ? 'border border-emerald-300 bg-emerald-100 font-semibold text-emerald-700 dark:border-emerald-700/40 dark:bg-emerald-900/30 dark:text-emerald-300'
               : ''
           }`}
           onClick$={handleNodeClick}
         >
-          <div
-            class={`inline-flex items-center rounded-md  px-2 py-1`}
-          >
+          <div class={`inline-flex items-center rounded-md  px-2 py-1`}>
             {hasChildren ? (
               <HiChevronUpMini
                 class={`mr-2 h-4 w-4 flex-shrink-0 text-muted-foreground transition-transform duration-200 ${

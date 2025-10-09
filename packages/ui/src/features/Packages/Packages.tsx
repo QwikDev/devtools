@@ -1,100 +1,51 @@
-import {
-  $,
-  component$,
-  Resource,
-  useResource$,
-  useSignal,
-} from '@qwik.dev/core';
-import { useDebouncer } from '../../hooks/useDebouncer';
+import { component$ } from '@qwik.dev/core';
 import { Package } from './types';
-import { InstallButton } from './components/InstallButton/InstallButton';
+import { DependencyCard } from './components/DependencyCard';
+import { State } from '../../types/state';
 
-export const Packages = component$(() => {
-  const debouncedQuery = useSignal('');
-  const installingPackage = useSignal<string | null>(null);
+interface PackagesProps {
+  state: State;
+}
 
-  const debounceSearch = useDebouncer(
-    $((value: string) => {
-      debouncedQuery.value = value;
-    }),
-    300,
-  );
+export const Packages = component$(({ state }: PackagesProps) => {
+  const packages = state.allDependencies as Package[];
+  const isLoading = state.isLoadingDependencies;
 
-  const searchResults = useResource$<Package[]>(async ({ track }) => {
-    const query = track(() => debouncedQuery.value);
-
-    if (!query || query.length < 2) {
-      return [] as Package[];
-    }
-
-    const response = await fetch(
-      `https://registry.npmjs.org/-/v1/search?text=${query}`,
+  if (isLoading) {
+    return (
+      <div class="flex items-center justify-center py-8">
+        <div class="flex flex-col items-center gap-3">
+          <div class="flex items-center gap-2">
+            <div class="border-t-foreground/40 animate-spin h-5 w-5 rounded-full border-2 border-border" />
+            <span class="text-sm text-muted-foreground">
+              Loading dependencies...
+            </span>
+          </div>
+          <div class="text-center text-xs text-muted-foreground">
+            Dependencies are being preloaded in the background...
+            <br />
+            This should only take a moment
+          </div>
+        </div>
+      </div>
     );
-    const data = await response.json();
-    const packages: Package[] = data.objects.map((obj: any) => ({
-      name: obj.package.name,
-      version: obj.package.version,
-      description: obj.package.description || 'No description available',
-    }));
-    return packages;
-  });
+  }
+
+  if (!packages || packages.length === 0) {
+    return (
+      <div class="py-8 text-center">
+        <div class="text-sm text-muted-foreground">
+          No dependencies found in package.json
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div class="space-y-4">
-      <div class="relative">
-        <input
-          type="text"
-          onInput$={(_, target) => {
-            debounceSearch(target.value);
-          }}
-          placeholder="Search npm packages..."
-          class="w-full rounded-lg border border-border bg-input px-4 py-2 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-ring"
-        />
-      </div>
-
-      <Resource
-        value={searchResults}
-        onPending={() => (
-          <div class="absolute right-3 top-1">
-            <div class="border-t-foreground/40 animate-spin h-5 w-5 rounded-full border-2 border-border" />
-          </div>
-        )}
-        onRejected={(error) => (
-          <div class="mt-2 text-xs text-red-400">
-            {error.message || 'Failed to fetch packages'}
-          </div>
-        )}
-        onResolved={(packages) => {
-          return (
-            <div class="grid gap-3 md:grid-cols-2">
-              {packages.map((pkg) => {
-                return (
-                  <div
-                    key={pkg.name}
-                    class="bg-foreground/5 flex flex-col gap-2 rounded-lg p-3"
-                  >
-                    <div class="flex items-center justify-between">
-                      <div class="text-sm">{pkg.name}</div>
-                      <div class="flex items-center gap-2">
-                        <div class="bg-foreground/5 rounded-full border border-border px-2 py-1 text-xs text-muted-foreground">
-                          {pkg.version}
-                        </div>
-                        <InstallButton
-                          pkg={pkg}
-                          installingPackage={installingPackage}
-                        />
-                      </div>
-                    </div>
-                    <div class="line-clamp-2 text-xs text-muted-foreground">
-                      {pkg.description}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        }}
-      />
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {packages.map((pkg) => (
+        <DependencyCard key={pkg.name} pkg={pkg} />
+      ))}
     </div>
   );
 });

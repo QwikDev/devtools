@@ -18,4 +18,6 @@ export interface State {
   assets: AssetInfo[];
   components: Component[];
   routes: NoSerialize<RoutesInfo[]>;
+  allDependencies: any[];
+  isLoadingDependencies: boolean;
 }

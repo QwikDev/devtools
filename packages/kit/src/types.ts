@@ -13,6 +13,7 @@ export interface ServerFunctions {
   getComponents: () => Promise<Component[]>;
   getRoutes: () => any;
   getQwikPackages: () => Promise<[string, string][]>;
+  getAllDependencies: () => Promise<any[]>;
   installPackage: (
     packageName: string,
     isDev?: boolean,

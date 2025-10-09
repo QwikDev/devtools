@@ -6,6 +6,13 @@ import {
   QRL_KEY,
 } from '@devtools/kit';
 
+// Extend Window interface to include QWIK_DEVTOOLS_GLOBAL_STATE
+declare global {
+  interface Window {
+    QWIK_DEVTOOLS_GLOBAL_STATE?: Record<string, ParsedStructure[]>;
+  }
+}
+
 // Q:SEQ has all data that includs hook and state, so we can use it to ingore inner hook and custom hook
 export const findInnerHook = (allSeq: Record<any, any>[]) => {
   return allSeq.filter(isInnerHook);
@@ -18,16 +25,14 @@ const isInnerHook = (seq: Record<any, any>) => {
 };
 
 export const getQwikState = (qrl: string) => {
-  //@ts-ignore
-  const stateKeyPath = Object.keys(window.QWIK_DEVTOOLS_GLOBAL_STATE)?.find(
+  const stateKeyPath = Object.keys(window.QWIK_DEVTOOLS_GLOBAL_STATE || {})?.find(
     (key) => key.endsWith(qrl!),
   );
 
   return (
-    (
-      //@ts-ignore
-      window.QWIK_DEVTOOLS_GLOBAL_STATE?.[stateKeyPath] as ParsedStructure[]
-    )?.filter((item) => !!item.data) || []
+    stateKeyPath
+      ? (window.QWIK_DEVTOOLS_GLOBAL_STATE?.[stateKeyPath] as ParsedStructure[])?.filter((item) => !!item.data) || []
+      : []
   );
 };
 
