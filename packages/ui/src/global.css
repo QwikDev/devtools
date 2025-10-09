@@ -1,10 +1,29 @@
 /**
- * Tailwind CSS imports
+ * Tailwind CSS imports (v4)
  * View the full documentation at https://tailwindcss.com
  */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@custom-variant dark (&:where(:root[data-theme="dark"] &));
+
+@theme {
+  /* default (light) tokens; can be overridden by :root rules below */
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-primary: #10b981;
+  --color-primary-hover: #f2f2f2;
+  --color-primary-active: #047857;
+  --color-secondary: #6b7280;
+  --color-muted: #9ca3af;
+  --color-muted-foreground: #6b7280;
+  --color-accent: #10b981;
+  --color-border: #e5e7eb;
+  --color-input: #e5e7eb;
+  --color-ring: #10b981;
+  --color-card: #f2f2f2;
+  --color-card-item-bg: rgba(0, 0, 0, 0.02);
+  --color-card-item-hover-bg: rgba(0, 0, 0, 0.03);
+}
 
 :root {
   --theme-name: 'light';
@@ -15,7 +34,7 @@
   --color-primary-active: #047857; /* green-700 */
   --color-secondary: #6b7280; /* Tailwind's secondary.light */
   --color-border: #e5e7eb;
-  --color-card: #f3f4f6;
+  --color-card: #f2f2f2;
 
   /* Specific variables based on existing CSS (light theme equivalents) */
 
@@ -33,6 +52,7 @@
 
   /* Tailwind semantic variables */
   --color-muted: #9ca3af; /* Similar to existing --color-text-subtle */
+  --color-muted-foreground: #6b7280;
   --color-accent: #10b981; /* Green accent */
   --color-input: var(--color-border); /* Alias to border */
   --color-ring: var(--color-primary); /* Alias to primary */
