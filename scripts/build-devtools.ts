@@ -15,6 +15,13 @@ rmSync(DIST_PATH, { recursive: true, force: true });
 // Ensure dist directory exists
 mkdirSync(DIST_PATH, { recursive: true });
 
+// Build plugin
+console.log('Building plugin...');
+execSync('pnpm build', {
+  cwd: PLUGIN_PATH,
+  stdio: 'inherit',
+});
+
 // Build devtools ui
 console.log('Building devtools...');
 execSync('pnpm build', {
@@ -29,13 +36,6 @@ cpSync(join(UI_PATH, 'lib'), join(DIST_PATH, 'ui'), {
 });
 cpSync(join(UI_PATH, 'lib-types'), join(DIST_PATH, 'ui', 'lib-types'), {
   recursive: true,
-});
-
-// Build plugin
-console.log('Building plugin...');
-execSync('pnpm build', {
-  cwd: PLUGIN_PATH,
-  stdio: 'inherit',
 });
 
 console.log('Copying plugin files to dist...');

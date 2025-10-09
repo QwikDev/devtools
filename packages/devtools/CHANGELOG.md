@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.0
+
+### Minor Changes
+
+- 99a81b1: FEAT: new UI and features
+
 ## 0.1.1
 
 ### Patch Changes

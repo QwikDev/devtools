@@ -1,6 +1,5 @@
 {
   "name": "@devtools/ui",
-  "version": "1.1.0",
   "description": "Qwik devtools package",
   "main": "./lib/index.qwik.mjs",
   "exports": {
@@ -16,7 +15,7 @@
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
-  "private": false,
+  "private": true,
   "type": "module",
   "scripts": {
     "build": "qwik build",
