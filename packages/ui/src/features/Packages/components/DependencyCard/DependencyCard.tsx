@@ -79,7 +79,7 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
         </p>
 
         {/* Divider */}
-        <div class="border-border/30 border-t" />
+        <div class="border-border border-t" />
 
         {/* Footer with author and links */}
         <div class="flex items-center justify-between gap-3">

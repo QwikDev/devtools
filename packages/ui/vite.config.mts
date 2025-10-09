@@ -4,6 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import pkg from './package.json';
 import { qwikDevtools } from '@devtools/plugin';
 import { createRequire } from 'module';
+import tailwindcss from '@tailwindcss/vite';
 const { dependencies = {}, peerDependencies = {} } = pkg as any;
 const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
 const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
@@ -45,6 +46,6 @@ export default defineConfig(() => {
         ],
       },
     },
-    plugins: [qwikVite(), tsconfigPaths(), qwikDevtools()],
+    plugins: [qwikVite(), tsconfigPaths(), qwikDevtools(), tailwindcss()],
   };
 });
