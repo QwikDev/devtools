@@ -1,6 +1,5 @@
 {
   "name": "@devtools/kit",
-  "version": "1.0.1",
   "description": "Qwik devtools package",
   "main": "./src/index.ts",
   "exports": {
@@ -12,7 +11,7 @@
     "src"
   ],
   "types": "./dist/index.d.ts",
-  "private": false,
+  "private": true,
   "type": "module",
   "scripts": {
     "build": "tsdown "
