@@ -19,7 +19,6 @@ import {
   createClientRpc,
   getViteClientRpc,
   setViteClientContext,
-  type NpmInfo,
   type RoutesInfo,
   RouteType,
 } from '@devtools/kit';
@@ -54,6 +53,8 @@ export const QwikDevtools = component$(() => {
     assets: [],
     components: [],
     routes: undefined,
+    allDependencies: [],
+    isLoadingDependencies: false,
   });
 
   useVisibleTask$(async ({ track }) => {
@@ -66,39 +67,54 @@ export const QwikDevtools = component$(() => {
     setViteClientContext(hot);
     createClientRpc(getClientRpcFunctions());
 
+    // Start loading data immediately in background
+    // Dependencies are already being preloaded on the server side
+    const rpc = getViteClientRpc();
+    state.isLoadingDependencies = true;
+
+    // Preload all data in parallel immediately
+    Promise.all([
+      rpc.getAssetsFromPublicDir(),
+      rpc.getComponents(),
+      rpc.getRoutes(),
+      rpc.getQwikPackages(),
+      rpc.getAllDependencies(), // This returns server-preloaded data instantly
+    ])
+      .then(([assets, components, routes, qwikPackages, allDeps]) => {
+        state.assets = assets;
+        state.components = components;
+
+        const children: RoutesInfo[] = routes?.children || [];
+        const directories: RoutesInfo[] = children.filter(
+          (child) => child.type === 'directory',
+        );
+
+        const values: RoutesInfo[] = [
+          {
+            relativePath: '',
+            name: 'index',
+            type: RouteType.DIRECTORY,
+            path: '',
+            isSymbolicLink: false,
+            children: undefined,
+          },
+          ...directories,
+        ];
+
+        state.routes = noSerialize(values);
+        state.npmPackages = qwikPackages;
+        state.allDependencies = allDeps;
+        state.isLoadingDependencies = false;
+      })
+      .catch((error) => {
+        console.error('Failed to load devtools data:', error);
+        state.isLoadingDependencies = false;
+      });
+
+    // Track devtools open state for other purposes if needed
     track(() => {
       if (state.isOpen.value) {
-        const rpc = getViteClientRpc();
-        rpc.getAssetsFromPublicDir().then((data) => {
-          state.assets = data;
-        });
-        rpc.getComponents().then((data) => {
-          state.components = data;
-        });
-        rpc.getRoutes().then((data: RoutesInfo) => {
-          const children: RoutesInfo[] = data?.children || [];
-          const directories: RoutesInfo[] = children.filter(
-            (child) => child.type === 'directory',
-          );
-
-          const values: RoutesInfo[] = [
-            {
-              relativePath: '',
-              name: 'index',
-              type: RouteType.DIRECTORY,
-              path: '',
-              isSymbolicLink: false,
-              children: undefined,
-            },
-            ...directories,
-          ];
-
-          state.routes = noSerialize(values);
-        });
-
-        rpc.getQwikPackages().then((data: NpmInfo) => {
-          state.npmPackages = data;
-        });
+        // Devtools is now open, data should already be loaded or loading
       }
     });
   });
@@ -174,8 +190,8 @@ export const QwikDevtools = component$(() => {
               )}
               {state.activeTab === 'packages' && (
                 <TabContent>
-                  <TabTitle title="Install an npm package" q:slot="title" />
-                  <Packages q:slot="content" />
+                  <TabTitle title="Project Dependencies" q:slot="title" />
+                  <Packages state={state} q:slot="content" />
                 </TabContent>
               )}
               {state.activeTab === 'routes' && (

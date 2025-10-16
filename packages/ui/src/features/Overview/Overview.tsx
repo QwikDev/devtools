@@ -19,7 +19,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
       <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
         <div
           onClick$={[$(() => pageJump('routes')), stopPropagation]}
-          class="flex cursor-pointer items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+           class="flex cursor-pointer items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
         >
           <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
             <LuFolderTree class="h-6 w-6 text-accent" />
@@ -59,7 +59,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
 
       <div
         onClick$={[$(() => pageJump('packages')), stopPropagation]}
-        class="cursor-pointer space-y-4 rounded-xl border border-border bg-card-item-bg p-5 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+        class="cursor-pointer space-y-4 rounded-xl border border-border bg-card-item-bg p-5 hover:-translate-y-0.5 hover:bg-card-item-hover-bg mt-6 md:mt-6"
       >
         <h3 class="text-lg font-semibold">Installed Packages</h3>
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -77,7 +77,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
         </div>
       </div>
 
-      <div class="space-y-4 rounded-xl border border-border bg-card-item-bg p-5">
+      <div class="space-y-4 rounded-xl border border-border bg-card-item-bg p-5 mt-6 md:mt-6">
         <h3 class="text-lg font-semibold">Performance</h3>
         <div class="space-y-3">
           <div class="flex justify-between border-b border-border py-2">

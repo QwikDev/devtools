@@ -7,7 +7,9 @@ export const TabContent = component$(() => {
         <Slot name="title" />
       </div>
 
-      <Slot name="content" />
+      <div class="flex-1 overflow-y-auto pb-6">
+        <Slot name="content" />
+      </div>
     </div>
   );
 });
