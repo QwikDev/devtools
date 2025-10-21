@@ -9,7 +9,8 @@ export type TabName =
   | 'assets'
   | 'components'
   | 'inspect'
-  | 'renderTree';
+  | 'renderTree'
+  | 'codeBreack';
 
 export interface State {
   isOpen: Signal<boolean>;
