@@ -1,5 +1,5 @@
 ---
-'@qwik.dev/devtools': major
+'@qwik.dev/devtools': patch
 ---
 
-update package versions and add CodeBreack feature
+chore: update package versions and add CodeBreack feature
