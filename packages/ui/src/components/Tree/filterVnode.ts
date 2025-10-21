@@ -2,11 +2,8 @@ import {
   _ElementVNode,
   _VirtualVNode,
   _VNode,
-  _vnode_getAttr,
   _vnode_getAttrKeys,
   _vnode_getFirstChild,
-  _vnode_getNextSibling,
-  _vnode_getProps,
   _vnode_isMaterialized,
   _vnode_isVirtualVNode,
   QRL,
@@ -70,10 +67,8 @@ function buildTreeRecursive(
 
           const value = container.getHostProp(currentVNode!, key) as QRL;
           // Update the underlying VNode props array and the new object's props.
-          _vnode_getProps(currentVNode!)[
-            _vnode_getProps(currentVNode!).indexOf(key) + 1
-          ] = value;
-          vnodeObject.props![key] = _vnode_getAttr(currentVNode!, key);
+          currentVNode?.setProp(key, value);
+          vnodeObject.props![key] = currentVNode?.getAttr(key);
 
           // Special handling to set the label from the render function's symbol.
           if (key === QRENDERFN) {
@@ -106,7 +101,7 @@ function buildTreeRecursive(
     }
 
     // Move to the next sibling in the tree.
-    currentVNode = _vnode_getNextSibling(currentVNode);
+    currentVNode = currentVNode.nextSibling as _VNode | null;
   }
 
   return result;

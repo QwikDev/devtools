@@ -12,6 +12,8 @@ import {
   HiPhotoOutline,
   HiMegaphoneMini,
   HiCubeOutline,
+
+  HiCodeBracketSolid
 } from '@qwikest/icons/heroicons';
 import { BsDiagram3 } from '@qwikest/icons/bootstrap';
 import { LuFolderTree } from '@qwikest/icons/lucide';
@@ -38,6 +40,7 @@ import { Packages } from './features/Packages/Packages';
 import { Inspect } from './features/inspect/Inspect';
 import { ThemeToggle } from './components/ThemeToggle/ThemeToggle';
 import { ThemeScript } from './components/ThemeToggle/theme-script';
+import { CodeBreack } from './features/CodeBreack/CodeBreack';
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -146,7 +149,9 @@ export const QwikDevtools = component$(() => {
               <Tab state={state} id="inspect" title="inspect">
                 <HiMegaphoneMini class="h-5 w-5" />
               </Tab>
-
+              <Tab state={state} id="codeBreack" title="codeBreack">
+                < HiCodeBracketSolid class="h-5 w-5" />
+              </Tab>
               <div class="mt-auto">
                 <ThemeToggle />
               </div>
@@ -209,6 +214,12 @@ export const QwikDevtools = component$(() => {
                 <TabContent>
                   <TabTitle title="render Tree" q:slot="title" />
                   <RenderTree q:slot="content" />
+                </TabContent>
+              )}
+              {state.activeTab === 'codeBreack' && (
+                <TabContent>
+                  <TabTitle title="codeBreack" q:slot="title" />
+                  <CodeBreack q:slot="content" />
                 </TabContent>
               )}
             </div>

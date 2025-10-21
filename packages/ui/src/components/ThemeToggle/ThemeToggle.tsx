@@ -37,10 +37,8 @@ export const ThemeToggle = component$(() => {
       currentTheme = 'light';
     } else if (currentTheme === 'light') {
       currentTheme = 'auto';
-    } else {
-      currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'light'
-        : 'dark';
+    } else if (currentTheme === 'auto') {
+      currentTheme = 'dark';
     }
     setTheme(currentTheme);
   });
