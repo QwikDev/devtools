@@ -39,7 +39,7 @@ import { DevtoolsPanel } from './components/DevtoolsPanel/DevtoolsPanel';
 import { Packages } from './features/Packages/Packages';
 import { Inspect } from './features/inspect/Inspect';
 import { ThemeToggle } from './components/ThemeToggle/ThemeToggle';
-import { ThemeScript } from './components/ThemeToggle/theme-script';
+import { ThemeScript as QwikThemeScript } from './components/ThemeToggle/theme-script';
 import { CodeBreack } from './features/CodeBreack/CodeBreack';
 function getClientRpcFunctions() {
   return {
@@ -124,7 +124,7 @@ export const QwikDevtools = component$(() => {
 
   return (
     <>
-      <ThemeScript />
+      <QwikThemeScript />
       <DevtoolsContainer>
         <DevtoolsButton state={state} />
 
