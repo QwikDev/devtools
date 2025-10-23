@@ -1,5 +1,12 @@
 # @qwik.dev/devtools
 
+## 0.2.1
+
+### Patch Changes
+
+- 0dc1be6: fix: update type definitions and improve theme script import in devtools
+- 321b929: chore: update package versions and add CodeBreack feature
+
 ## 0.2.0
 
 ### Minor Changes
