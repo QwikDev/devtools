@@ -5,6 +5,7 @@ import VueInspector from 'vite-plugin-inspect'
 import useCollectHooksSource from './utils/useCollectHooks'
 import { parseQwikCode } from './parse/parse';
 import { startPreloading } from './npm/index';
+import updateConf from './utils/updateConf';
 
 
 export function qwikDevtools(): Plugin[] {
@@ -41,7 +42,7 @@ export function qwikDevtools(): Plugin[] {
     },
     configResolved(viteConfig) {
       _config = viteConfig;
-      
+      updateConf(_config);
       // Start preloading as early as possible, right after config is resolved
       if (!preloadStarted) {
         preloadStarted = true;

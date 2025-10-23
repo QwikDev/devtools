@@ -13,7 +13,7 @@
     "./ui": {
       "import": "./dist/ui/index.qwik.mjs",
       "require": "./dist/ui/index.qwik.cjs",
-      "types": "./dist/ui/lib-types/index.d.ts"
+      "types": "./dist/ui/lib-types/ui/src/index.d.ts"
     }
   },
   "files": [
