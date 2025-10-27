@@ -1,6 +1,6 @@
 {
   "name": "@qwik.dev/devtools",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "main": "./dist/plugin/index.mjs",
   "description": "Qwik devtools package",
@@ -14,7 +14,6 @@
       "import": "./dist/ui/index.qwik.mjs",
       "types": "./dist/ui/lib-types/ui/src/index.d.ts",
       "style": "./dist/ui/style.css"
-      
     },
     "./style": {
       "import": "./dist/ui/theme.css"
