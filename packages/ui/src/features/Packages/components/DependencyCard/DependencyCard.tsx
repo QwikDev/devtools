@@ -48,13 +48,13 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
 
           <div class="min-w-0 flex-1">
             <h3
-              class="mb-1.5 cursor-pointer truncate text-base font-bold text-foreground transition-colors hover:text-primary"
+              class="text-foreground hover:text-primary mb-1.5 cursor-pointer truncate text-base font-bold transition-colors"
               onClick$={handlePackageClick}
               title={pkg.name}
             >
               {pkg.name}
             </h3>
-            <span class="bg-primary/10 border-primary/20 inline-flex items-center gap-1 rounded-md border px-2.5 py-0.5 text-xs font-medium text-primary">
+            <span class="bg-primary/10 border-primary/20 text-primary inline-flex items-center gap-1 rounded-md border px-2.5 py-0.5 text-xs font-medium">
               <svg
                 class="h-3 w-3"
                 fill="none"
@@ -74,7 +74,7 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
         </div>
 
         {/* Description */}
-        <p class="line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed text-muted-foreground">
+        <p class="text-muted-foreground line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed">
           {pkg.description || 'No description available'}
         </p>
 
@@ -91,7 +91,7 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
                 onClick$={handleAuthorClick}
                 title={`Contact ${pkg.author.name}`}
               >
-                <span class="text-[10px] font-semibold text-accent">
+                <span class="text-accent text-[10px] font-semibold">
                   {pkg.author.name
                     .split(' ')
                     .map((n) => n.charAt(0))
@@ -100,8 +100,8 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
                     .toUpperCase()}
                 </span>
               </div>
-              <span class="truncate text-xs text-muted-foreground">
-                <span class="font-medium text-foreground">
+              <span class="text-muted-foreground truncate text-xs">
+                <span class="text-foreground font-medium">
                   {pkg.author.name}
                 </span>
               </span>
@@ -115,7 +115,7 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
             {pkg.homepage && (
               <button
                 onClick$={handleHomepageClick}
-                class="hover:bg-primary/10 group/btn rounded-lg p-1.5 text-muted-foreground transition-all duration-200 hover:text-primary"
+                class="hover:bg-primary/10 group/btn text-muted-foreground hover:text-primary rounded-lg p-1.5 transition-all duration-200"
                 title="Homepage"
               >
                 <svg
@@ -136,7 +136,7 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
             {pkg.repository && (
               <button
                 onClick$={handleRepositoryClick}
-                class="hover:bg-primary/10 group/btn rounded-lg p-1.5 text-muted-foreground transition-all duration-200 hover:text-primary"
+                class="hover:bg-primary/10 group/btn text-muted-foreground hover:text-primary rounded-lg p-1.5 transition-all duration-200"
                 title="Repository"
               >
                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
@@ -147,7 +147,7 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
             {pkg.npmUrl && (
               <button
                 onClick$={handlePackageClick}
-                class="hover:bg-primary/10 group/btn rounded-lg p-1.5 text-muted-foreground transition-all duration-200 hover:text-primary"
+                class="hover:bg-primary/10 group/btn text-muted-foreground hover:text-primary rounded-lg p-1.5 transition-all duration-200"
                 title="npm"
               >
                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">

@@ -30,7 +30,7 @@ export const InstallButton = component$(
       >
         {installingPackage.value === pkg.name ? (
           <div class="flex items-center gap-1">
-            <div class="animate-spin h-3 w-3 rounded-full border border-current border-t-transparent" />
+            <div class="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
             <span>Installing...</span>
           </div>
         ) : (
