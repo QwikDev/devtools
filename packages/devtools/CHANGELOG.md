@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.2
+
+### Patch Changes
+
+- 64805a3: CHORE: add debug log and format
+
 ## 0.2.1
 
 ### Patch Changes
