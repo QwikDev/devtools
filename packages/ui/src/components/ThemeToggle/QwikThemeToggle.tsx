@@ -29,7 +29,7 @@ export const setTheme = (theme: ThemeName) => {
   localStorage.setItem(themeStorageKey, theme);
 };
 
-export const ThemeToggle = component$(() => {
+export const QwikThemeToggle = component$(() => {
   useStyles$(themeTogglecss);
   const onClick$ = event$(() => {
     let currentTheme = getTheme();
@@ -37,10 +37,8 @@ export const ThemeToggle = component$(() => {
       currentTheme = 'light';
     } else if (currentTheme === 'light') {
       currentTheme = 'auto';
-    } else {
-      currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'light'
-        : 'dark';
+    } else if (currentTheme === 'auto') {
+      currentTheme = 'dark';
     }
     setTheme(currentTheme);
   });

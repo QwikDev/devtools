@@ -5,6 +5,7 @@ import VueInspector from 'vite-plugin-inspect'
 import useCollectHooksSource from './utils/useCollectHooks'
 import { parseQwikCode } from './parse/parse';
 import { startPreloading } from './npm/index';
+import updateConf from './utils/updateConf';
 
 
 export function qwikDevtools(): Plugin[] {
@@ -35,13 +36,13 @@ export function qwikDevtools(): Plugin[] {
       ) {
         return {
           code: useCollectHooksSource,
-          map: null,
+          map: { mappings: '' },
         };
       }
     },
     configResolved(viteConfig) {
       _config = viteConfig;
-      
+      updateConf(_config);
       // Start preloading as early as possible, right after config is resolved
       if (!preloadStarted) {
         preloadStarted = true;
@@ -57,8 +58,11 @@ export function qwikDevtools(): Plugin[] {
         // Ensure virtual import is present at the very top once when a component$ is present
         if (id.endsWith('.tsx') && code.includes('component$')) {
           if (!code.includes(VIRTUAL_QWIK_DEVTOOLS_KEY)) {
+           
             const importLine = `import { ${INNER_USE_HOOK} } from '${VIRTUAL_QWIK_DEVTOOLS_KEY}';\n`
             code = importLine + code
+          }else {
+            console.log('importing virtual qwik devtools', VIRTUAL_QWIK_DEVTOOLS_KEY, code);
           }
           code = parseQwikCode(code, {path: id})
         }
@@ -88,7 +92,7 @@ export function qwikDevtools(): Plugin[] {
 
        return {
           code,
-          map: null,
+          map: { mappings: '' },
         };
       },
     },

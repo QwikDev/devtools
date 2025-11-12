@@ -5,6 +5,8 @@ import {
   $,
   useSignal,
   useStyles$,
+  useResource$,
+  Resource,
 } from '@qwik.dev/core';
 import { Tree, TreeNode } from '../../components/Tree/Tree';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
@@ -79,19 +81,16 @@ export const RenderTree = component$(() => {
     }
   });
 
-  const highlightedCodes = useSignal<string[]>([]);
-
-  useVisibleTask$(async ({ track }) => {
+  const highlightedCodesResource = useResource$(async ({ track }) => {
     track(() => codes.value);
     if (!codes.value.length) {
-      highlightedCodes.value = [];
-      return;
+      return [] as string[];
     }
     const highlighter = await createHighlighter({
-      themes: ['nord'], // v1+ requires array
+      themes: ['nord'],
       langs: ['tsx', 'js', 'ts', 'jsx'],
     });
-    highlightedCodes.value = codes.value.map((item) => {
+    return codes.value.map((item) => {
       let lang = 'tsx';
       if (item.pathId.endsWith('.js')) lang = 'js';
       if (item.pathId.endsWith('.ts')) lang = 'ts';
@@ -147,6 +146,7 @@ export const RenderTree = component$(() => {
     codes.value = [];
 
     const res = await rpc?.getModulesByPathIds(findAllQrl());
+    console.log('res', res);
     codes.value = res.filter((item) => item.modules);
     stateTree.value = buildTree() as TreeNode[];
     hookFilters.value = getHookFilterList();
@@ -309,23 +309,27 @@ export const RenderTree = component$(() => {
 
           {currentTab.value === 'code' && (
             <div class="mt-5 min-h-0 flex-1 overflow-y-auto rounded-lg border border-border p-2 shadow-sm">
-              {codes.value.map((item, idx) => {
-                return (
+              <Resource
+                value={highlightedCodesResource}
+                onPending={() => <div class="p-2 text-sm text-muted-foreground">Loading code highlights…</div>}
+                onResolved={(highlighted) => (
                   <>
-                    <div class="mb-4 rounded-xl border border-border bg-card-item-bg p-4 shadow-sm transition-colors hover:bg-card-item-hover-bg">
-                      <div class="mb-2 break-all text-base font-semibold text-primary">
-                        {item.pathId}
-                      </div>
-                      <pre
-                        class="overflow-hidden"
-                        dangerouslySetInnerHTML={
-                          highlightedCodes.value[idx] || ''
-                        }
-                      />
-                    </div>
+                    {codes.value.map((item, idx) => (
+                      <>
+                        <div class="mb-4 rounded-xl border border-border bg-card-item-bg p-4 shadow-sm transition-colors hover:bg-card-item-hover-bg">
+                          <div class="mb-2 break-all text-base font-semibold text-primary">
+                            {item.pathId}
+                          </div>
+                          <pre
+                            class="overflow-hidden"
+                            dangerouslySetInnerHTML={highlighted[idx] || ''}
+                          />
+                        </div>
+                      </>
+                    ))}
                   </>
-                );
-              })}
+                )}
+              />
             </div>
           )}
         </div>

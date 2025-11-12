@@ -1,6 +1,6 @@
 {
   "name": "@qwik.dev/devtools",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "main": "./dist/plugin/index.mjs",
   "description": "Qwik devtools package",
@@ -12,8 +12,11 @@
     },
     "./ui": {
       "import": "./dist/ui/index.qwik.mjs",
-      "require": "./dist/ui/index.qwik.cjs",
-      "types": "./dist/ui/lib-types/index.d.ts"
+      "types": "./dist/ui/lib-types/ui/src/index.d.ts",
+      "style": "./dist/ui/style.css"
+    },
+    "./style": {
+      "import": "./dist/ui/theme.css"
     }
   },
   "files": [
@@ -21,9 +24,12 @@
     "README.md"
   ],
   "peerDependencies": {
-    "@qwik.dev/core": "2.0.0-beta.9",
-    "@qwik.dev/router": "2.0.0-beta.9",
-    "vite": "7.1.3"
+    "@qwik.dev/core": "2.0.0-beta.11",
+    "@qwik.dev/router": "2.0.0-beta.11",
+    "vite": "7.1.3",
+    "@tailwindcss/postcss": "^4.1.14",
+    "@tailwindcss/vite": "^4.1.14",
+    "tailwindcss": "^4.1.14"
   },
   "dependencies": {
     "@qwikest/icons": "^0.0.13",

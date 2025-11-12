@@ -12,6 +12,8 @@ import {
   HiPhotoOutline,
   HiMegaphoneMini,
   HiCubeOutline,
+
+  HiCodeBracketSolid
 } from '@qwikest/icons/heroicons';
 import { BsDiagram3 } from '@qwikest/icons/bootstrap';
 import { LuFolderTree } from '@qwikest/icons/lucide';
@@ -36,8 +38,9 @@ import { DevtoolsContainer } from './components/DevtoolsContainer/DevtoolsContai
 import { DevtoolsPanel } from './components/DevtoolsPanel/DevtoolsPanel';
 import { Packages } from './features/Packages/Packages';
 import { Inspect } from './features/inspect/Inspect';
-import { ThemeToggle } from './components/ThemeToggle/ThemeToggle';
-import { ThemeScript } from './components/ThemeToggle/theme-script';
+import { QwikThemeToggle } from './components/ThemeToggle/QwikThemeToggle';
+import { ThemeScript as QwikThemeScript } from './components/ThemeToggle/theme-script';
+import { CodeBreack } from './features/CodeBreack/CodeBreack';
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -57,71 +60,102 @@ export const QwikDevtools = component$(() => {
     isLoadingDependencies: false,
   });
 
-  useVisibleTask$(async ({ track }) => {
-    const hot = await tryCreateHotContext(undefined, ['/']);
+  const clientReady = useSignal(false);
 
+  useVisibleTask$(async () => {
+    const hot = await tryCreateHotContext(undefined, ['/']);
     if (!hot) {
       throw new Error('Vite Hot Context not connected');
     }
 
     setViteClientContext(hot);
     createClientRpc(getClientRpcFunctions());
+    clientReady.value = true;
+  });
 
-    // Start loading data immediately in background
-    // Dependencies are already being preloaded on the server side
+  useVisibleTask$(async ({ track }) => {
+    track(() => clientReady.value);
+    if (!clientReady.value) return;
+    const rpc = getViteClientRpc();
+    try {
+      const assets = await rpc.getAssetsFromPublicDir();
+      state.assets = assets;
+    } catch (error) {
+      console.error('Failed to load assets:', error);
+    }
+  });
+
+  useVisibleTask$(async ({ track }) => {
+    track(() => clientReady.value);
+    if (!clientReady.value) return;
+    const rpc = getViteClientRpc();
+    try {
+      const components = await rpc.getComponents();
+      state.components = components;
+    } catch (error) {
+      console.error('Failed to load components:', error);
+    }
+  });
+
+  useVisibleTask$(async ({ track }) => {
+    track(() => clientReady.value);
+    if (!clientReady.value) return;
+    const rpc = getViteClientRpc();
+    try {
+      const routes = await rpc.getRoutes();
+      const children: RoutesInfo[] = routes?.children || [];
+      const directories: RoutesInfo[] = children.filter(
+        (child) => child.type === 'directory',
+      );
+
+      const values: RoutesInfo[] = [
+        {
+          relativePath: '',
+          name: 'index',
+          type: RouteType.DIRECTORY,
+          path: '',
+          isSymbolicLink: false,
+          children: undefined,
+        },
+        ...directories,
+      ];
+
+      state.routes = noSerialize(values);
+    } catch (error) {
+      console.error('Failed to load routes:', error);
+    }
+  });
+
+  useVisibleTask$(async ({ track }) => {
+    track(() => clientReady.value);
+    if (!clientReady.value) return;
+    const rpc = getViteClientRpc();
+    try {
+      const qwikPackages = await rpc.getQwikPackages();
+      state.npmPackages = qwikPackages;
+    } catch (error) {
+      console.error('Failed to load Qwik packages:', error);
+    }
+  });
+
+  useVisibleTask$(async ({ track }) => {
+    track(() => clientReady.value);
+    if (!clientReady.value) return;
     const rpc = getViteClientRpc();
     state.isLoadingDependencies = true;
-
-    // Preload all data in parallel immediately
-    Promise.all([
-      rpc.getAssetsFromPublicDir(),
-      rpc.getComponents(),
-      rpc.getRoutes(),
-      rpc.getQwikPackages(),
-      rpc.getAllDependencies(), // This returns server-preloaded data instantly
-    ])
-      .then(([assets, components, routes, qwikPackages, allDeps]) => {
-        state.assets = assets;
-        state.components = components;
-
-        const children: RoutesInfo[] = routes?.children || [];
-        const directories: RoutesInfo[] = children.filter(
-          (child) => child.type === 'directory',
-        );
-
-        const values: RoutesInfo[] = [
-          {
-            relativePath: '',
-            name: 'index',
-            type: RouteType.DIRECTORY,
-            path: '',
-            isSymbolicLink: false,
-            children: undefined,
-          },
-          ...directories,
-        ];
-
-        state.routes = noSerialize(values);
-        state.npmPackages = qwikPackages;
-        state.allDependencies = allDeps;
-        state.isLoadingDependencies = false;
-      })
-      .catch((error) => {
-        console.error('Failed to load devtools data:', error);
-        state.isLoadingDependencies = false;
-      });
-
-    // Track devtools open state for other purposes if needed
-    track(() => {
-      if (state.isOpen.value) {
-        // Devtools is now open, data should already be loaded or loading
-      }
-    });
+    try {
+      const allDeps = await rpc.getAllDependencies();
+      state.allDependencies = allDeps;
+    } catch (error) {
+      console.error('Failed to load all dependencies:', error);
+    } finally {
+      state.isLoadingDependencies = false;
+    }
   });
 
   return (
     <>
-      <ThemeScript />
+      <QwikThemeScript />
       <DevtoolsContainer>
         <DevtoolsButton state={state} />
 
@@ -146,9 +180,11 @@ export const QwikDevtools = component$(() => {
               <Tab state={state} id="inspect" title="inspect">
                 <HiMegaphoneMini class="h-5 w-5" />
               </Tab>
-
+              <Tab state={state} id="codeBreack" title="codeBreack">
+                < HiCodeBracketSolid class="h-5 w-5" />
+              </Tab>
               <div class="mt-auto">
-                <ThemeToggle />
+                <QwikThemeToggle />
               </div>
             </div>
 
@@ -209,6 +245,12 @@ export const QwikDevtools = component$(() => {
                 <TabContent>
                   <TabTitle title="render Tree" q:slot="title" />
                   <RenderTree q:slot="content" />
+                </TabContent>
+              )}
+              {state.activeTab === 'codeBreack' && (
+                <TabContent>
+                  <TabTitle title="codeBreack" q:slot="title" />
+                  <CodeBreack q:slot="content" />
                 </TabContent>
               )}
             </div>

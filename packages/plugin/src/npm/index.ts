@@ -34,6 +34,35 @@ function setCachedPackage(name: string, data: any): void {
   });
 }
 
+async function findNearestFileUp(startDir: string, fileName: string): Promise<string | null> {
+  try {
+    let currentDir = path.resolve(startDir);
+    // Guard against infinite loops by capping directory ascents
+    for (let i = 0; i < 100; i++) {
+      const candidate = path.join(currentDir, fileName);
+      const exists = await fsp
+        .access(candidate)
+        .then(() => true)
+        .catch(() => false);
+      if (exists) return candidate;
+
+      const parent = path.dirname(currentDir);
+      if (parent === currentDir) break;
+      currentDir = parent;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function getProjectStartDirFromConfig(config: any): string {
+  // Prefer Vite's resolved root; fallback to the directory of the config file; finally cwd
+  if (config?.root) return config.root;
+  if (config?.configFile) return path.dirname(config.configFile);
+  return process.cwd();
+}
+
 export async function detectPackageManager(
   projectRoot: string,
 ): Promise<'npm' | 'pnpm' | 'yarn'> {
@@ -84,9 +113,8 @@ const preloadDependencies = async (config: any): Promise<any[]> => {
   console.log('[Qwik DevTools] Starting to preload dependencies...');
   
   preloadPromise = (async () => {
-    const pathToPackageJson = config.configFileDependencies.find(
-      (file: string) => file.endsWith('package.json'),
-    );
+    const startDir = getProjectStartDirFromConfig(config);
+    const pathToPackageJson = await findNearestFileUp(startDir, 'package.json');
     
     if (!pathToPackageJson) {
       preloadedDependencies = [];
@@ -259,9 +287,8 @@ export async function startPreloading({ config }: { config: any }) {
 export function getNpmFunctions({ config }: ServerContext) {
   return {
     async getQwikPackages(): Promise<NpmInfo> {
-      const pathToPackageJson = config.configFileDependencies.find(
-        (file: string) => file.endsWith('package.json'),
-      );
+      const startDir = getProjectStartDirFromConfig(config);
+      const pathToPackageJson = await findNearestFileUp(startDir, 'package.json');
       if (!pathToPackageJson) return [];
 
       try {
@@ -298,7 +325,9 @@ export function getNpmFunctions({ config }: ServerContext) {
       isDev = true,
     ): Promise<{ success: boolean; error?: string }> {
       try {
-        const projectRoot = path.dirname(config.configFileDependencies[0]);
+        const startDir = getProjectStartDirFromConfig(config);
+        const pathToPackageJson = await findNearestFileUp(startDir, 'package.json');
+        const projectRoot = pathToPackageJson ? path.dirname(pathToPackageJson) : startDir;
         const pm = await detectPackageManager(projectRoot);
         const devFlag = isDev ? (pm === 'npm' ? '--save-dev' : '-D') : '';
 
