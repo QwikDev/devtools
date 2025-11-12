@@ -47,7 +47,7 @@ export const QwikThemeToggle = component$(() => {
     <>
       <button
         onClick$={onClick$}
-        class="group relative flex h-8 w-8 items-center justify-center rounded-md bg-background text-foreground hover:opacity-60"
+        class="bg-background text-foreground group relative flex h-8 w-8 items-center justify-center rounded-md hover:opacity-60"
       >
         <div class="absolute inset-0 grid place-items-center transition-transform duration-200 ease-out group-hover:scale-110 group-active:scale-75">
           <HiSunOutline class="themeIcon light col-start-1 row-start-1" />

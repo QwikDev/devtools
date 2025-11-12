@@ -83,7 +83,7 @@ const TreeNodeComponent = component$(
           <div class={`inline-flex items-center rounded-md  px-2 py-1`}>
             {hasChildren ? (
               <HiChevronUpMini
-                class={`mr-2 h-4 w-4 flex-shrink-0 text-muted-foreground transition-transform duration-200 ${
+                class={`text-muted-foreground mr-2 h-4 w-4 flex-shrink-0 transition-transform duration-200 ${
                   isExpanded.value ? 'rotate-90' : 'rotate-180'
                 }`}
               />

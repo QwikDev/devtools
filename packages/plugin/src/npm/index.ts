@@ -3,7 +3,9 @@ import fsp from 'node:fs/promises';
 import { NpmInfo } from '@devtools/kit';
 import { execSync } from 'child_process';
 import path from 'path';
+import {debug} from 'debug'
 
+const log = debug('qwik:devtools:npm');
 // In-memory cache for npm package information
 interface CacheEntry {
   data: any;
@@ -100,17 +102,17 @@ export async function detectPackageManager(
 // Preload dependencies function - moved to module scope
 const preloadDependencies = async (config: any): Promise<any[]> => {
   if (preloadedDependencies) {
-    console.log('[Qwik DevTools] Dependencies already preloaded');
+    log('[Qwik DevTools] Dependencies already preloaded');
     return preloadedDependencies;
   }
 
   if (isPreloading && preloadPromise) {
-    console.log('[Qwik DevTools] Preloading already in progress...');
+    log('[Qwik DevTools] Preloading already in progress...');
     return preloadPromise;
   }
 
   isPreloading = true;
-  console.log('[Qwik DevTools] Starting to preload dependencies...');
+  log('[Qwik DevTools] Starting to preload dependencies...');
   
   preloadPromise = (async () => {
     const startDir = getProjectStartDirFromConfig(config);
@@ -119,7 +121,7 @@ const preloadDependencies = async (config: any): Promise<any[]> => {
     if (!pathToPackageJson) {
       preloadedDependencies = [];
       isPreloading = false;
-      console.log('[Qwik DevTools] No package.json found');
+      log('[Qwik DevTools] No package.json found');
       return [];
     }
 
@@ -163,7 +165,7 @@ const preloadDependencies = async (config: any): Promise<any[]> => {
 
         const fetchedPackages: any[] = [];
         
-        console.log(`[Qwik DevTools] Fetching ${uncachedDependencies.length} packages in parallel...`);
+        log(`[Qwik DevTools] Fetching ${uncachedDependencies.length} packages in parallel...`);
         
         const allBatchPromises = batches.map(async (batch) => {
           const batchPromises = batch.map(async ([name, version]) => {
@@ -253,11 +255,11 @@ const preloadDependencies = async (config: any): Promise<any[]> => {
         preloadedDependencies = allPackages;
         isPreloading = false;
         
-        console.log(`[Qwik DevTools] ✓ Successfully preloaded ${allPackages.length} dependencies`);
+        log(`[Qwik DevTools] ✓ Successfully preloaded ${allPackages.length} dependencies`);
         
         return allPackages;
       } catch (error) {
-        console.error('[Qwik DevTools] ✗ Failed to preload dependencies:', error);
+        log('[Qwik DevTools] ✗ Failed to preload dependencies:', error);
         preloadedDependencies = [];
         isPreloading = false;
         return [];
@@ -270,14 +272,14 @@ const preloadDependencies = async (config: any): Promise<any[]> => {
 // Export function to start preloading from plugin initialization
 export async function startPreloading({ config }: { config: any }) {
   const startTime = Date.now();
-  console.log('[Qwik DevTools] 🚀 Initiating dependency preload (background)...');
+  log('[Qwik DevTools] 🚀 Initiating dependency preload (background)...');
   
   // Start preloading in background, don't wait for it
   preloadDependencies(config).then(() => {
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    console.log(`[Qwik DevTools] ⚡ Preload completed in ${duration}s`);
+    log(`[Qwik DevTools] ⚡ Preload completed in ${duration}s`);
   }).catch((err) => {
-    console.error('[Qwik DevTools] ✗ Preload failed:', err);
+    log('[Qwik DevTools] ✗ Preload failed:', err);
   });
   
   // Return immediately, don't block
@@ -305,18 +307,18 @@ export function getNpmFunctions({ config }: ServerContext) {
     async getAllDependencies(): Promise<any[]> {
       // Return preloaded data immediately if available
       if (preloadedDependencies) {
-        console.log('[Qwik DevTools] Returning preloaded dependencies');
+        log('[Qwik DevTools] Returning preloaded dependencies');
         return preloadedDependencies;
       }
 
       // If preloading is in progress, wait for it
       if (isPreloading && preloadPromise) {
-        console.log('[Qwik DevTools] Waiting for preload to complete...');
+        log('[Qwik DevTools] Waiting for preload to complete...');
         return preloadPromise;
       }
 
       // If preloading hasn't started (shouldn't happen), start it now
-      console.log('[Qwik DevTools] Warning: Preload not started, starting now...');
+      log('[Qwik DevTools] Warning: Preload not started, starting now...');
       return preloadDependencies(config);
     },
 

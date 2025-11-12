@@ -25,15 +25,15 @@ const isInnerHook = (seq: Record<any, any>) => {
 };
 
 export const getQwikState = (qrl: string) => {
-  const stateKeyPath = Object.keys(window.QWIK_DEVTOOLS_GLOBAL_STATE || {})?.find(
-    (key) => key.endsWith(qrl!),
-  );
+  const stateKeyPath = Object.keys(
+    window.QWIK_DEVTOOLS_GLOBAL_STATE || {},
+  )?.find((key) => key.endsWith(qrl!));
 
-  return (
-    stateKeyPath
-      ? (window.QWIK_DEVTOOLS_GLOBAL_STATE?.[stateKeyPath] as ParsedStructure[])?.filter((item) => !!item.data) || []
-      : []
-  );
+  return stateKeyPath
+    ? (
+        window.QWIK_DEVTOOLS_GLOBAL_STATE?.[stateKeyPath] as ParsedStructure[]
+      )?.filter((item) => !!item.data) || []
+    : [];
 };
 
 export const returnQrlData = (seqs: Record<any, any>) => {

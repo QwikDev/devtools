@@ -14,6 +14,7 @@ import { htmlContainer } from '../../utils/location';
 import { ISDEVTOOL } from '../../components/Tree/type';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
 import { isListen } from '../../utils/type';
+import debug from 'debug';
 import {
   findAllQrl,
   formatData,
@@ -34,6 +35,8 @@ import {
 import { createHighlighter } from 'shiki';
 import { getQwikState, returnQrlData } from './data';
 import { HiChevronUpMini } from '@qwikest/icons/heroicons';
+
+const log = debug('qwik:devtools:renderTree');
 
 function getValueColorClass(node: TreeNode, valueText: string): string {
   switch (node.elementType) {
@@ -76,7 +79,7 @@ export const RenderTree = component$(() => {
     try {
       return htmlContainer();
     } catch (error) {
-      console.error(error);
+      log('get html container failed: %O', error);
       return null;
     }
   });
@@ -112,7 +115,7 @@ export const RenderTree = component$(() => {
   });
 
   const onNodeClick = $(async (node: TreeNode) => {
-    console.log('current node', node);
+    log(' current node clicked: %O', node);
     const rpc = getViteClientRpc();
     let parsed: ParsedStructure[] = [];
 
@@ -146,7 +149,7 @@ export const RenderTree = component$(() => {
     codes.value = [];
 
     const res = await rpc?.getModulesByPathIds(findAllQrl());
-    console.log('res', res);
+    log('getModulesByPathIds return: %O', res);
     codes.value = res.filter((item) => item.modules);
     stateTree.value = buildTree() as TreeNode[];
     hookFilters.value = getHookFilterList();
@@ -155,15 +158,15 @@ export const RenderTree = component$(() => {
   const currentTab = useSignal<'state' | 'code'>('state');
 
   return (
-    <div class="h-full w-full flex-1 overflow-hidden rounded-md border border-border bg-background">
+    <div class="border-border bg-background h-full w-full flex-1 overflow-hidden rounded-md border">
       <div class="flex h-full w-full">
         <div class="w-1/2 overflow-hidden p-4" style={{ minWidth: '400px' }}>
           <Tree data={data} onNodeClick={onNodeClick}></Tree>
         </div>
-        <div class="border-l border-border"></div>
+        <div class="border-border border-l"></div>
         <div class="flex h-full min-h-0 w-1/2 flex-col overflow-hidden p-4">
-          <div class="border-b border-border">
-            <div class="flex space-x-4 border-b border-border">
+          <div class="border-border border-b">
+            <div class="border-border flex space-x-4 border-b">
               <button
                 onClick$={() => (currentTab.value = 'state')}
                 style={
@@ -171,7 +174,7 @@ export const RenderTree = component$(() => {
                     ? { borderBottom: '2px solid var(--color-primary-active)' }
                     : {}
                 }
-                class="border-b-2 border-b-transparent px-4 py-3 text-sm font-medium text-muted-foreground transition-all duration-300 ease-in-out hover:text-foreground"
+                class="text-muted-foreground hover:text-foreground border-b-2 border-b-transparent px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out"
               >
                 State
               </button>
@@ -182,7 +185,7 @@ export const RenderTree = component$(() => {
                     ? { borderBottom: '2px solid var(--color-primary-active)' }
                     : {}
                 }
-                class="border-b-2 border-b-transparent px-4 py-3 text-sm font-medium text-muted-foreground transition-all duration-300 ease-in-out hover:text-foreground"
+                class="text-muted-foreground hover:text-foreground border-b-2 border-b-transparent px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out"
               >
                 Code
               </button>
@@ -191,14 +194,14 @@ export const RenderTree = component$(() => {
 
           {currentTab.value === 'state' && (
             <div class="mt-5 flex min-h-0 flex-1 flex-col">
-              <div class="rounded-lg border border-border bg-card-item-bg shadow-sm">
-                <div class="flex items-center justify-between border-b border-border px-2 py-2">
-                  <span class="text-xs font-medium text-muted-foreground">
+              <div class="border-border bg-card-item-bg rounded-lg border shadow-sm">
+                <div class="border-border flex items-center justify-between border-b px-2 py-2">
+                  <span class="text-muted-foreground text-xs font-medium">
                     Hooks
                   </span>
                   <div class="flex items-center space-x-2">
                     <button
-                      class="px-2 py-1 text-xs text-primary hover:underline"
+                      class="text-primary px-2 py-1 text-xs hover:underline"
                       onClick$={$(() => {
                         hookFilters.value = hookFilters.value.map((item) => {
                           item.display = true;
@@ -214,7 +217,7 @@ export const RenderTree = component$(() => {
                       Select all
                     </button>
                     <button
-                      class="px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:underline"
+                      class="text-muted-foreground hover:text-foreground px-2 py-1 text-xs hover:underline"
                       onClick$={$(() => {
                         hookFilters.value = hookFilters.value.map((item) => {
                           item.display = false;
@@ -232,7 +235,7 @@ export const RenderTree = component$(() => {
                     <button
                       aria-label="toggle hooks"
                       onClick$={$(() => (hooksOpen.value = !hooksOpen.value))}
-                      class="rounded p-1 text-muted-foreground hover:text-foreground"
+                      class="text-muted-foreground hover:text-foreground rounded p-1"
                     >
                       <HiChevronUpMini
                         class={`h-4 w-4 transition-transform duration-200 ${
@@ -253,7 +256,7 @@ export const RenderTree = component$(() => {
                   {hookFilters.value.map((item, idx) => (
                     <label key={idx} class="flex items-center">
                       <input
-                        class="h-4 w-4 rounded-full border-border focus:ring-primary-active focus:ring-offset-0 dark:border-[#374151] dark:bg-[#1F2937]"
+                        class="border-border focus:ring-primary-active h-4 w-4 rounded-full focus:ring-offset-0 dark:border-[#374151] dark:bg-[#1F2937]"
                         style={{ accentColor: 'var(--color-primary-active)' }}
                         type="checkbox"
                         checked={item.display}
@@ -308,16 +311,20 @@ export const RenderTree = component$(() => {
           )}
 
           {currentTab.value === 'code' && (
-            <div class="mt-5 min-h-0 flex-1 overflow-y-auto rounded-lg border border-border p-2 shadow-sm">
+            <div class="border-border mt-5 min-h-0 flex-1 overflow-y-auto rounded-lg border p-2 shadow-sm">
               <Resource
                 value={highlightedCodesResource}
-                onPending={() => <div class="p-2 text-sm text-muted-foreground">Loading code highlights…</div>}
+                onPending={() => (
+                  <div class="text-muted-foreground p-2 text-sm">
+                    Loading code highlights…
+                  </div>
+                )}
                 onResolved={(highlighted) => (
                   <>
                     {codes.value.map((item, idx) => (
                       <>
-                        <div class="mb-4 rounded-xl border border-border bg-card-item-bg p-4 shadow-sm transition-colors hover:bg-card-item-hover-bg">
-                          <div class="mb-2 break-all text-base font-semibold text-primary">
+                        <div class="border-border bg-card-item-bg hover:bg-card-item-hover-bg mb-4 rounded-xl border p-4 shadow-sm transition-colors">
+                          <div class="text-primary mb-2 break-all text-base font-semibold">
                             {item.pathId}
                           </div>
                           <pre

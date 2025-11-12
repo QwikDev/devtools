@@ -8,7 +8,7 @@ import { inspectorLink } from './constant';
 //@ts-ignore
 export const Inspect = component$(() => {
   return (
-    <div class="flex-1 overflow-hidden">
+    <div class="h-full flex-1 overflow-hidden">
       <iframe
         src={`${location.href}${inspectorLink}`}
         width={'100%'}

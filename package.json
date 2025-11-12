@@ -4,7 +4,7 @@
   "description": "Qwik devtools monorepo",
   "scripts": {
     "dev": "pnpm --filter plugin build && MODE=dev pnpm --parallel dev",
-    "playground": "MODE=dev pnpm --filter playground dev",
+    "playground": "MODE=dev DEBUG=qwik:devtools:* pnpm --filter playground dev",
     "build": "tsx scripts/build-devtools.ts",
     "change": "changeset",
     "release": "changeset publish",
@@ -17,7 +17,9 @@
     "@types/node": "^22.10.5",
     "tsdown": "^0.9.6",
     "tsx": "^4.19.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "debug": "4.4.3",
+    "@types/debug": "4.1.12"
   },
   "private": true,
   "keywords": [

@@ -1,6 +1,9 @@
 import fs from 'node:fs/promises'
 import { parseQwikCode } from "../parse/parse";
 import { ServerContext } from "../types";
+import {debug} from 'debug'
+
+const log = debug('qwik:devtools:inspect');
 const codeStringCache = new Map<string, ReturnType<typeof parseQwikCode>>()
 
 function parseCodeWithCache(code: string) {
@@ -41,7 +44,7 @@ export function getModulesContent(ctx: ServerContext) {
             modules
           };
         } catch (error) {
-          console.log(`Failed to transform request for ${pathId}:`, error);
+          log(`Failed to transform request for ${pathId}:`, error);
           return {
             pathId,
             modules: null,
@@ -98,7 +101,7 @@ export function getModulesContent(ctx: ServerContext) {
 
         return []
       } catch (error) {
-        console.error(`Failed to parse qwik code for ${pathId}:`, error);
+        log(`Failed to parse qwik code for ${pathId}:`, error);
         return []
       }
 

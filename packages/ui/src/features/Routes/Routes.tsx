@@ -7,8 +7,8 @@ interface RoutesProps {
 
 export const Routes = component$(({ state }: RoutesProps) => {
   return (
-    <div class="flex-1 overflow-hidden rounded-xl border border-border">
-      <div class="grid grid-cols-4 gap-4 bg-card-item-bg p-4 text-sm font-medium">
+    <div class="border-border flex-1 overflow-hidden rounded-xl border">
+      <div class="bg-card-item-bg grid grid-cols-4 gap-4 p-4 text-sm font-medium">
         <div>Route Path</div>
         <div>Name</div>
         <div>Middleware</div>
@@ -24,7 +24,7 @@ export const Routes = component$(({ state }: RoutesProps) => {
         return (
           <div
             key={route.relativePath}
-            class="grid grid-cols-4 gap-4 border-t border-border p-4 text-sm hover:bg-card-item-hover-bg"
+            class="border-border hover:bg-card-item-hover-bg grid grid-cols-4 gap-4 border-t p-4 text-sm"
           >
             <div>
               <span

@@ -8,6 +8,9 @@ import {
   ParsedStructure,
   QRL_KEY,
 } from '@devtools/kit';
+import { debug } from 'debug';
+
+const log = debug('qwik:devtools:renderTree');
 
 const schedule = (value: any) => {
   return objectToTree(value);
@@ -272,7 +275,7 @@ export function findAllQrl() {
       }
     });
   });
-  console.log('findAllQrl', result.flat(2).filter(Boolean));
+  log('findAllQrl function return: %O', result.flat(2).filter(Boolean));
   return result.flat(2).filter(Boolean);
 }
 

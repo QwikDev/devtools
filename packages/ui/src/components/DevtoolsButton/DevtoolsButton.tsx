@@ -88,7 +88,7 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     <div
       ref={elementRef}
       class={{
-        'fixed flex h-9 w-9 origin-center select-none items-center justify-center rounded-lg border border-border bg-background backdrop-blur-md':
+        'border-border bg-background fixed flex h-9 w-9 origin-center select-none items-center justify-center rounded-lg border backdrop-blur-md':
           true,
         'border-accent/50 bg-background/95 shadow-accent/35 rotate-90 shadow-lg':
           state.isOpen.value && !isDragging.value,
