@@ -2,4 +2,4 @@
 '@qwik.dev/devtools': patch
 ---
 
-add debug log and format
+CHORE: add debug log and format
