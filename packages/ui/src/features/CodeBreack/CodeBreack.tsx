@@ -22,18 +22,19 @@ export const CodeBreack = component$(() => {
 
   const currentTab = useSignal<ParserTab>('state');
 
-
   return (
-    <div class="space-y-6 h-full overflow-hidden">
+    <div class="h-full space-y-6 overflow-hidden">
       {/* Segmented Navigation */}
       <div class="flex justify-center">
-        <div class="inline-flex rounded-xl border border-border bg-background p-0.5">
+        <div class="border-border bg-background inline-flex rounded-xl border p-0.5">
           <button
             onClick$={() => (currentTab.value = 'state')}
             class={{
-              'px-3 md:px-4 py-2 rounded-lg text-sm font-medium transition-colors': true,
+              'rounded-lg px-3 py-2 text-sm font-medium transition-colors md:px-4':
+                true,
               'bg-accent text-white shadow': currentTab.value === 'state',
-              'text-muted-foreground hover:bg-foreground/5': currentTab.value !== 'state',
+              'text-muted-foreground hover:bg-foreground/5':
+                currentTab.value !== 'state',
             }}
           >
             State Parser
@@ -41,9 +42,11 @@ export const CodeBreack = component$(() => {
           <button
             onClick$={() => (currentTab.value = 'html')}
             class={{
-              'px-3 md:px-4 py-2 rounded-lg text-sm font-medium transition-colors': true,
+              'rounded-lg px-3 py-2 text-sm font-medium transition-colors md:px-4':
+                true,
               'bg-accent text-white shadow': currentTab.value === 'html',
-              'text-muted-foreground hover:bg-foreground/5': currentTab.value !== 'html',
+              'text-muted-foreground hover:bg-foreground/5':
+                currentTab.value !== 'html',
             }}
           >
             HTML Parser

@@ -1,4 +1,10 @@
-import { $, component$, useSignal, useVisibleTask$, useStyles$ } from '@qwik.dev/core';
+import {
+  $,
+  component$,
+  useSignal,
+  useVisibleTask$,
+  useStyles$,
+} from '@qwik.dev/core';
 import { _getDomContainer, _vnode_toString } from '@qwik.dev/core/internal';
 import { createHighlighter } from 'shiki';
 
@@ -37,7 +43,7 @@ export const HtmlParser = component$(() => {
               '',
               true,
               false,
-              false
+              false,
             );
             output += '// VNode Tree:\n' + vdomTree + '\n\n';
           } catch (vnodeErr) {
@@ -67,33 +73,41 @@ export const HtmlParser = component$(() => {
       return;
     }
     if (!shikiRef.value) {
-      shikiRef.value = await createHighlighter({ themes: ['nord'], langs: ['html'] });
+      shikiRef.value = await createHighlighter({
+        themes: ['nord'],
+        langs: ['html'],
+      });
     }
-    highlightedHtml.value = shikiRef.value.codeToHtml(htmlResult.value, { lang: 'html', theme: 'nord' });
+    highlightedHtml.value = shikiRef.value.codeToHtml(htmlResult.value, {
+      lang: 'html',
+      theme: 'nord',
+    });
   });
 
   return (
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <div class="rounded-xl border border-border bg-card-item-bg flex h-[60vh] min-h-0 flex-col">
-        <div class="flex items-center justify-between border-b border-border p-3">
+      <div class="border-border bg-card-item-bg flex h-[60vh] min-h-0 flex-col rounded-xl border">
+        <div class="border-border flex items-center justify-between border-b p-3">
           <div class="text-sm font-medium">Input HTML</div>
           {parsingTime.value !== null && (
-            <span class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
+            <span class="border-border text-muted-foreground rounded-full border px-2 py-0.5 text-xs">
               {parsingTime.value}ms
             </span>
           )}
         </div>
-        <div class="p-3 space-y-3 flex-1 min-h-0 flex-col">
+        <div class="min-h-0 flex-1 flex-col space-y-3 p-3">
           <textarea
             value={inputHtml.value}
-            onInput$={(e, t) => (inputHtml.value = (t as HTMLTextAreaElement).value)}
+            onInput$={(e, t) =>
+              (inputHtml.value = (t as HTMLTextAreaElement).value)
+            }
             placeholder="Paste HTML and click to parse/format."
-            class="h-full min-h-0 w-full flex-1 resize-none rounded-md border border-border bg-background p-3 font-mono text-sm"
+            class="border-border bg-background h-full min-h-0 w-full flex-1 resize-none rounded-md border p-3 font-mono text-sm"
           />
           <div class="flex items-center gap-3">
             <button
               onClick$={onParseHtml$}
-              class="bg-accent hover:opacity-90 rounded-md px-3 py-1.5 text-sm text-white"
+              class="bg-accent rounded-md px-3 py-1.5 text-sm text-white hover:opacity-90"
             >
               Parse HTML
             </button>
@@ -101,21 +115,22 @@ export const HtmlParser = component$(() => {
         </div>
       </div>
 
-      <div class="rounded-xl border border-border bg-card-item-bg overflow-hidden flex h-[60vh] min-h-0 flex-col">
-        <div class="flex items-center justify-between border-b border-border p-3">
+      <div class="border-border bg-card-item-bg flex h-[60vh] min-h-0 flex-col overflow-hidden rounded-xl border">
+        <div class="border-border flex items-center justify-between border-b p-3">
           <div class="text-sm font-medium">VNode Tree</div>
           {parsingTime.value !== null && (
-            <span class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
+            <span class="border-border text-muted-foreground rounded-full border px-2 py-0.5 text-xs">
               {parsingTime.value}ms
             </span>
           )}
         </div>
-        <div class="flex-1 min-h-0 h-full">
-          <pre class="overflow-auto h-full" dangerouslySetInnerHTML={highlightedHtml.value || ''} />
+        <div class="h-full min-h-0 flex-1">
+          <pre
+            class="h-full overflow-auto"
+            dangerouslySetInnerHTML={highlightedHtml.value || ''}
+          />
         </div>
       </div>
     </div>
   );
 });
-
-

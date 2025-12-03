@@ -12,8 +12,7 @@ import {
   HiPhotoOutline,
   HiMegaphoneMini,
   HiCubeOutline,
-
-  HiCodeBracketSolid
+  HiCodeBracketSolid,
 } from '@qwikest/icons/heroicons';
 import { BsDiagram3 } from '@qwikest/icons/bootstrap';
 import { LuFolderTree } from '@qwikest/icons/lucide';
@@ -41,6 +40,9 @@ import { Inspect } from './features/inspect/Inspect';
 import { QwikThemeToggle } from './components/ThemeToggle/QwikThemeToggle';
 import { ThemeScript as QwikThemeScript } from './components/ThemeToggle/theme-script';
 import { CodeBreack } from './features/CodeBreack/CodeBreack';
+import { debug } from 'debug';
+
+const log = debug('qwik:devtools:devtools');
 function getClientRpcFunctions() {
   return {
     healthCheck: () => true,
@@ -81,7 +83,7 @@ export const QwikDevtools = component$(() => {
       const assets = await rpc.getAssetsFromPublicDir();
       state.assets = assets;
     } catch (error) {
-      console.error('Failed to load assets:', error);
+      log('Failed to load assets:', error);
     }
   });
 
@@ -93,7 +95,7 @@ export const QwikDevtools = component$(() => {
       const components = await rpc.getComponents();
       state.components = components;
     } catch (error) {
-      console.error('Failed to load components:', error);
+      log('Failed to load components:', error);
     }
   });
 
@@ -122,7 +124,7 @@ export const QwikDevtools = component$(() => {
 
       state.routes = noSerialize(values);
     } catch (error) {
-      console.error('Failed to load routes:', error);
+      log('Failed to load routes:', error);
     }
   });
 
@@ -134,7 +136,7 @@ export const QwikDevtools = component$(() => {
       const qwikPackages = await rpc.getQwikPackages();
       state.npmPackages = qwikPackages;
     } catch (error) {
-      console.error('Failed to load Qwik packages:', error);
+      log('Failed to load Qwik packages:', error);
     }
   });
 
@@ -147,7 +149,7 @@ export const QwikDevtools = component$(() => {
       const allDeps = await rpc.getAllDependencies();
       state.allDependencies = allDeps;
     } catch (error) {
-      console.error('Failed to load all dependencies:', error);
+      log('Failed to load all dependencies:', error);
     } finally {
       state.isLoadingDependencies = false;
     }
@@ -161,7 +163,7 @@ export const QwikDevtools = component$(() => {
 
         {state.isOpen.value && (
           <DevtoolsPanel state={state}>
-            <div class="bg-background/95 flex flex-col gap-2 border-r border-border p-3">
+            <div class="bg-background/95 border-border flex flex-col gap-2 border-r p-3">
               <Tab state={state} id="overview" title="Overview">
                 <HiBoltOutline class="h-5 w-5" />
               </Tab>
@@ -181,7 +183,7 @@ export const QwikDevtools = component$(() => {
                 <HiMegaphoneMini class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="codeBreack" title="codeBreack">
-                < HiCodeBracketSolid class="h-5 w-5" />
+                <HiCodeBracketSolid class="h-5 w-5" />
               </Tab>
               <div class="mt-auto">
                 <QwikThemeToggle />
@@ -207,7 +209,7 @@ export const QwikDevtools = component$(() => {
               {state.activeTab === 'assets' && (
                 <TabContent>
                   <TabTitle title="Public Assets" q:slot="title" />
-                  <div class="flex gap-4 text-sm text-muted-foreground">
+                  <div class="text-muted-foreground flex gap-4 text-sm">
                     <span>
                       Total Size:{' '}
                       {(

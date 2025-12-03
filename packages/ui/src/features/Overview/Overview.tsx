@@ -19,47 +19,47 @@ export const Overview = component$(({ state }: OverviewProps) => {
       <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
         <div
           onClick$={[$(() => pageJump('routes')), stopPropagation]}
-           class="flex cursor-pointer items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+          class="border-border bg-card-item-bg hover:bg-card-item-hover-bg flex cursor-pointer items-center gap-5 rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5"
         >
-          <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
-            <LuFolderTree class="h-6 w-6 text-accent" />
+          <div class="bg-foreground/5 border-border rounded-lg border p-3.5">
+            <LuFolderTree class="text-accent h-6 w-6" />
           </div>
           <div>
             <div class="text-3xl font-semibold">{state.routes?.length}</div>
-            <div class="text-sm text-muted-foreground">pages</div>
+            <div class="text-muted-foreground text-sm">pages</div>
           </div>
         </div>
 
         <div
           onClick$={[$(() => pageJump('components')), stopPropagation]}
-          class="flex cursor-pointer items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+          class="border-border bg-card-item-bg hover:bg-card-item-hover-bg flex cursor-pointer items-center gap-5 rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5"
         >
-          <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
-            <HiCubeOutline class="h-6 w-6 text-accent" />
+          <div class="bg-foreground/5 border-border rounded-lg border p-3.5">
+            <HiCubeOutline class="text-accent h-6 w-6" />
           </div>
           <div>
             <div class="text-3xl font-semibold">{state.components.length}</div>
-            <div class="text-sm text-muted-foreground">components</div>
+            <div class="text-muted-foreground text-sm">components</div>
           </div>
         </div>
 
         <div
           onClick$={[$(() => pageJump('assets')), stopPropagation]}
-          class="flex cursor-pointer items-center gap-5 rounded-xl border border-border bg-card-item-bg p-5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-card-item-hover-bg"
+          class="border-border bg-card-item-bg hover:bg-card-item-hover-bg flex cursor-pointer items-center gap-5 rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5"
         >
-          <div class="bg-foreground/5 rounded-lg border border-border p-3.5">
-            <HiPhotoOutline class="h-6 w-6 text-accent" />
+          <div class="bg-foreground/5 border-border rounded-lg border p-3.5">
+            <HiPhotoOutline class="text-accent h-6 w-6" />
           </div>
           <div>
             <div class="text-3xl font-semibold">{state.assets.length || 0}</div>
-            <div class="text-sm text-muted-foreground">assets</div>
+            <div class="text-muted-foreground text-sm">assets</div>
           </div>
         </div>
       </div>
 
       <div
         onClick$={[$(() => pageJump('packages')), stopPropagation]}
-        class="cursor-pointer space-y-4 rounded-xl border border-border bg-card-item-bg p-5 hover:-translate-y-0.5 hover:bg-card-item-hover-bg mt-6 md:mt-6"
+        class="border-border bg-card-item-bg hover:bg-card-item-hover-bg mt-6 cursor-pointer space-y-4 rounded-xl border p-5 hover:-translate-y-0.5 md:mt-6"
       >
         <h3 class="text-lg font-semibold">Installed Packages</h3>
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -69,7 +69,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
               class="bg-foreground/5 flex items-center justify-between rounded-lg p-3"
             >
               <div class="text-sm">{name}</div>
-              <div class="bg-foreground/5 rounded-full border border-border px-2 py-1 text-xs text-muted-foreground">
+              <div class="bg-foreground/5 border-border text-muted-foreground rounded-full border px-2 py-1 text-xs">
                 {version}
               </div>
             </div>
@@ -77,14 +77,14 @@ export const Overview = component$(({ state }: OverviewProps) => {
         </div>
       </div>
 
-      <div class="space-y-4 rounded-xl border border-border bg-card-item-bg p-5 mt-6 md:mt-6">
+      <div class="border-border bg-card-item-bg mt-6 space-y-4 rounded-xl border p-5 md:mt-6">
         <h3 class="text-lg font-semibold">Performance</h3>
         <div class="space-y-3">
-          <div class="flex justify-between border-b border-border py-2">
+          <div class="border-border flex justify-between border-b py-2">
             <span class="text-muted-foreground">SSR to full load</span>
             <span class="font-medium">-</span>
           </div>
-          <div class="flex justify-between border-b border-border py-2">
+          <div class="border-border flex justify-between border-b py-2">
             <span class="text-muted-foreground">Page load</span>
             <span class="font-medium">-</span>
           </div>

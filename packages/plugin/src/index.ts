@@ -6,8 +6,9 @@ import useCollectHooksSource from './utils/useCollectHooks'
 import { parseQwikCode } from './parse/parse';
 import { startPreloading } from './npm/index';
 import updateConf from './utils/updateConf';
+import {debug} from 'debug'
 
-
+const log = debug('qwik:devtools:plugin');
 export function qwikDevtools(): Plugin[] {
   let _config: ResolvedConfig;
   const qwikData = new Map<string, any>();
@@ -47,7 +48,7 @@ export function qwikDevtools(): Plugin[] {
       if (!preloadStarted) {
         preloadStarted = true;
         startPreloading({ config: _config }).catch((err) => {
-          console.error('[Qwik DevTools] Failed to start preloading:', err);
+          log('[Qwik DevTools] Failed to start preloading:', err);
         });
       }
     }, 
@@ -62,7 +63,7 @@ export function qwikDevtools(): Plugin[] {
             const importLine = `import { ${INNER_USE_HOOK} } from '${VIRTUAL_QWIK_DEVTOOLS_KEY}';\n`
             code = importLine + code
           }else {
-            console.log('importing virtual qwik devtools', VIRTUAL_QWIK_DEVTOOLS_KEY, code);
+            log('importing virtual qwik devtools', VIRTUAL_QWIK_DEVTOOLS_KEY, code);
           }
           code = parseQwikCode(code, {path: id})
         }

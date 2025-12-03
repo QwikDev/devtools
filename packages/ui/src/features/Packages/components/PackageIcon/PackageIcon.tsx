@@ -20,7 +20,7 @@ export const PackageIcon = component$(
     // Show fallback if no icon URL or icon failed to load
     if (!iconUrl || iconError.value) {
       return (
-        <span class="text-sm font-bold text-primary">{fallbackInitial}</span>
+        <span class="text-primary text-sm font-bold">{fallbackInitial}</span>
       );
     }
 

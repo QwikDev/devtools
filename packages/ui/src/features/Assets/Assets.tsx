@@ -15,7 +15,7 @@ export const Assets = component$(({ state }: AssetsProps) => {
         return (
           <div
             key={asset.filePath}
-            class="overflow-hidden rounded-xl border border-border bg-card-item-bg transition-all duration-200 hover:bg-card-item-hover-bg"
+            class="border-border bg-card-item-bg hover:bg-card-item-hover-bg overflow-hidden rounded-xl border transition-all duration-200"
           >
             {isImage ? (
               <div class="aspect-square overflow-hidden bg-black/20">
@@ -29,7 +29,7 @@ export const Assets = component$(({ state }: AssetsProps) => {
               </div>
             ) : (
               <div class="flex aspect-square items-center justify-center bg-black/20">
-                <span class="font-mono text-2xl text-muted-foreground">
+                <span class="text-muted-foreground font-mono text-2xl">
                   {fileExt}
                 </span>
               </div>
@@ -38,7 +38,7 @@ export const Assets = component$(({ state }: AssetsProps) => {
               <div class="truncate text-sm" title={asset.path}>
                 {asset.path.split('/').pop()}
               </div>
-              <div class="flex items-center justify-between text-xs text-muted-foreground">
+              <div class="text-muted-foreground flex items-center justify-between text-xs">
                 <span>{(asset.size / 1024).toFixed(2)} KB</span>
                 <span class="bg-foreground/5 rounded-full px-2 py-1">
                   {fileExt}
