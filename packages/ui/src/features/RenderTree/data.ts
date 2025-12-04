@@ -1,10 +1,10 @@
 import {
-  CHUNK_KEY,
   COMPUTED_QRL_KEY,
   INNER_USE_HOOK,
-  ParsedStructure,
   QRL_KEY,
 } from '@devtools/kit';
+import type { ParsedStructure } from '@devtools/kit';
+import type { QRLInternal } from './types';
 
 // Extend Window interface to include QWIK_DEVTOOLS_GLOBAL_STATE
 declare global {
@@ -13,44 +13,77 @@ declare global {
   }
 }
 
-// Q:SEQ has all data that includs hook and state, so we can use it to ingore inner hook and custom hook
-export const findInnerHook = (allSeq: Record<any, any>[]) => {
-  return allSeq.filter(isInnerHook);
-};
+/**
+ * Sequence entry from Qwik's q:seq containing QRL references.
+ * Can have either $qrl$ (for tasks) or $computeQrl$ (for computed).
+ */
+interface QSeqEntry {
+  [QRL_KEY]?: QRLInternal;
+  [COMPUTED_QRL_KEY]?: QRLInternal;
+}
 
-const isInnerHook = (seq: Record<any, any>) => {
-  return !(seq[QRL_KEY] || seq[COMPUTED_QRL_KEY])?.[CHUNK_KEY].includes(
-    INNER_USE_HOOK,
+/**
+ * Check if a sequence entry is a user-defined hook (not internal devtools hook)
+ */
+function isUserDefinedHook(seq: QSeqEntry): boolean {
+  const qrl = seq[QRL_KEY] ?? seq[COMPUTED_QRL_KEY];
+  const chunkPath = qrl?.$chunk$ ?? '';
+  return !chunkPath.includes(INNER_USE_HOOK);
+}
+
+/**
+ * Filter sequence data to only include user-defined hooks
+ * (excludes internal devtools hooks like useCollectHooks)
+ */
+export function filterUserDefinedHooks(allSeq: QSeqEntry[]): QSeqEntry[] {
+  return allSeq.filter(isUserDefinedHook);
+}
+
+/**
+ * Get parsed structure from global devtools state by QRL chunk name
+ */
+export function getQwikState(qrlChunkName: string): ParsedStructure[] {
+  const globalState = window.QWIK_DEVTOOLS_GLOBAL_STATE ?? {};
+  const matchingKey = Object.keys(globalState).find((key) =>
+    key.endsWith(qrlChunkName),
   );
-};
 
-export const getQwikState = (qrl: string) => {
-  const stateKeyPath = Object.keys(
-    window.QWIK_DEVTOOLS_GLOBAL_STATE || {},
-  )?.find((key) => key.endsWith(qrl!));
+  if (!matchingKey) return [];
 
-  return stateKeyPath
-    ? (
-        window.QWIK_DEVTOOLS_GLOBAL_STATE?.[stateKeyPath] as ParsedStructure[]
-      )?.filter((item) => !!item.data) || []
-    : [];
-};
+  const entries = globalState[matchingKey] ?? [];
+  return entries.filter((item) => item.data !== undefined);
+}
 
-export const returnQrlData = (seqs: Record<any, any>) => {
+/**
+ * Determine hook type from QRL chunk path
+ */
+function getHookTypeFromChunk(
+  chunkPath: string,
+): 'useTask' | 'useVisibleTask' {
+  return chunkPath.includes('useTask') ? 'useTask' : 'useVisibleTask';
+}
+
+/**
+ * Transform QRL sequence data to normalized parsed structure format
+ */
+export function transformQrlSequenceData(seqs: QSeqEntry[]): ParsedStructure[] {
   return seqs
-    .filter(isInnerHook)
-    .filter((item: any) => item[QRL_KEY])
-    .map((item: any) => {
+    .filter(isUserDefinedHook)
+    .filter((item) => item[QRL_KEY])
+    .map((item) => {
+      const qrl = item[QRL_KEY]!;
+      const chunkPath = qrl.$chunk$ ?? '';
+      const hookType = getHookTypeFromChunk(chunkPath);
+
       return {
-        category: 'expressionStatement',
-        data: item[QRL_KEY],
-        hookType: item[QRL_KEY]?.[CHUNK_KEY]?.includes('useTask')
-          ? 'useTask'
-          : 'useVisibleTask',
-        returnType: 'undefined',
-        variableName: item[QRL_KEY]?.[CHUNK_KEY]?.includes('useTask')
-          ? 'useTask'
-          : 'useVisibleTask',
+        category: 'expressionStatement' as const,
+        data: qrl,
+        hookType,
+        variableName: hookType,
       };
     });
-};
+}
+
+// Legacy exports for backward compatibility
+export const findInnerHook = filterUserDefinedHooks;
+export const returnQrlData = transformQrlSequenceData;

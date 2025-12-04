@@ -6,7 +6,7 @@ import {
   useStyles$,
 } from '@qwik.dev/core';
 import { _dumpState, _preprocessState } from '@qwik.dev/core/internal';
-import { createHighlighter } from 'shiki';
+import { getHighlighter } from '../../utils/shiki';
 
 export const StateParser = component$(() => {
   useStyles$(`
@@ -87,10 +87,7 @@ export const StateParser = component$(() => {
       return;
     }
     if (!shikiRef.value) {
-      shikiRef.value = await createHighlighter({
-        themes: ['nord'],
-        langs: ['json'],
-      });
+      shikiRef.value = await getHighlighter();
     }
     highlightedState.value = shikiRef.value.codeToHtml(stateResult.value, {
       lang: 'json',
@@ -112,7 +109,7 @@ export const StateParser = component$(() => {
         <div class="min-h-0 flex-1 flex-col space-y-3 p-3">
           <textarea
             value={inputState.value}
-            onInput$={(e, t) =>
+            onInput$={(e: InputEvent, t: HTMLTextAreaElement) =>
               (inputState.value = (t as HTMLTextAreaElement).value)
             }
             placeholder="Paste Qwik state and click to parse/format."
