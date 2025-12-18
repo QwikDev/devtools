@@ -15,15 +15,7 @@ import { ISDEVTOOL } from '../../components/Tree/type';
 import { removeNodeFromTree } from '../../components/Tree/vnode';
 import { isListen } from '../../utils/type';
 import debug from 'debug';
-import {
-  findAllQrl,
-  formatData,
-  buildTree,
-  clearAll,
-  getHookFilterList,
-  getQrlChunkName,
-} from './formatTreeData';
-import type { QSeqsList } from './formatTreeData';
+import { getHookStore, QrlUtils, type HookType } from './formatTreeData';
 import { unwrapStore } from '@qwik.dev/core/internal';
 import {
   getViteClientRpc,
@@ -32,7 +24,7 @@ import {
   QRENDERFN,
   QSEQ,
 } from '@devtools/kit';
-import { createHighlighter } from 'shiki';
+import { getHighlighter } from '../../utils/shiki';
 import { getQwikState, returnQrlData } from './data';
 import { HiChevronUpMini } from '@qwikest/icons/heroicons';
 
@@ -60,6 +52,7 @@ function getValueColorClass(node: TreeNode, valueText: string): string {
 }
 
 export const RenderTree = component$(() => {
+  const hookStore = useSignal(getHookStore());
   useStyles$(`
     pre.shiki {
       overflow: auto;
@@ -72,7 +65,7 @@ export const RenderTree = component$(() => {
   const data = useSignal<TreeNode[]>([]);
 
   const stateTree = useSignal<TreeNode[]>([]);
-  const hookFilters = useSignal<{ key: QSeqsList; display: boolean }[]>([]);
+  const hookFilters = useSignal<{ key: HookType; display: boolean }[]>([]);
   const hooksOpen = useSignal(true);
 
   const qwikContainer = useComputed$(() => {
@@ -89,10 +82,7 @@ export const RenderTree = component$(() => {
     if (!codes.value.length) {
       return [] as string[];
     }
-    const highlighter = await createHighlighter({
-      themes: ['nord'],
-      langs: ['tsx', 'js', 'ts', 'jsx'],
-    });
+    const highlighter = await getHighlighter();
     return codes.value.map((item) => {
       let lang = 'tsx';
       if (item.pathId.endsWith('.js')) lang = 'js';
@@ -120,27 +110,25 @@ export const RenderTree = component$(() => {
     let parsed: ParsedStructure[] = [];
 
     // reset previous collected hook data before new node aggregation
-    clearAll();
+    hookStore.value.clear();
 
     if (node.props?.[QRENDERFN]) {
-      formatData('render', { data: { render: node.props[QRENDERFN] } });
-      const qrl = getQrlChunkName(node.props[QRENDERFN]);
+      hookStore.value.add('render', { data: { render: node.props[QRENDERFN] } });
+      const qrl = QrlUtils.getChunkName(node.props[QRENDERFN]);
       parsed = getQwikState(qrl);
     }
-    1;
 
     if (Array.isArray(node.props?.[QSEQ]) && parsed.length > 0) {
       const normalizedData = [...parsed, ...returnQrlData(node.props?.[QSEQ])];
-      //@ts-ignore
       normalizedData.forEach((item) => {
-        formatData(item.hookType, item);
+        hookStore.value.add(item.hookType as HookType, item);
       });
     }
 
     if (node.props?.[QPROPS]) {
       const props = unwrapStore(node.props[QPROPS]);
       Object.entries(props).forEach(([key, value]) => {
-        formatData(isListen(key) ? 'listens' : 'props', {
+        hookStore.value.add(isListen(key) ? 'listens' : 'props', {
           data: { [key]: value },
         });
       });
@@ -148,11 +136,14 @@ export const RenderTree = component$(() => {
 
     codes.value = [];
 
-    const res = await rpc?.getModulesByPathIds(findAllQrl());
+    const res =
+      (await rpc?.getModulesByPathIds(hookStore.value.findAllQrlPaths())) ?? [];
     log('getModulesByPathIds return: %O', res);
-    codes.value = res.filter((item) => item.modules);
-    stateTree.value = buildTree() as TreeNode[];
-    hookFilters.value = getHookFilterList();
+    codes.value = res.filter(
+      (item: { pathId: string; modules: unknown; error?: string }) => item.modules
+    );
+    stateTree.value = hookStore.value.buildTree() as TreeNode[];
+    hookFilters.value = hookStore.value.getFilterList();
   });
 
   const currentTab = useSignal<'state' | 'code'>('state');
@@ -207,7 +198,7 @@ export const RenderTree = component$(() => {
                           item.display = true;
                           return item;
                         });
-                        stateTree.value = buildTree().filter((item) =>
+                        stateTree.value = hookStore.value.buildTree().filter((item) =>
                           hookFilters.value.some(
                             (hook) => hook.key === item?.label && hook.display,
                           ),
@@ -223,7 +214,7 @@ export const RenderTree = component$(() => {
                           item.display = false;
                           return item;
                         });
-                        stateTree.value = buildTree().filter((item) =>
+                        stateTree.value = hookStore.value.buildTree().filter((item) =>
                           hookFilters.value.some(
                             (hook) => hook.key === item?.label && hook.display,
                           ),
@@ -260,10 +251,10 @@ export const RenderTree = component$(() => {
                         style={{ accentColor: 'var(--color-primary-active)' }}
                         type="checkbox"
                         checked={item.display}
-                        onChange$={(ev) => {
+                        onChange$={(ev: InputEvent) => {
                           const target = ev.target as HTMLInputElement;
                           hookFilters.value[idx].display = target.checked;
-                          stateTree.value = buildTree().filter((item) =>
+                          stateTree.value = hookStore.value.buildTree().filter((item) =>
                             hookFilters.value.some(
                               (hook) =>
                                 hook.key === item?.label && hook.display,
@@ -283,7 +274,7 @@ export const RenderTree = component$(() => {
                   animate
                   animationDuration={200}
                   isHover
-                  renderNode={$((node) => {
+                  renderNode={$((node: TreeNode) => {
                     const label = node.label || node.name || '';
                     const parts = label.split(':');
                     if (node.children && parts.length === 1) {

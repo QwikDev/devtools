@@ -24,7 +24,7 @@
   "devDependencies": {
     "@babel/types": "^7.26.7",
     "@devtools/kit": "workspace:*",
-    "@qwik.dev/core": "2.0.0-beta.11",
+    "@qwik.dev/core": "2.0.0-beta.15",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",
     "@typescript-eslint/eslint-plugin": "7.16.1",

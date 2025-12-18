@@ -6,7 +6,7 @@ import {
   useStyles$,
 } from '@qwik.dev/core';
 import { _getDomContainer, _vnode_toString } from '@qwik.dev/core/internal';
-import { createHighlighter } from 'shiki';
+import { getHighlighter } from '../../utils/shiki';
 
 export const HtmlParser = component$(() => {
   useStyles$(`
@@ -73,10 +73,7 @@ export const HtmlParser = component$(() => {
       return;
     }
     if (!shikiRef.value) {
-      shikiRef.value = await createHighlighter({
-        themes: ['nord'],
-        langs: ['html'],
-      });
+      shikiRef.value = await getHighlighter();
     }
     highlightedHtml.value = shikiRef.value.codeToHtml(htmlResult.value, {
       lang: 'html',
@@ -98,7 +95,7 @@ export const HtmlParser = component$(() => {
         <div class="min-h-0 flex-1 flex-col space-y-3 p-3">
           <textarea
             value={inputHtml.value}
-            onInput$={(e, t) =>
+            onInput$={(e: InputEvent, t: HTMLTextAreaElement) =>
               (inputHtml.value = (t as HTMLTextAreaElement).value)
             }
             placeholder="Paste HTML and click to parse/format."
