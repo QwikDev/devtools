@@ -9,34 +9,37 @@ import {
 } from './globals';
 import { ServerRpc, ClientRpc } from './types';
 
+type GlobalTarget = Record<string, unknown>;
+const t = target as unknown as GlobalTarget;
+
 export function getViteClientContext(): ViteClientContext {
-  return target[CLIENT_CTX];
+  return t[CLIENT_CTX] as ViteClientContext;
 }
 
 export function setViteClientContext(ctx: ViteClientContext) {
-  target[CLIENT_CTX] = ctx;
+  t[CLIENT_CTX] = ctx;
 }
 
 export function getViteServerContext() {
-  return target[SERVER_CTX];
+  return t[SERVER_CTX] as ViteServerContext;
 }
 
 export function setViteServerContext(ctx: ViteServerContext) {
-  target[SERVER_CTX] = ctx;
+  t[SERVER_CTX] = ctx;
 }
 
 export function getViteServerRpc() {
-  return target[SERVER_RPC];
+  return t[SERVER_RPC] as ServerRpc;
 }
 
 export function setViteServerRpc(rpc: ServerRpc) {
-  target[SERVER_RPC] = rpc;
+  t[SERVER_RPC] = rpc;
 }
 
 export function getViteClientRpc() {
-  return target[CLIENT_RPC];
+  return t[CLIENT_RPC] as ClientRpc;
 }
 
 export function setViteClientRpc(rpc: ClientRpc) {
-  target[CLIENT_RPC] = rpc;
+  t[CLIENT_RPC] = rpc;
 }

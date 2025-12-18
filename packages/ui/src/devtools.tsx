@@ -13,6 +13,7 @@ import {
   HiMegaphoneMini,
   HiCubeOutline,
   HiCodeBracketSolid,
+  HiClockOutline
 } from '@qwikest/icons/heroicons';
 import { BsDiagram3 } from '@qwikest/icons/bootstrap';
 import { LuFolderTree } from '@qwikest/icons/lucide';
@@ -40,6 +41,7 @@ import { Inspect } from './features/inspect/Inspect';
 import { QwikThemeToggle } from './components/ThemeToggle/QwikThemeToggle';
 import { ThemeScript as QwikThemeScript } from './components/ThemeToggle/theme-script';
 import { CodeBreack } from './features/CodeBreack/CodeBreack';
+import { Performance } from './features/Performance/Performance';
 import { debug } from 'debug';
 
 const log = debug('qwik:devtools:devtools');
@@ -182,8 +184,11 @@ export const QwikDevtools = component$(() => {
               <Tab state={state} id="inspect" title="inspect">
                 <HiMegaphoneMini class="h-5 w-5" />
               </Tab>
-              <Tab state={state} id="codeBreack" title="codeBreack">
+              <Tab state={state} id="codeBreack" title="CodeBreack">
                 <HiCodeBracketSolid class="h-5 w-5" />
+              </Tab>
+              <Tab state={state} id="performance" title="Performance">
+                <HiClockOutline class="h-5 w-5" />
               </Tab>
               <div class="mt-auto">
                 <QwikThemeToggle />
@@ -253,6 +258,12 @@ export const QwikDevtools = component$(() => {
                 <TabContent>
                   <TabTitle title="codeBreack" q:slot="title" />
                   <CodeBreack q:slot="content" />
+                </TabContent>
+              )}
+              {state.activeTab === 'performance' && (
+                <TabContent>
+                  <TabTitle title="performance" q:slot="title" />
+                  <Performance q:slot="content" />
                 </TabContent>
               )}
             </div>

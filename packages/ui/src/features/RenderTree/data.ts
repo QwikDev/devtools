@@ -3,15 +3,8 @@ import {
   INNER_USE_HOOK,
   QRL_KEY,
 } from '@devtools/kit';
-import type { ParsedStructure } from '@devtools/kit';
+import type { ParsedStructure, ComponentDevtoolsState, DevtoolsRenderStats } from '@devtools/kit';
 import type { QRLInternal } from './types';
-
-// Extend Window interface to include QWIK_DEVTOOLS_GLOBAL_STATE
-declare global {
-  interface Window {
-    QWIK_DEVTOOLS_GLOBAL_STATE?: Record<string, ParsedStructure[]>;
-  }
-}
 
 /**
  * Sequence entry from Qwik's q:seq containing QRL references.
@@ -50,8 +43,34 @@ export function getQwikState(qrlChunkName: string): ParsedStructure[] {
 
   if (!matchingKey) return [];
 
-  const entries = globalState[matchingKey] ?? [];
+  const componentState = globalState[matchingKey];
+  if (!componentState) return [];
+
+  // 新结构：{ hooks: ParsedStructure[], stats: DevtoolsRenderStats }
+  const entries = componentState.hooks ?? [];
   return entries.filter((item) => item.data !== undefined);
+}
+
+/**
+ * Get render stats from global devtools state by QRL chunk name
+ */
+export function getRenderStats(qrlChunkName: string): DevtoolsRenderStats | null {
+  const globalState = window.QWIK_DEVTOOLS_GLOBAL_STATE ?? {};
+  const matchingKey = Object.keys(globalState).find((key) =>
+    key.endsWith(qrlChunkName),
+  );
+
+  if (!matchingKey) return null;
+
+  const componentState = globalState[matchingKey];
+  return componentState?.stats ?? null;
+}
+
+/**
+ * Get all component states from global devtools state
+ */
+export function getAllComponentStates(): Record<string, ComponentDevtoolsState> {
+  return window.QWIK_DEVTOOLS_GLOBAL_STATE ?? {};
 }
 
 /**

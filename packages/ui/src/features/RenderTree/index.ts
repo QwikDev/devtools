@@ -22,24 +22,11 @@ export {
   isQRLInternal,
 } from './types';
 
-// Data store
-export {
-  HookDataStore,
-  getHookDataStore,
-  resetHookDataStore,
-  getQrlChunkName,
-} from './HookDataStore';
-
 // Tree builder
 export { TreeBuilder } from './TreeBuilder';
 
 // Data utilities
-export {
-  getQwikState,
-  filterUserDefinedHooks,
-  transformQrlSequenceData,
-} from './data';
+export { getQwikState, getRenderStats, getAllComponentStates, filterUserDefinedHooks, transformQrlSequenceData } from './data';
 
 // Hook store (class-based API)
 export { HookStore, QrlUtils, getHookStore } from './formatTreeData';
-

@@ -136,9 +136,12 @@ export const RenderTree = component$(() => {
 
     codes.value = [];
 
-    const res = await rpc?.getModulesByPathIds(hookStore.value.findAllQrlPaths());
+    const res =
+      (await rpc?.getModulesByPathIds(hookStore.value.findAllQrlPaths())) ?? [];
     log('getModulesByPathIds return: %O', res);
-    codes.value = res.filter((item) => item.modules);
+    codes.value = res.filter(
+      (item: { pathId: string; modules: unknown; error?: string }) => item.modules
+    );
     stateTree.value = hookStore.value.buildTree() as TreeNode[];
     hookFilters.value = hookStore.value.getFilterList();
   });
