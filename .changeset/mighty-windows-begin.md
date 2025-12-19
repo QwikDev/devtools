@@ -2,4 +2,4 @@
 '@qwik.dev/devtools': patch
 ---
 
-add performance tab
+feat: add performance tab
