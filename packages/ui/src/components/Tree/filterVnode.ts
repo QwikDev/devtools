@@ -6,12 +6,12 @@ import {
   _vnode_getFirstChild,
   _vnode_isMaterialized,
   _vnode_isVirtualVNode,
-  QRL,
 } from '@qwik.dev/core/internal';
 import { normalizeName } from './vnode';
 import { htmlContainer } from '../../utils/location';
 import { TreeNode } from './Tree';
 import { QRENDERFN, QTYPE } from '@devtools/kit';
+import { QRLInternal } from '../../features/RenderTree/types';
 
 let index = 0;
 
@@ -65,7 +65,7 @@ function buildTreeRecursive(
           // We skip the QTYPE prop as it's for internal use.
           if (key === QTYPE) return;
 
-          const value = container.getHostProp(currentVNode!, key) as QRL;
+          const value = container.getHostProp(currentVNode!, key) as QRLInternal;
           // Update the underlying VNode props array and the new object's props.
           currentVNode?.setProp(key, value);
           vnodeObject.props![key] = currentVNode?.getAttr(key);

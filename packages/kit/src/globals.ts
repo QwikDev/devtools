@@ -1,5 +1,5 @@
 import { ViteDevServer } from 'vite';
-import { ClientRpc, ServerRpc } from './types';
+import { ClientRpc, ParsedStructure, ServerRpc } from './types';
 
 interface EventEmitter {
   on: (name: string, handler: (data: any) => void) => void;
@@ -14,9 +14,71 @@ export const SERVER_CTX = '__qwik_server_ctx__';
 export const SERVER_RPC = '__qwik_server_rpc__';
 export const CLIENT_RPC = '__qwik_client_rpc__';
 
+// Devtools global state types
+export type QwikPerfPhaseRemembered = 'ssr' | 'csr';
+
+export interface QwikPerfErrorRemembered {
+  name: string;
+  message: string;
+}
+
+export interface QwikPerfEntryRemembered {
+  id: number;
+  component: string;
+  phase: QwikPerfPhaseRemembered;
+  duration: number;
+  start: number;
+  end: number;
+  error?: QwikPerfErrorRemembered;
+  /**
+   * Present for wrapped `_component_` render-function modules; helps de-dupe.
+   */
+  viteId?: string;
+  /**
+   * Present for wrapped `_component_` render-function modules.
+   */
+  renderCount?: number;
+}
+
+export interface QwikPerfStoreRemembered {
+  ssr: QwikPerfEntryRemembered[];
+  csr: QwikPerfEntryRemembered[];
+
+}
+
+export interface DevtoolsRenderStats {
+  /**
+   * In-memory performance store written by devtools instrumentation.
+   * (Populated at runtime; optional in types.)
+   */
+  perf?: QwikPerfStoreRemembered;
+}
+export interface ComponentDevtoolsState { 
+  hooks: ParsedStructure[];
+  stats: DevtoolsRenderStats;
+}
+
+
 declare global {
-  var __qwik_client_ctx__: ViteClientContext;
-  var __qwik_server_ctx__: ViteServerContext;
-  var __qwik_server_rpc__: ServerRpc;
-  var __qwik_client_rpc__: ClientRpc;
+  interface Window {
+    QWIK_DEVTOOLS_GLOBAL_STATE?: Record<string, ComponentDevtoolsState>;
+    /**
+     * Performance store (CSR + injected SSR snapshot).
+     * Written by `@devtools/plugin` instrumentation.
+     */
+    __QWIK_PERF__?: QwikPerfStoreRemembered;
+  }
+}
+
+declare global {
+  // SSR collector lives on `process` (preferred) or `globalThis` via dynamic properties.
+  // We type the `process` case here to avoid `any` in plugin code.
+  namespace NodeJS {
+    interface Process {
+      __QWIK_SSR_PERF__?: QwikPerfEntryRemembered[];
+      __QWIK_SSR_PERF_SET__?: Set<string>;
+      __QWIK_SSR_PERF_ID__?: number;
+      __QWIK_SSR_PERF_INDEX__?: Record<string, number>;
+    }
+  }
 }
