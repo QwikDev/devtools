@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.3
+
+### Patch Changes
+
+- 9265c38: fix(plugin): preserve Qwik lazy render metadata when wrapping components
+
 ## 0.2.2
 
 ### Patch Changes
