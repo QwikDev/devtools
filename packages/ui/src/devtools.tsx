@@ -51,6 +51,25 @@ function getClientRpcFunctions() {
   };
 }
 
+function toDevtoolsRoutes(routes: any): RoutesInfo[] {
+  const children: RoutesInfo[] = routes?.children || [];
+  const directories: RoutesInfo[] = children.filter(
+    (child) => child.type === RouteType.DIRECTORY,
+  );
+
+  return [
+    {
+      relativePath: '',
+      name: 'index',
+      type: RouteType.DIRECTORY,
+      path: '',
+      isSymbolicLink: false,
+      children: undefined,
+    },
+    ...directories,
+  ];
+}
+
 export const QwikDevtools = component$(() => {
   useStyles$(globalCss);
   const state = useStore<State>({
@@ -64,8 +83,6 @@ export const QwikDevtools = component$(() => {
     isLoadingDependencies: false,
   });
 
-  const clientReady = useSignal(false);
-
   useVisibleTask$(async () => {
     const hot = await tryCreateHotContext(undefined, ['/']);
     if (!hot) {
@@ -74,87 +91,58 @@ export const QwikDevtools = component$(() => {
 
     setViteClientContext(hot);
     createClientRpc(getClientRpcFunctions());
-    clientReady.value = true;
-  });
 
-  useVisibleTask$(async ({ track }) => {
-    track(() => clientReady.value);
-    if (!clientReady.value) return;
     const rpc = getViteClientRpc();
-    try {
-      const assets = await rpc.getAssetsFromPublicDir();
-      state.assets = assets;
-    } catch (error) {
-      log('Failed to load assets:', error);
-    }
-  });
 
-  useVisibleTask$(async ({ track }) => {
-    track(() => clientReady.value);
-    if (!clientReady.value) return;
-    const rpc = getViteClientRpc();
-    try {
-      const components = await rpc.getComponents();
-      state.components = components;
-    } catch (error) {
-      log('Failed to load components:', error);
-    }
-  });
+    // Group 1: load most data in parallel, each failure is isolated.
+    const group1 = Promise.allSettled([
+      rpc.getAssetsFromPublicDir(),
+      rpc.getComponents(),
+      rpc.getRoutes(),
+      rpc.getQwikPackages(),
+    ]);
 
-  useVisibleTask$(async ({ track }) => {
-    track(() => clientReady.value);
-    if (!clientReady.value) return;
-    const rpc = getViteClientRpc();
-    try {
-      const routes = await rpc.getRoutes();
-      const children: RoutesInfo[] = routes?.children || [];
-      const directories: RoutesInfo[] = children.filter(
-        (child) => child.type === 'directory',
-      );
-
-      const values: RoutesInfo[] = [
-        {
-          relativePath: '',
-          name: 'index',
-          type: RouteType.DIRECTORY,
-          path: '',
-          isSymbolicLink: false,
-          children: undefined,
-        },
-        ...directories,
-      ];
-
-      state.routes = noSerialize(values);
-    } catch (error) {
-      log('Failed to load routes:', error);
-    }
-  });
-
-  useVisibleTask$(async ({ track }) => {
-    track(() => clientReady.value);
-    if (!clientReady.value) return;
-    const rpc = getViteClientRpc();
-    try {
-      const qwikPackages = await rpc.getQwikPackages();
-      state.npmPackages = qwikPackages;
-    } catch (error) {
-      log('Failed to load Qwik packages:', error);
-    }
-  });
-
-  useVisibleTask$(async ({ track }) => {
-    track(() => clientReady.value);
-    if (!clientReady.value) return;
-    const rpc = getViteClientRpc();
+    // Group 2: load dependencies separately to keep a dedicated loading state.
     state.isLoadingDependencies = true;
-    try {
-      const allDeps = await rpc.getAllDependencies();
-      state.allDependencies = allDeps;
-    } catch (error) {
-      log('Failed to load all dependencies:', error);
-    } finally {
-      state.isLoadingDependencies = false;
+    const depsPromise = rpc
+      .getAllDependencies()
+      .then((allDeps) => {
+        state.allDependencies = allDeps;
+      })
+      .catch((error) => {
+        log('Failed to load all dependencies:', error);
+      })
+      .finally(() => {
+        state.isLoadingDependencies = false;
+      });
+
+    const [assetsRes, componentsRes, routesRes, packagesRes] = await group1;
+
+    if (assetsRes.status === 'fulfilled') {
+      state.assets = assetsRes.value;
+    } else {
+      log('Failed to load assets:', assetsRes.reason);
     }
+
+    if (componentsRes.status === 'fulfilled') {
+      state.components = componentsRes.value;
+    } else {
+      log('Failed to load components:', componentsRes.reason);
+    }
+
+    if (routesRes.status === 'fulfilled') {
+      state.routes = noSerialize(toDevtoolsRoutes(routesRes.value));
+    } else {
+      log('Failed to load routes:', routesRes.reason);
+    }
+
+    if (packagesRes.status === 'fulfilled') {
+      state.npmPackages = packagesRes.value;
+    } else {
+      log('Failed to load Qwik packages:', packagesRes.reason);
+    }
+
+    await depsPromise;
   });
 
   return (

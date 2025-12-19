@@ -23,11 +23,6 @@ const __qwik_perf_init_csr__ = () => {
 const __qwik_perf_get_ssr_store__ = () =>
   typeof process !== 'undefined' && process ? process : globalThis;
 
-const __qwik_perf_to_error__ = (err) => ({
-  name: (err && err.name) || 'Error',
-  message: err && err.message ? String(err.message) : String(err),
-});
-
 const __qwik_perf_next_id__ = (perf) => {
   perf._id = (perf._id || 0) + 1;
   return perf._id;
