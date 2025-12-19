@@ -18,31 +18,17 @@ function componentQrl(qrl, options) {
   if(qrl.dev){
     viteId = qrl.dev.file.replace(/[^/]*$/, qrl.dev.displayName);
   }
-  try {
-    const result = originalComponentQrl(qrl, options);
-    const duration = performance.now() - start;
-    __qwik_perf_commit_componentqrl__({
-      component,
-      phase,
-      duration,
-      start,  
-      viteId,
-      end: start + duration,
-    });
-    return result;
-  } catch (err) {
-    const duration = performance.now() - start;
-    __qwik_perf_commit_componentqrl__({
-      component,
-      phase,
-      duration,
-      start,
-      viteId,
-      end: start + duration,
-      error: __qwik_perf_to_error__(err),
-    });
-    throw err;
-  }
+  const result = originalComponentQrl(qrl, options);
+  const duration = performance.now() - start;
+  __qwik_perf_commit_componentqrl__({
+    component,
+    phase,
+    duration,
+    start,  
+    viteId,
+    end: start + duration,
+  });
+  return result;
 }
 
 export { componentQrl };

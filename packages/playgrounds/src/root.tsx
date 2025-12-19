@@ -16,7 +16,7 @@ export default component$(() => {
    */
 
   return (
-    <QwikRouterProvider viewTransition={true}>
+    <QwikRouterProvider viewTransition={false}>
       <head>
         <meta charset="utf-8" />
         {!isDev && (

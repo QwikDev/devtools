@@ -14,6 +14,15 @@ export interface ServerFunctions {
   getRoutes: () => any;
   getQwikPackages: () => Promise<[string, string][]>;
   getAllDependencies: () => Promise<any[]>;
+  getDependenciesStatus: () => Promise<{
+    phase: 'idle' | 'phase1' | 'phase2' | 'done' | 'error';
+    loaded: number;
+    total: number;
+    startedAt: number | null;
+    finishedAt: number | null;
+    error?: string;
+  }>;
+  refreshDependencies: () => Promise<void>;
   installPackage: (
     packageName: string,
     isDev?: boolean,
