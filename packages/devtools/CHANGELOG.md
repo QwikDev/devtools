@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.4
+
+### Patch Changes
+
+- b42ee41: style: update color palette in global.css and enhance author handling
+
 ## 0.2.3
 
 ### Patch Changes
