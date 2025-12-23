@@ -3,11 +3,26 @@ import { Package } from '../../types';
 import { PackageIcon } from '../PackageIcon';
 
 export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
+  const author = pkg.author;
+  const authorName =
+    typeof author === 'string' ? author.trim() : (author?.name || '').trim();
+  const authorDisplayName = authorName || 'Unknown';
+  const authorInitials =
+    authorDisplayName
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((n) => n.charAt(0))
+      .join('')
+      .substring(0, 2)
+      .toUpperCase() || '??';
+
   const handleAuthorClick = $(() => {
-    if (pkg.author?.url) {
-      window.open(pkg.author.url, '_blank');
-    } else if (pkg.author?.email) {
-      window.open(`mailto:${pkg.author.email}`, '_blank');
+    if (typeof author !== 'string') {
+      if (author?.url) {
+        window.open(author.url, '_blank');
+      } else if (author?.email) {
+        window.open(`mailto:${author.email}`, '_blank');
+      }
     }
   });
 
@@ -84,25 +99,20 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
         {/* Footer with author and links */}
         <div class="flex items-center justify-between gap-3">
           {/* Author Information */}
-          {pkg.author ? (
+          {author ? (
             <div class="flex min-w-0 flex-1 items-center gap-2">
               <div
                 class="from-accent/20 to-accent/40 border-accent/30 flex h-7 w-7 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border bg-gradient-to-br transition-transform hover:scale-110"
                 onClick$={handleAuthorClick}
-                title={`Contact ${pkg.author.name}`}
+                title={`Contact ${authorDisplayName}`}
               >
                 <span class="text-accent text-[10px] font-semibold">
-                  {pkg.author.name
-                    .split(' ')
-                    .map((n) => n.charAt(0))
-                    .join('')
-                    .substring(0, 2)
-                    .toUpperCase()}
+                  {authorInitials}
                 </span>
               </div>
               <span class="text-muted-foreground truncate text-xs">
                 <span class="text-foreground font-medium">
-                  {pkg.author.name}
+                  {authorDisplayName}
                 </span>
               </span>
             </div>
