@@ -261,7 +261,7 @@ export function statisticsPlugin(): Plugin {
   return {
     name: 'vite:qwik-component-proxy-transform',
     enforce: 'post',
-
+    apply: 'serve',
     transform(code, id) {
       // Avoid rewriting imports inside the perf virtual module itself (otherwise `originalComponentQrl`
       // could become self-referential/undefined)
@@ -295,9 +295,4 @@ export function statisticsPlugin(): Plugin {
       attachSsrPerfInjectorMiddleware(server);
     },
   };
-}
-
-// Backwards compatible default export (existing callers spread a Plugin[])
-export default function qwikComponentProxy(): Plugin[] {
-  return [statisticsPlugin()];
 }
