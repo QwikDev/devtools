@@ -2,4 +2,4 @@
 '@qwik.dev/devtools': patch
 ---
 
-BUG: everyplugins just run in development environment
+fix: run everyplugins only in development environment
