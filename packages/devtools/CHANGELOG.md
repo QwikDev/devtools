@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.5
+
+### Patch Changes
+
+- ea23e81: fix: run everyplugins only in development environment
+
 ## 0.2.4
 
 ### Patch Changes
