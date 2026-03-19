@@ -68,7 +68,7 @@ export const StateParser = component$(() => {
           stateResult.value = dumpedState;
           return;
         }
-      } catch (secondError) {
+      } catch {
         parsingTime.value = performance.now() - startTime;
         stateResult.value = `// Error parsing state: ${error instanceof Error ? error.message : 'Invalid state format'}\n\n// Raw input:\n${inputState.value}`;
         return;
@@ -81,18 +81,37 @@ export const StateParser = component$(() => {
 
   const shikiRef = useSignal<any>(null);
   useVisibleTask$(async ({ track }) => {
-    track(() => stateResult.value);
-    if (!stateResult.value) {
-      highlightedState.value = '';
+    track(() => stateResult?.value);
+    const currentState = stateResult?.value ?? '';
+    if (!currentState) {
+      if (highlightedState) {
+        highlightedState.value = '';
+      }
       return;
     }
-    if (!shikiRef.value) {
-      shikiRef.value = await getHighlighter();
+    try {
+      if (!shikiRef?.value) {
+        if (shikiRef) {
+          shikiRef.value = await getHighlighter();
+        }
+      }
+      if (!shikiRef?.value) {
+        if (highlightedState) {
+          highlightedState.value = currentState;
+        }
+        return;
+      }
+      if (highlightedState) {
+        highlightedState.value = shikiRef.value.codeToHtml(currentState, {
+          lang: 'json',
+          theme: 'nord',
+        });
+      }
+    } catch {
+      if (highlightedState) {
+        highlightedState.value = currentState;
+      }
     }
-    highlightedState.value = shikiRef.value.codeToHtml(stateResult.value, {
-      lang: 'json',
-      theme: 'nord',
-    });
   });
 
   return (

@@ -5,7 +5,7 @@ interface DevtoolsButtonProps {
   state: State;
 }
 
-export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
+export const DevtoolsButton = component$((props: DevtoolsButtonProps) => {
   // Signal for the button's position (distance from bottom-right corner)
   const position = useSignal({ x: 16, y: 16 });
   // Signal to track if the element is currently being dragged
@@ -46,9 +46,16 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
     if (isDragging.value) {
       isDragging.value = false; // Stop dragging
     }
-    if (!isMoved.value) {
-      state.isOpen.value = !state.isOpen.value;
+  });
+
+  const handleClick = $(() => {
+    // Ignore click generated right after dragging.
+    if (isMoved.value) {
+      isMoved.value = false;
+      return;
     }
+    if (!props.state) return;
+    props.state.isOpen = !props.state.isOpen;
   });
 
   /**
@@ -91,7 +98,7 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
         'border-border bg-background fixed flex h-9 w-9 origin-center select-none items-center justify-center rounded-lg border backdrop-blur-md':
           true,
         'border-accent/50 bg-background/95 shadow-accent/35 rotate-90 shadow-lg':
-          state.isOpen.value && !isDragging.value,
+          props.state?.isOpen && !isDragging.value,
         'cursor-grab': !isDragging.value,
         'cursor-grabbing': isDragging.value,
         'transition-all duration-300 ease-in-out': !isDragging.value,
@@ -103,6 +110,7 @@ export const DevtoolsButton = component$(({ state }: DevtoolsButtonProps) => {
         transition: isDragging.value ? 'none' : undefined,
       }}
       onMouseDown$={handleMouseDown}
+      onClick$={handleClick}
     >
       <img
         width={20}

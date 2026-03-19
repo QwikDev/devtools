@@ -1,6 +1,9 @@
 import { $, component$, sync$ } from '@qwik.dev/core';
-import { HiCubeOutline, HiPhotoOutline } from '@qwikest/icons/heroicons';
-import { LuFolderTree } from '@qwikest/icons/lucide';
+import {
+  IconCubeOutline,
+  IconFolderTree,
+  IconPhotoOutline,
+} from '../../components/Icons/Icons';
 import { State, TabName } from '../../types/state';
 
 interface OverviewProps {
@@ -22,7 +25,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
           class="border-border bg-card-item-bg hover:bg-card-item-hover-bg flex cursor-pointer items-center gap-5 rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5"
         >
           <div class="bg-foreground/5 border-border rounded-lg border p-3.5">
-            <LuFolderTree class="text-accent h-6 w-6" />
+            <IconFolderTree class="text-accent h-6 w-6" />
           </div>
           <div>
             <div class="text-3xl font-semibold">{state.routes?.length}</div>
@@ -35,7 +38,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
           class="border-border bg-card-item-bg hover:bg-card-item-hover-bg flex cursor-pointer items-center gap-5 rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5"
         >
           <div class="bg-foreground/5 border-border rounded-lg border p-3.5">
-            <HiCubeOutline class="text-accent h-6 w-6" />
+            <IconCubeOutline class="text-accent h-6 w-6" />
           </div>
           <div>
             <div class="text-3xl font-semibold">{state.components.length}</div>
@@ -48,7 +51,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
           class="border-border bg-card-item-bg hover:bg-card-item-hover-bg flex cursor-pointer items-center gap-5 rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5"
         >
           <div class="bg-foreground/5 border-border rounded-lg border p-3.5">
-            <HiPhotoOutline class="text-accent h-6 w-6" />
+            <IconPhotoOutline class="text-accent h-6 w-6" />
           </div>
           <div>
             <div class="text-3xl font-semibold">{state.assets.length || 0}</div>

@@ -1,9 +1,10 @@
+@import 'tailwindcss';
+@config "../tailwind.config.ts";
+
 /**
  * Tailwind CSS imports (v4)
  * View the full documentation at https://tailwindcss.com
  */
-@config "../tailwind.config.ts";
-@import 'tailwindcss';
 
 @theme {
   /* default (light) tokens; can be overridden by :root rules below */

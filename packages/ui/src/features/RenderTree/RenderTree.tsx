@@ -26,7 +26,7 @@ import {
 } from '@devtools/kit';
 import { getHighlighter } from '../../utils/shiki';
 import { getQwikState, returnQrlData } from './data';
-import { HiChevronUpMini } from '@qwikest/icons/heroicons';
+import { IconChevronUpMini } from '../../components/Icons/Icons';
 
 const log = debug('qwik:devtools:renderTree');
 
@@ -228,7 +228,7 @@ export const RenderTree = component$(() => {
                       onClick$={$(() => (hooksOpen.value = !hooksOpen.value))}
                       class="text-muted-foreground hover:text-foreground rounded p-1"
                     >
-                      <HiChevronUpMini
+                      <IconChevronUpMini
                         class={`h-4 w-4 transition-transform duration-200 ${
                           hooksOpen.value ? 'rotate-180' : '-rotate-90'
                         }`}

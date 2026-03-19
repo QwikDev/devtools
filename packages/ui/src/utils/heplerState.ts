@@ -9,11 +9,11 @@ export function getVnodeById(id: string | number) {
     VnodeId = id * 2 + 1;
   }
   if (Number.isNaN(VnodeId)) {
-    new Error(`Vnode id is not a number: ${id}`);
     return null;
   }
   const container = htmlContainer()! as DomContainer;
-  return container.$rawStateData$[VnodeId];
+  const rawStateData = (container as any).$rawStateData$ as unknown[] | undefined;
+  return rawStateData?.[VnodeId] ?? null;
 }
 
 export function getIndexByObject(obj: unknown) {
@@ -21,9 +21,9 @@ export function getIndexByObject(obj: unknown) {
     return null;
   }
   const container = htmlContainer()! as DomContainer;
-  const index = container.$rawStateData$.findIndex((item) => item === obj);
+  const rawStateData = (container as any).$rawStateData$ as unknown[] | undefined;
+  const index = rawStateData?.findIndex((item: unknown) => item === obj) ?? -1;
   if (index === -1) {
-    new Error(`Object not found in state: ${obj}`);
     return null;
   }
   return (index - 1) / 2;

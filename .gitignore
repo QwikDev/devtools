@@ -64,3 +64,4 @@ testem.log
 .DS_Store
 Thumbs.db
 .vite-inspect
+.pnpm-store/*

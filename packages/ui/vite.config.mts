@@ -6,8 +6,8 @@ import { qwikDevtools } from '@devtools/plugin';
 import { createRequire } from 'module';
 import tailwindcss from '@tailwindcss/vite';
 const { dependencies = {}, peerDependencies = {} } = pkg as any;
-const makeRegex = (dep) => new RegExp(`^${dep}(/.*)?$`);
-const excludeAll = (obj) => Object.keys(obj).map(makeRegex);
+const makeRegex = (dep: string) => new RegExp(`^${dep}(/.*)?$`);
+const excludeAll = (obj: Record<string, unknown>) => Object.keys(obj).map(makeRegex);
 const require = createRequire(import.meta.url);
 const isBuild = process.argv.includes('lib');
 
@@ -27,11 +27,18 @@ export default defineConfig(() => {
         entry: './src/index.ts',
         formats: ['es'],
         fileName: (format, entryName) => `${entryName}.qwik.mjs`,
+        cssFileName: 'styles',
       },
       rollupOptions: {
         output: {
           preserveModules: true,
           preserveModulesRoot: 'src',
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name?.endsWith('.css')) {
+              return 'styles.css';
+            }
+            return '[name]-[hash][extname]';
+          },
         },
         // externalize deps that shouldn't be bundled into the library
         external: [

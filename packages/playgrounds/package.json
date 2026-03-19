@@ -29,17 +29,17 @@
   "devDependencies": {
     "@devtools/plugin": "workspace:*",
     "@devtools/ui": "workspace:*",
-    "@qwik.dev/core": "2.0.0-beta.15",
-    "@qwik.dev/router": "2.0.0-beta.15",
-    "@types/eslint": "8.56.10",
-    "@types/node": "20.14.11",
-    "@typescript-eslint/eslint-plugin": "7.16.1",
-    "@typescript-eslint/parser": "7.16.1",
-    "eslint": "8.57.0",
-    "eslint-plugin-qwik": "2.0.0-beta.15",
-    "prettier": "3.3.3",
-    "typescript": "5.4.5",
-    "vite": "7.1.3",
-    "vite-tsconfig-paths": "^4.2.1"
+    "@qwik.dev/core": "2.0.0-beta.29",
+    "@qwik.dev/router": "2.0.0-beta.29",
+    "@types/eslint": "9.6.1",
+    "@types/node": "25.5.0",
+    "@typescript-eslint/eslint-plugin": "8.57.1",
+    "@typescript-eslint/parser": "8.57.1",
+    "eslint": "10.0.3",
+    "eslint-plugin-qwik": "2.0.0-beta.29",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3",
+    "vite": "8.0.0",
+    "vite-tsconfig-paths": "^6.1.1"
   }
 }

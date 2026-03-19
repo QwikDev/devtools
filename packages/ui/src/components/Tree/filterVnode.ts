@@ -10,21 +10,26 @@ import {
 import { normalizeName } from './vnode';
 import { htmlContainer } from '../../utils/location';
 import { TreeNode } from './Tree';
-import { QRENDERFN, QTYPE } from '@devtools/kit';
+import { QPROPS, QRENDERFN, QSEQ, QTYPE } from '@devtools/kit';
 import { QRLInternal } from '../../features/RenderTree/types';
 
 let index = 0;
+const ALLOWED_PROP_KEYS = new Set<string>([
+  QRENDERFN,
+  QSEQ,
+  QPROPS,
+  'q:id',
+  'q:key',
+]);
 
 function initVnode({
   name = 'text',
   props = {},
-  element = {},
   children = [],
 }): TreeNode {
   return {
     name,
     props,
-    element,
     children,
     label: name,
     id: `vnode-${index++}`,
@@ -58,17 +63,21 @@ function buildTreeRecursive(
       isVirtual &&
       typeof container.getHostProp(currentVNode, QRENDERFN) === 'function';
     if (isFragment) {
-      const vnodeObject = initVnode({ element: currentVNode });
+      const vnodeObject = initVnode({});
 
-      _vnode_getAttrKeys(currentVNode as _ElementVNode | _VirtualVNode).forEach(
+      _vnode_getAttrKeys(
+        container,
+        currentVNode as _ElementVNode | _VirtualVNode,
+      ).forEach(
         (key) => {
           // We skip the QTYPE prop as it's for internal use.
           if (key === QTYPE) return;
+          // Keep only the fields consumed by Devtools to avoid
+          // leaking non-serializable runtime VNode references.
+          if (!ALLOWED_PROP_KEYS.has(key)) return;
 
           const value = container.getHostProp(currentVNode!, key) as QRLInternal;
-          // Update the underlying VNode props array and the new object's props.
-          currentVNode?.setProp(key, value);
-          vnodeObject.props![key] = currentVNode?.getAttr(key);
+          vnodeObject.props![key] = value;
 
           // Special handling to set the label from the render function's symbol.
           if (key === QRENDERFN) {
