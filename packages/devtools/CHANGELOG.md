@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.6
+
+### Patch Changes
+
+- ed594a2: feat: add ESLint configuration and update dependencies
+
 ## 0.2.5
 
 ### Patch Changes
