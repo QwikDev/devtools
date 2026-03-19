@@ -1,11 +1,10 @@
 import { $, component$, QRL, useSignal } from '@qwik.dev/core';
 import type { JSXOutput, Signal } from '@qwik.dev/core';
-import { HiChevronUpMini } from '@qwikest/icons/heroicons';
+import { IconChevronUpMini } from '../Icons/Icons';
 
 export interface TreeNode {
   name?: string | 'text';
   props?: Record<string, any>;
-  element?: Record<string, any>;
   children?: TreeNode[];
   elementType?: string;
   label?: string;
@@ -82,13 +81,13 @@ const TreeNodeComponent = component$(
         >
           <div class={`inline-flex items-center rounded-md  px-2 py-1`}>
             {hasChildren ? (
-              <HiChevronUpMini
-                class={`text-muted-foreground mr-2 h-4 w-4 flex-shrink-0 transition-transform duration-200 ${
+              <IconChevronUpMini
+                class={`text-muted-foreground mr-2 h-4 w-4 shrink-0 transition-transform duration-200 ${
                   isExpanded.value ? 'rotate-90' : 'rotate-180'
                 }`}
               />
             ) : (
-              <div class="mr-2 w-4 flex-shrink-0"></div>
+              <div class="mr-2 w-4 shrink-0"></div>
             )}
             <div class="cursor-pointer whitespace-nowrap text-sm">
               {props.renderNode ? (

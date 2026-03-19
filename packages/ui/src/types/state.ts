@@ -1,5 +1,5 @@
 import { AssetInfo, NpmInfo, RoutesInfo, Component } from '@devtools/kit';
-import { NoSerialize, Signal } from '@qwik.dev/core';
+import { NoSerialize } from '@qwik.dev/core';
 
 export type TabName =
   | 'overview'
@@ -14,7 +14,7 @@ export type TabName =
   | 'performance';
 
 export interface State {
-  isOpen: Signal<boolean>;
+  isOpen: boolean;
   activeTab: TabName;
   npmPackages: NpmInfo;
   assets: AssetInfo[];

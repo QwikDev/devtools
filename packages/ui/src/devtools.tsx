@@ -2,21 +2,19 @@ import {
   component$,
   useStore,
   noSerialize,
-  useStyles$,
-  useSignal,
   useVisibleTask$,
 } from '@qwik.dev/core';
 import { tryCreateHotContext } from 'vite-hot-client';
 import {
-  HiBoltOutline,
-  HiPhotoOutline,
-  HiMegaphoneMini,
-  HiCubeOutline,
-  HiCodeBracketSolid,
-  HiClockOutline
-} from '@qwikest/icons/heroicons';
-import { BsDiagram3 } from '@qwikest/icons/bootstrap';
-import { LuFolderTree } from '@qwikest/icons/lucide';
+  IconBoltOutline,
+  IconClockOutline,
+  IconCodeBracketSolid,
+  IconCubeOutline,
+  IconDiagram3,
+  IconFolderTree,
+  IconMegaphoneMini,
+  IconPhotoOutline,
+} from './components/Icons/Icons';
 import {
   createClientRpc,
   getViteClientRpc,
@@ -24,7 +22,7 @@ import {
   type RoutesInfo,
   RouteType,
 } from '@devtools/kit';
-import globalCss from './global.css?inline';
+import './global.css';
 import { Tab } from './components/Tab/Tab';
 import { TabContent } from './components/TabContent/TabContent';
 import { Overview } from './features/Overview/Overview';
@@ -71,9 +69,8 @@ function toDevtoolsRoutes(routes: any): RoutesInfo[] {
 }
 
 export const QwikDevtools = component$(() => {
-  useStyles$(globalCss);
   const state = useStore<State>({
-    isOpen: useSignal(false),
+    isOpen: false,
     activeTab: 'overview',
     npmPackages: [],
     assets: [],
@@ -151,32 +148,32 @@ export const QwikDevtools = component$(() => {
       <DevtoolsContainer>
         <DevtoolsButton state={state} />
 
-        {state.isOpen.value && (
+        {state.isOpen && (
           <DevtoolsPanel state={state}>
             <div class="bg-background/95 border-border flex flex-col gap-2 border-r p-3">
               <Tab state={state} id="overview" title="Overview">
-                <HiBoltOutline class="h-5 w-5" />
+                <IconBoltOutline class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="packages" title="Packages">
-                <HiCubeOutline class="h-5 w-5" />
+                <IconCubeOutline class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="renderTree" title="renderTree">
-                <BsDiagram3 class="h-5 w-5" />
+                <IconDiagram3 class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="routes" title="Routes">
-                <LuFolderTree class="h-5 w-5" />
+                <IconFolderTree class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="assets" title="Assets">
-                <HiPhotoOutline class="h-5 w-5" />
+                <IconPhotoOutline class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="inspect" title="inspect">
-                <HiMegaphoneMini class="h-5 w-5" />
+                <IconMegaphoneMini class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="codeBreack" title="CodeBreack">
-                <HiCodeBracketSolid class="h-5 w-5" />
+                <IconCodeBracketSolid class="h-5 w-5" />
               </Tab>
               <Tab state={state} id="performance" title="Performance">
-                <HiClockOutline class="h-5 w-5" />
+                <IconClockOutline class="h-5 w-5" />
               </Tab>
               <div class="mt-auto">
                 <QwikThemeToggle />

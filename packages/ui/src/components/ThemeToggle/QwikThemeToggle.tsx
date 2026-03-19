@@ -1,9 +1,7 @@
-import { component$, event$, isServer, useStyles$ } from '@qwik.dev/core';
+import { component$, event$, isServer } from '@qwik.dev/core';
 import { themeStorageKey } from '../router-head/theme-script';
-import { HiSunOutline, HiMoonOutline } from '@qwikest/icons/heroicons';
-import { BsBrilliance } from '@qwikest/icons/bootstrap';
-import themeTogglecss from './themToggle.css?inline';
-
+import { IconMoonOutline, IconSparkles, IconSunOutline } from '../Icons/Icons';
+import './themToggle.css'
 type ThemeName = 'dark' | 'light' | 'auto';
 
 export const getTheme = (): ThemeName => {
@@ -30,7 +28,6 @@ export const setTheme = (theme: ThemeName) => {
 };
 
 export const QwikThemeToggle = component$(() => {
-  useStyles$(themeTogglecss);
   const onClick$ = event$(() => {
     let currentTheme = getTheme();
     if (currentTheme === 'dark') {
@@ -50,9 +47,9 @@ export const QwikThemeToggle = component$(() => {
         class="bg-background text-foreground group relative flex h-8 w-8 items-center justify-center rounded-md hover:opacity-60"
       >
         <div class="absolute inset-0 grid place-items-center transition-transform duration-200 ease-out group-hover:scale-110 group-active:scale-75">
-          <HiSunOutline class="themeIcon light col-start-1 row-start-1" />
-          <HiMoonOutline class="themeIcon dark col-start-1 row-start-1" />
-          <BsBrilliance class="themeIcon auto col-start-1 row-start-1" />
+          <IconSunOutline class="themeIcon light col-start-1 row-start-1" />
+          <IconMoonOutline class="themeIcon dark col-start-1 row-start-1" />
+          <IconSparkles class="themeIcon auto col-start-1 row-start-1" />
         </div>
       </button>
     </>

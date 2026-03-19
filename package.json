@@ -10,15 +10,15 @@
     "release.pkg-pr-new": "cd packages/devtools && pnpm dlx pkg-pr-new publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.11",
-    "@changesets/get-github-info": "^0.6.0",
-    "@changesets/types": "^6.0.0",
-    "@types/node": "^22.10.5",
-    "tsdown": "^0.9.6",
-    "tsx": "^4.19.2",
-    "vitest": "^3.2.4",
+    "@changesets/cli": "^2.30.0",
+    "@changesets/get-github-info": "^0.8.0",
+    "@changesets/types": "^6.1.0",
+    "@types/debug": "4.1.12",
+    "@types/node": "^25.5.0",
     "debug": "4.4.3",
-    "@types/debug": "4.1.12"
+    "tsdown": "^0.21.4",
+    "tsx": "^4.21.0",
+    "vitest": "^4.1.0"
   },
   "private": true,
   "keywords": [

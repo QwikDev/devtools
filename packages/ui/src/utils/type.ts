@@ -5,7 +5,7 @@ export const isListen = (str: string) => {
 export const isValue = (value: any) => {
   try {
     return 'untrackedValue' in value && 'value' in value;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

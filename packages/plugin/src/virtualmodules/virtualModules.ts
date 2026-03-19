@@ -72,10 +72,19 @@ export function transformComponentFile(code: string, id: string): string {
 export function transformRootFile(code: string): string {
   const mode = process.env.MODE;
   const importPath = mode === 'dev' ? '@devtools/ui' : '@qwik.dev/devtools/ui';
+  const styleImportPath =
+    mode === 'dev' ? '@devtools/ui/styles.css' : '@qwik.dev/devtools/ui/styles.css';
+  const devtoolsImport = `import { QwikDevtools } from '${importPath}';`;
+  const stylesImport = `import '${styleImportPath}';`;
 
   // Add QwikDevtools import if not present
-  if (!code.includes(importPath)) {
-    code = `import { QwikDevtools } from '${importPath}';\n${code}`;
+  if (!code.includes(devtoolsImport)) {
+    code = `${devtoolsImport}\n${code}`;
+  }
+
+  // Add DevTools styles import if not present
+  if (!code.includes(stylesImport)) {
+    code = `${stylesImport}\n${code}`;
   }
 
   // Inject QwikDevtools component before closing body tag

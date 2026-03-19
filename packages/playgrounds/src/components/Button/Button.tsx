@@ -15,7 +15,7 @@ import {
   useStylesScoped$,
   createContextId,
   Resource,
-  useAsyncComputed$,
+  useAsync$,
   useSerializer$,
   useConstant,
   useOn,
@@ -70,7 +70,6 @@ export default component$<ButtonProps>((props) => {
     signal.value = '33333';
   });
 
-  // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(({ track }) => {
     track(() => store.count);
     signal.value = '2227';
@@ -89,8 +88,9 @@ export default component$<ButtonProps>((props) => {
     }
   });
 
-  const asyncComputedValue = useAsyncComputed$(({ track }) =>
-    Promise.resolve(track(signal) + 3),
+  const asyncComputedValue = useAsync$(
+    async ({ track }) => Promise.resolve(track(signal) + 3),
+    { initial: '' },
   );
 
   useContextProvider(ButtonContext, {
