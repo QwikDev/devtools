@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.7
+
+### Patch Changes
+
+- 73144dc: refactor: Improve UI aesthetics with updated tab and card styles, and refactor RenderTree data formatting for hooks.
+
 ## 0.2.6
 
 ### Patch Changes
