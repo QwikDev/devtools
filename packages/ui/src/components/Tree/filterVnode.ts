@@ -9,7 +9,7 @@ import {
 } from '@qwik.dev/core/internal';
 import { normalizeName } from './vnode';
 import { htmlContainer } from '../../utils/location';
-import { TreeNode } from './Tree';
+import { TreeNode, TreeNodePropValue } from './type';
 import { QPROPS, QRENDERFN, QSEQ, QTYPE } from '@devtools/kit';
 import { QRLInternal } from '../../features/RenderTree/types';
 
@@ -26,7 +26,7 @@ function initVnode({
   name = 'text',
   props = {},
   children = [],
-}): TreeNode {
+}: Partial<Pick<TreeNode, 'name' | 'props' | 'children'>> = {}): TreeNode {
   return {
     name,
     props,
@@ -68,24 +68,23 @@ function buildTreeRecursive(
       _vnode_getAttrKeys(
         container,
         currentVNode as _ElementVNode | _VirtualVNode,
-      ).forEach(
-        (key) => {
-          // We skip the QTYPE prop as it's for internal use.
-          if (key === QTYPE) return;
-          // Keep only the fields consumed by Devtools to avoid
-          // leaking non-serializable runtime VNode references.
-          if (!ALLOWED_PROP_KEYS.has(key)) return;
+      ).forEach((key) => {
+        // We skip the QTYPE prop as it's for internal use.
+        if (key === QTYPE) return;
+        // Keep only the fields consumed by Devtools to avoid
+        // leaking non-serializable runtime VNode references.
+        if (!ALLOWED_PROP_KEYS.has(key)) return;
 
-          const value = container.getHostProp(currentVNode!, key) as QRLInternal;
-          vnodeObject.props![key] = value;
+        const value: unknown = container.getHostProp(currentVNode!, key);
+        vnodeObject.props![key] = value as TreeNodePropValue;
 
-          // Special handling to set the label from the render function's symbol.
-          if (key === QRENDERFN) {
-            vnodeObject.label = normalizeName(value!.getSymbol());
-            vnodeObject.name = normalizeName(value!.getSymbol());
-          }
-        },
-      );
+        // Special handling to set the label from the render function's symbol.
+        if (key === QRENDERFN && value != null) {
+          const qrl = value as QRLInternal;
+          vnodeObject.label = normalizeName(qrl.getSymbol());
+          vnodeObject.name = normalizeName(qrl.getSymbol());
+        }
+      });
 
       // Recursively build the tree for child nodes.
       const firstChild = _vnode_getFirstChild(currentVNode);

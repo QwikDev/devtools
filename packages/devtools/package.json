@@ -29,7 +29,7 @@
     "@tailwindcss/postcss": "^4.2.1",
     "@tailwindcss/vite": "^4.2.1",
     "tailwindcss": "^4.2.1",
-    "vite": "8.0.0"
+    "vite": ">=7.0.0 <9.0.0"
   },
   "dependencies": {
     "birpc": "^4.0.0",

@@ -15,10 +15,10 @@ export const Assets = component$(({ state }: AssetsProps) => {
         return (
           <div
             key={asset.filePath}
-            class="border-border bg-card-item-bg hover:bg-card-item-hover-bg overflow-hidden rounded-xl border transition-all duration-200"
+            class="border-glass-border bg-card-item-bg hover:bg-card-item-hover-bg overflow-hidden rounded-xl border transition-all duration-200"
           >
             {isImage ? (
-              <div class="aspect-square overflow-hidden bg-black/20">
+              <div class="aspect-square overflow-hidden bg-foreground/5">
                 <img
                   width={176}
                   height={176}
@@ -28,7 +28,7 @@ export const Assets = component$(({ state }: AssetsProps) => {
                 />
               </div>
             ) : (
-              <div class="flex aspect-square items-center justify-center bg-black/20">
+              <div class="flex aspect-square items-center justify-center bg-foreground/5">
                 <span class="text-muted-foreground font-mono text-2xl">
                   {fileExt}
                 </span>

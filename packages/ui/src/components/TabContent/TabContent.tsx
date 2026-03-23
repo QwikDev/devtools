@@ -2,12 +2,12 @@ import { component$, Slot } from '@qwik.dev/core';
 
 export const TabContent = component$(() => {
   return (
-    <div class="flex h-full w-full flex-col space-y-6">
-      <div class="border-border flex items-center justify-between border-b pb-4">
+    <div class="flex h-full w-full flex-col space-y-8 animate-slide-up-fade" style="animation-duration: 0.3s; animation-fill-mode: both; animation-delay: 0.1s;">
+      <div class="border-glass-border flex items-center justify-between border-b pb-4 px-2">
         <Slot name="title" />
       </div>
 
-      <div class="flex-1 overflow-y-auto pb-6">
+      <div class="custom-scrollbar flex-1 overflow-y-auto px-2 pb-8">
         <Slot name="content" />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { computeEventRows, computePerfViewModel } from './computePerfViewModel';
 import type { QwikPerfStoreRemembered } from '@devtools/kit';
+import type { PerfGroupedCsrItem } from './transformPerformanceData';
 
 describe('computePerfViewModel', () => {
   it('prefers ssr list when present and groups csr via _component_ prefix', () => {
@@ -86,7 +87,7 @@ describe('computePerfViewModel', () => {
 
 describe('computeEventRows', () => {
   it('uses render when eventName is missing and uses renderCount as calls fallback', () => {
-    const rows = computeEventRows([
+    const items: PerfGroupedCsrItem[] = [
       {
         id: 1,
         component: 'A_component_x',
@@ -95,8 +96,7 @@ describe('computeEventRows', () => {
         duration: 2,
         start: 0,
         end: 2,
-        // no eventName -> render
-      } as any,
+      },
       {
         id: 2,
         component: 'A_component_x_useEffect_1',
@@ -107,9 +107,10 @@ describe('computeEventRows', () => {
         start: 0,
         end: 1,
         renderCount: 3,
-      } as any,
-    ]);
+      },
+    ];
 
+    const rows = computeEventRows(items);
     const byName = new Map(rows.map((r) => [r.eventName, r]));
     expect(byName.get('render')?.calls).toBe(1);
     expect(byName.get('render')?.time).toBe(2);
@@ -117,5 +118,6 @@ describe('computeEventRows', () => {
     expect(byName.get('useEffect')?.time).toBe(1);
   });
 });
+
 
 

@@ -1,5 +1,4 @@
-import { TreeNode } from './Tree';
-
+import { TreeNode } from './type';
 export function normalizeName(str: string) {
   const array = str.split('_');
   if (array.length > 0) {

@@ -45,7 +45,7 @@ export const DependencyCard = component$(({ pkg }: { pkg: Package }) => {
   });
 
   return (
-    <div class="bg-card border-border/50 hover:border-primary/30 hover:shadow-primary/5 group relative rounded-xl border p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+    <div class="bg-card-item-bg border-glass-border hover:border-primary/30 hover:shadow-primary/5 group relative rounded-xl border p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
       {/* Subtle gradient background on hover */}
       <div class="from-primary/0 via-primary/0 to-primary/5 pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 

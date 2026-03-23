@@ -1,4 +1,4 @@
-import type { TreeNode } from '../../components/Tree/Tree';
+import type { TreeNode } from '../../components/Tree/type';
 import type { ParsedStructure } from '@devtools/kit';
 import { CAPTURE_REF_KEY, COMPUTED_QRL_KEY, QRL_KEY } from '@devtools/kit';
 import debug from 'debug';
@@ -10,6 +10,7 @@ import {
   type HookType,
   type HookFilterItem,
   type QRLInternal,
+  type HookDataEntry,
 } from './types';
 
 const log = debug('qwik:devtools:renderTree');
@@ -19,7 +20,7 @@ const log = debug('qwik:devtools:renderTree');
 // ============================================================================
 
 interface HookStoreEntry {
-  set: Set<unknown>;
+  set: Set<HookDataEntry>;
   visible: boolean;
 }
 
@@ -53,7 +54,7 @@ export class HookStore {
   /**
    * Add data to the store for a specific hook type
    */
-  add(type: HookType, data: ParsedStructure | { data: Record<string, unknown> }): void {
+  add(type: HookType, data: HookDataEntry): void {
     this.store[type].set.add(data);
   }
 
@@ -76,7 +77,7 @@ export class HookStore {
   /**
    * Get entries for a specific hook type
    */
-  getEntries(type: HookType): unknown[] {
+  getEntries(type: HookType): HookDataEntry[] {
     return [...this.store[type].set];
   }
 
@@ -144,42 +145,40 @@ export class HookStore {
     return entries.map((entry) => this.transformEntry(hookType, entry)).flat();
   }
 
-  private transformEntry(hookType: HookType, entry: unknown): TreeNode[] {
-    const typedEntry = entry as Record<string, unknown>;
+  private transformEntry(hookType: HookType, entry: HookDataEntry): TreeNode[] {
+    const isParsed = 'hookType' in entry;
+    const variableName = isParsed ? entry.variableName : undefined;
+    const data = entry.data as Record<string, unknown>;
 
     switch (hookType) {
       case 'props':
       case 'listens':
       case 'render':
-        return this.treeBuilder.objectToTree(
-          typedEntry.data as Record<string, unknown>,
-        );
+        return this.treeBuilder.objectToTree(data);
 
       case 'useTask':
       case 'useVisibleTask': {
-        const scopeVars = this.findScopeVariables(typedEntry);
+        const scopeVars = this.findScopeVariables(entry);
         return this.treeBuilder.objectToTree({
-          [`let ${typedEntry.variableName ?? hookType} =`]: scopeVars,
+          [`let ${variableName ?? hookType} =`]: scopeVars,
         });
       }
 
       case 'customhook': {
-        const captureRef = (typedEntry.data as Record<string, unknown>)?.[
-          CAPTURE_REF_KEY
-        ];
+        const captureRef = data?.[CAPTURE_REF_KEY];
         return this.treeBuilder.objectToTree({
-          [`let ${typedEntry.variableName ?? 'customhook'} = Scope `]: captureRef,
+          [`let ${variableName ?? 'customhook'} = Scope `]: captureRef,
         });
       }
 
       default:
         return this.treeBuilder.objectToTree({
-          [`let ${typedEntry.variableName ?? hookType} =`]: typedEntry.data,
+          [`let ${variableName ?? hookType} =`]: data,
         });
     }
   }
 
-  findScopeVariables(item: Record<string, unknown>): string {
+  findScopeVariables(item: HookDataEntry): string {
     const targets = (item.data as Record<string, unknown>)?.[
       CAPTURE_REF_KEY
     ] as unknown[] | undefined;
@@ -190,13 +189,12 @@ export class HookStore {
 
     for (const entry of Object.values(this.store)) {
       for (const storedEntry of entry.set) {
-        const entryData = storedEntry as Record<string, unknown>;
-        const data = entryData?.data ?? entryData;
+        const data = storedEntry.data;
         if (!data) continue;
 
         const match = targets.find((target) => target === data);
-        if (match && entryData.variableName) {
-          variableNames.push(entryData.variableName as string);
+        if (match && 'variableName' in storedEntry && storedEntry.variableName) {
+          variableNames.push(storedEntry.variableName);
         }
       }
     }
@@ -220,7 +218,7 @@ export class HookStore {
       for (const entry of entries) {
         const extracted = this.extractQrlPath(
           hookType,
-          entry as Record<string, unknown>,
+          entry,
         );
 
         if (extracted) {
@@ -239,21 +237,22 @@ export class HookStore {
 
   private extractQrlPath(
     hookType: HookType,
-    entry: Record<string, unknown>,
+    entry: HookDataEntry,
   ): string | string[] | null {
     if (hookType === 'listens') {
-      const data = (entry.data ?? entry) as Record<string, unknown>;
+      const data = entry.data as Record<string, unknown>;
       return Object.values(data)
         .map((v) => (v as QRLInternal)?.$chunk$)
         .filter((v): v is string => typeof v === 'string');
     }
 
     if (hookType === 'render') {
-      const renderFn = (entry.data as Record<string, unknown>)?.render ?? entry;
+      const data = entry.data as Record<string, unknown>;
+      const renderFn = data?.render ?? entry.data;
       return QrlUtils.getPath(renderFn as QRLInternal);
     }
 
-    const data = (entry.data ?? entry) as Record<string, unknown>;
+    const data = entry.data as Record<string, unknown>;
     const qrlObj = data[QRL_KEY] ?? data[COMPUTED_QRL_KEY];
     return QrlUtils.getPath(qrlObj as QRLInternal);
   }

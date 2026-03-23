@@ -150,32 +150,32 @@ export const QwikDevtools = component$(() => {
 
         {state.isOpen && (
           <DevtoolsPanel state={state}>
-            <div class="bg-background/95 border-border flex flex-col gap-2 border-r p-3">
+            <div class="glass-bg border-r border-glass-border shadow-r flex flex-col gap-3 p-3 w-16 md:w-20 items-center justify-start h-full">
               <Tab state={state} id="overview" title="Overview">
-                <IconBoltOutline class="h-5 w-5" />
+                <IconBoltOutline class="h-6 w-6" />
               </Tab>
               <Tab state={state} id="packages" title="Packages">
-                <IconCubeOutline class="h-5 w-5" />
+                <IconCubeOutline class="h-6 w-6" />
               </Tab>
               <Tab state={state} id="renderTree" title="renderTree">
-                <IconDiagram3 class="h-5 w-5" />
+                <IconDiagram3 class="h-6 w-6" />
               </Tab>
               <Tab state={state} id="routes" title="Routes">
-                <IconFolderTree class="h-5 w-5" />
+                <IconFolderTree class="h-6 w-6" />
               </Tab>
               <Tab state={state} id="assets" title="Assets">
-                <IconPhotoOutline class="h-5 w-5" />
+                <IconPhotoOutline class="h-6 w-6" />
               </Tab>
               <Tab state={state} id="inspect" title="inspect">
-                <IconMegaphoneMini class="h-5 w-5" />
+                <IconMegaphoneMini class="h-6 w-6" />
               </Tab>
               <Tab state={state} id="codeBreack" title="CodeBreack">
-                <IconCodeBracketSolid class="h-5 w-5" />
+                <IconCodeBracketSolid class="h-6 w-6" />
               </Tab>
               <Tab state={state} id="performance" title="Performance">
-                <IconClockOutline class="h-5 w-5" />
+                <IconClockOutline class="h-6 w-6" />
               </Tab>
-              <div class="mt-auto">
+              <div class="mt-auto mb-2 opacity-80 hover:opacity-100 transition-opacity">
                 <QwikThemeToggle />
               </div>
             </div>

@@ -1,5 +1,11 @@
 import type { QwikPerfStoreRemembered } from '@devtools/kit';
-import { groupCsrBySsr, parseComponentAndEventName, type PerfGroupedCsrItem, type PerfSsrItem } from './transformPerformanceData';
+import {
+  groupCsrBySsr,
+  parseComponentAndEventName,
+  type PerfCsrItem,
+  type PerfGroupedCsrItem,
+  type PerfSsrItem,
+} from './transformPerformanceData';
 
 export type PerfPayload = QwikPerfStoreRemembered;
 
@@ -64,34 +70,45 @@ function computeComponentVmFromCsr(componentName: string, csrItems: PerfGroupedC
   return { componentName, totalTime, calls, avgTime, ssr, csrItems };
 }
 
-export function computePerfViewModel(perf: PerfPayload | undefined | null): PerfViewModel {
-  const safe: PerfPayload = perf || { ssr: [], csr: [] };
+// ---------------------------------------------------------------------------
+// Component grouping helpers
+// ---------------------------------------------------------------------------
 
-  const components: PerfComponentVm[] = [];
-
-  if (safe.ssr?.length) {
-    const grouped = groupCsrBySsr(safe);
-    for (const ssrItem of safe.ssr as PerfSsrItem[]) {
-      const componentName = parseComponentAndEventName(ssrItem.component).componentName;
-      const csrItems = grouped.get(ssrItem as PerfSsrItem) || [];
-      components.push(computeComponentVmFromCsr(componentName, csrItems, ssrItem as PerfSsrItem));
-    }
-  } else if (safe.csr?.length) {
-    const byName = new Map<string, PerfGroupedCsrItem[]>();
-    for (const csrItem of safe.csr as any[]) {
-      const parsed = parseComponentAndEventName(csrItem.component);
-      const list = byName.get(parsed.componentName) || [];
-      list.push({ ...csrItem, ...parsed });
-      byName.set(parsed.componentName, list);
-    }
-    for (const [componentName, csrItems] of byName.entries()) {
-      components.push(computeComponentVmFromCsr(componentName, csrItems));
-    }
+/** Build component view-models when SSR entries are available. */
+function groupComponentsBySsr(safe: PerfPayload): PerfComponentVm[] {
+  const grouped = groupCsrBySsr(safe);
+  const result: PerfComponentVm[] = [];
+  for (const raw of safe.ssr) {
+    const ssrItem: PerfSsrItem = { ...raw, phase: 'ssr' as const };
+    const componentName = parseComponentAndEventName(ssrItem.component).componentName;
+    const csrItems = grouped.get(raw as PerfSsrItem) || [];
+    result.push(computeComponentVmFromCsr(componentName, csrItems, ssrItem));
   }
+  return result;
+}
 
-  // Sort components by total time (desc) to make the list useful.
-  components.sort((a, b) => b.totalTime - a.totalTime);
+/** Build component view-models from CSR-only data, grouped by component name. */
+function groupComponentsByName(csrRaw: PerfPayload['csr']): PerfComponentVm[] {
+  const byName = new Map<string, PerfGroupedCsrItem[]>();
+  for (const entry of csrRaw) {
+    const csrItem: PerfCsrItem = { ...entry, phase: 'csr' as const };
+    const parsed = parseComponentAndEventName(csrItem.component);
+    const list = byName.get(parsed.componentName) || [];
+    list.push({ ...csrItem, ...parsed });
+    byName.set(parsed.componentName, list);
+  }
+  const result: PerfComponentVm[] = [];
+  for (const [componentName, csrItems] of byName.entries()) {
+    result.push(computeComponentVmFromCsr(componentName, csrItems));
+  }
+  return result;
+}
 
+// ---------------------------------------------------------------------------
+// Overview helpers
+// ---------------------------------------------------------------------------
+
+function computeOverview(components: PerfComponentVm[]): PerfOverviewVm {
   let totalRenderTime = 0;
   let totalCalls = 0;
   for (const c of components) {
@@ -107,7 +124,7 @@ export function computePerfViewModel(perf: PerfPayload | undefined | null): Perf
       return cur.avgTime > acc.avgTime ? cur : acc;
     }, undefined);
 
-  const overview: PerfOverviewVm = {
+  return {
     totalRenderTime,
     totalCalls,
     avgTime,
@@ -120,8 +137,25 @@ export function computePerfViewModel(perf: PerfPayload | undefined | null): Perf
         }
       : undefined,
   };
+}
 
-  return { overview, components };
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
+
+export function computePerfViewModel(perf: PerfPayload | undefined | null): PerfViewModel {
+  const safe: PerfPayload = perf || { ssr: [], csr: [] };
+
+  const components = safe.ssr?.length
+    ? groupComponentsBySsr(safe)
+    : safe.csr?.length
+      ? groupComponentsByName(safe.csr)
+      : [];
+
+  // Sort components by total time (desc) to make the list useful.
+  components.sort((a, b) => b.totalTime - a.totalTime);
+
+  return { overview: computeOverview(components), components };
 }
 
 
