@@ -8,7 +8,8 @@ import {
   useResource$,
   Resource,
 } from '@qwik.dev/core';
-import { Tree, TreeNode } from '../../components/Tree/Tree';
+import { Tree } from '../../components/Tree/Tree';
+import type { TreeNode } from '../../components/Tree/type';
 import { vnode_toObject } from '../../components/Tree/filterVnode';
 import { htmlContainer } from '../../utils/location';
 import { ISDEVTOOL } from '../../components/Tree/type';
@@ -16,6 +17,7 @@ import { removeNodeFromTree } from '../../components/Tree/vnode';
 import { isListen } from '../../utils/type';
 import debug from 'debug';
 import { getHookStore, QrlUtils, type HookType } from './formatTreeData';
+import type { QRLInternal } from './types';
 import { unwrapStore } from '@qwik.dev/core/internal';
 import {
   getViteClientRpc,
@@ -27,8 +29,15 @@ import {
 import { getHighlighter } from '../../utils/shiki';
 import { getQwikState, returnQrlData } from './data';
 import { IconChevronUpMini } from '../../components/Icons/Icons';
+import type { ParsedHookEntry } from './types';
 
 const log = debug('qwik:devtools:renderTree');
+
+interface CodeModule {
+  pathId: string;
+  modules: { code: string } | null;
+  error?: string;
+}
 
 function getValueColorClass(node: TreeNode, valueText: string): string {
   switch (node.elementType) {
@@ -59,9 +68,7 @@ export const RenderTree = component$(() => {
       padding: 10px;
     }
   `);
-  const codes = useSignal<{ pathId: string; modules: any; error?: string }[]>(
-    [],
-  );
+  const codes = useSignal<CodeModule[]>([]);
   const data = useSignal<TreeNode[]>([]);
 
   const stateTree = useSignal<TreeNode[]>([]);
@@ -114,14 +121,14 @@ export const RenderTree = component$(() => {
 
     if (node.props?.[QRENDERFN]) {
       hookStore.value.add('render', { data: { render: node.props[QRENDERFN] } });
-      const qrl = QrlUtils.getChunkName(node.props[QRENDERFN]);
+      const qrl = QrlUtils.getChunkName(node.props[QRENDERFN] as QRLInternal);
       parsed = getQwikState(qrl);
     }
 
     if (Array.isArray(node.props?.[QSEQ]) && parsed.length > 0) {
       const normalizedData = [...parsed, ...returnQrlData(node.props?.[QSEQ])];
       normalizedData.forEach((item) => {
-        hookStore.value.add(item.hookType as HookType, item);
+        hookStore.value.add(item.hookType as HookType, item as ParsedHookEntry);
       });
     }
 
@@ -140,43 +147,45 @@ export const RenderTree = component$(() => {
       (await rpc?.getModulesByPathIds(hookStore.value.findAllQrlPaths())) ?? [];
     log('getModulesByPathIds return: %O', res);
     codes.value = res.filter(
-      (item: { pathId: string; modules: unknown; error?: string }) => item.modules
+      (item: CodeModule) => item.modules
     );
-    stateTree.value = hookStore.value.buildTree() as TreeNode[];
+    stateTree.value = hookStore.value.buildTree();
     hookFilters.value = hookStore.value.getFilterList();
   });
 
   const currentTab = useSignal<'state' | 'code'>('state');
 
   return (
-    <div class="border-border bg-background h-full w-full flex-1 overflow-hidden rounded-md border">
+    <div class="h-full w-full flex-1 overflow-hidden rounded-2xl border border-glass-border bg-card-item-bg">
       <div class="flex h-full w-full">
-        <div class="w-1/2 overflow-hidden p-4" style={{ minWidth: '400px' }}>
+        <div class="w-1/2 overflow-hidden p-3 custom-scrollbar" style={{ minWidth: '360px' }}>
           <Tree data={data} onNodeClick={onNodeClick}></Tree>
         </div>
-        <div class="border-border border-l"></div>
+        <div class="border-l border-glass-border"></div>
         <div class="flex h-full min-h-0 w-1/2 flex-col overflow-hidden p-4">
-          <div class="border-border border-b">
-            <div class="border-border flex space-x-4 border-b">
+          <div class="">
+            <div class="border-b border-glass-border flex space-x-2 pb-1">
               <button
                 onClick$={() => (currentTab.value = 'state')}
-                style={
+                class={[
+                  'px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
                   currentTab.value === 'state'
-                    ? { borderBottom: '2px solid var(--color-primary-active)' }
-                    : {}
-                }
-                class="text-muted-foreground hover:text-foreground border-b-2 border-b-transparent px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out"
+                    ? 'text-primary bg-primary/10'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
+                ]}
+                style={currentTab.value === 'state' ? { boxShadow: 'inset 0 -2px 0 0 var(--color-primary)' } : {}}
               >
                 State
               </button>
               <button
                 onClick$={() => (currentTab.value = 'code')}
-                style={
+                class={[
+                  'px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
                   currentTab.value === 'code'
-                    ? { borderBottom: '2px solid var(--color-primary-active)' }
-                    : {}
-                }
-                class="text-muted-foreground hover:text-foreground border-b-2 border-b-transparent px-4 py-3 text-sm font-medium transition-all duration-300 ease-in-out"
+                    ? 'text-primary bg-primary/10'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
+                ]}
+                style={currentTab.value === 'code' ? { boxShadow: 'inset 0 -2px 0 0 var(--color-primary)' } : {}}
               >
                 Code
               </button>
@@ -185,8 +194,8 @@ export const RenderTree = component$(() => {
 
           {currentTab.value === 'state' && (
             <div class="mt-5 flex min-h-0 flex-1 flex-col">
-              <div class="border-border bg-card-item-bg rounded-lg border shadow-sm">
-                <div class="border-border flex items-center justify-between border-b px-2 py-2">
+              <div class="rounded-xl border border-glass-border bg-card-item-bg">
+                <div class="border-b border-glass-border flex items-center justify-between px-2 py-2">
                   <span class="text-muted-foreground text-xs font-medium">
                     Hooks
                   </span>
@@ -202,7 +211,7 @@ export const RenderTree = component$(() => {
                           hookFilters.value.some(
                             (hook) => hook.key === item?.label && hook.display,
                           ),
-                        ) as TreeNode[];
+                        );
                       })}
                     >
                       Select all
@@ -218,7 +227,7 @@ export const RenderTree = component$(() => {
                           hookFilters.value.some(
                             (hook) => hook.key === item?.label && hook.display,
                           ),
-                        ) as TreeNode[];
+                        );
                       })}
                     >
                       Clear
@@ -245,9 +254,9 @@ export const RenderTree = component$(() => {
                   }}
                 >
                   {hookFilters.value.map((item, idx) => (
-                    <label key={idx} class="flex items-center">
+                    <label key={idx} class="flex items-center gap-2 cursor-pointer">
                       <input
-                        class="border-border focus:ring-primary-active h-4 w-4 rounded-full focus:ring-offset-0 dark:border-[#374151] dark:bg-[#1F2937]"
+                        class="h-4 w-4 rounded focus:ring-0 cursor-pointer"
                         style={{ accentColor: 'var(--color-primary-active)' }}
                         type="checkbox"
                         checked={item.display}
@@ -259,7 +268,7 @@ export const RenderTree = component$(() => {
                               (hook) =>
                                 hook.key === item?.label && hook.display,
                             ),
-                          ) as TreeNode[];
+                          );
                         }}
                       />
                       <span class="ml-2 select-none">{item.key}</span>
@@ -302,7 +311,7 @@ export const RenderTree = component$(() => {
           )}
 
           {currentTab.value === 'code' && (
-            <div class="border-border mt-5 min-h-0 flex-1 overflow-y-auto rounded-lg border p-2 shadow-sm">
+            <div class="mt-4 min-h-0 flex-1 overflow-y-auto rounded-xl border border-glass-border bg-card-item-bg p-2">
               <Resource
                 value={highlightedCodesResource}
                 onPending={() => (
@@ -314,7 +323,7 @@ export const RenderTree = component$(() => {
                   <>
                     {codes.value.map((item, idx) => (
                       <>
-                        <div class="border-border bg-card-item-bg hover:bg-card-item-hover-bg mb-4 rounded-xl border p-4 shadow-sm transition-colors">
+                        <div class="border-glass-border bg-card-item-bg hover:bg-card-item-hover-bg mb-4 rounded-xl border p-4 transition-colors">
                           <div class="text-primary mb-2 break-all text-base font-semibold">
                             {item.pathId}
                           </div>

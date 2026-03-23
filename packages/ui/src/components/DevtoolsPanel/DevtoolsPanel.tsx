@@ -30,18 +30,18 @@ export const DevtoolsPanel = component$(({ state }: DevtoolsPanelProps) => {
   return (
     <>
       <div
-        class="fixed inset-0 bg-black/40 backdrop-blur-[1px]"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9990] transition-opacity duration-300"
         onMouseDown$={() => {
           state.isOpen = false;
         }}
       />
       <div
-        class="border-border bg-background text-foreground fixed bottom-6 right-6 flex h-[calc(100vh-3rem)] w-[calc(100vw-3rem)] translate-y-0 transform overflow-hidden rounded-lg border-2 backdrop-blur-lg transition-transform duration-300 ease-in-out"
+        class="glass-panel text-foreground fixed bottom-6 right-6 z-[9991] flex h-[calc(100vh-3rem)] w-[calc(100vw-3rem)] md:w-[90vw] lg:w-[85vw] max-w-7xl animate-slide-up-fade overflow-hidden rounded-2xl transition-transform duration-300 ease-out origin-bottom-right"
       >
         <button
           type="button"
           aria-label="Close devtools"
-          class="border-border bg-background/90 text-muted-foreground hover:text-foreground absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-md border shadow-sm transition-colors cursor-pointer"
+          class="bg-card-item-bg hover:bg-card-item-hover-bg border-glass-border text-muted-foreground hover:text-foreground absolute top-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
           onClick$={() => {
             state.isOpen = false;
           }}

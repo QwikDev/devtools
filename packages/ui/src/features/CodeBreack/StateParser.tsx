@@ -116,11 +116,11 @@ export const StateParser = component$(() => {
 
   return (
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <div class="border-border bg-card-item-bg flex h-[60vh] min-h-0 flex-col rounded-xl border">
-        <div class="border-border flex items-center justify-between border-b p-3">
+      <div class="border-glass-border bg-card-item-bg flex h-[60vh] min-h-0 flex-col rounded-xl border">
+        <div class="border-glass-border flex items-center justify-between border-b p-3">
           <div class="text-sm font-medium">Input State</div>
           {parsingTime.value !== null && (
-            <span class="border-border text-muted-foreground rounded-full border px-2 py-0.5 text-xs">
+            <span class="border-glass-border text-muted-foreground rounded-full border px-2 py-0.5 text-xs">
               {parsingTime.value}ms
             </span>
           )}
@@ -132,7 +132,7 @@ export const StateParser = component$(() => {
               (inputState.value = (t as HTMLTextAreaElement).value)
             }
             placeholder="Paste Qwik state and click to parse/format."
-            class="border-border bg-background h-full min-h-0 w-full flex-1 resize-none rounded-md border p-3 font-mono text-sm"
+            class="border-glass-border bg-card-item-bg text-foreground h-full min-h-0 w-full flex-1 resize-none rounded-md border p-3 font-mono text-sm placeholder:text-muted-foreground"
           />
           <div class="flex items-center gap-3">
             <button
@@ -145,11 +145,11 @@ export const StateParser = component$(() => {
         </div>
       </div>
 
-      <div class="border-border bg-card-item-bg flex h-[60vh] min-h-0 flex-col overflow-hidden rounded-xl border">
-        <div class="border-border flex items-center justify-between border-b p-3">
+      <div class="border-glass-border bg-card-item-bg flex h-[60vh] min-h-0 flex-col overflow-hidden rounded-xl border">
+        <div class="border-glass-border flex items-center justify-between border-b p-3">
           <div class="text-sm font-medium">Parsed State</div>
           {parsingTime.value !== null && (
-            <span class="border-border text-muted-foreground rounded-full border px-2 py-0.5 text-xs">
+            <span class="border-glass-border text-muted-foreground rounded-full border px-2 py-0.5 text-xs">
               {parsingTime.value}ms
             </span>
           )}

@@ -26,7 +26,7 @@ export const CodeBreack = component$(() => {
     <div class="h-full space-y-6 overflow-hidden">
       {/* Segmented Navigation */}
       <div class="flex justify-center">
-        <div class="border-border bg-background inline-flex rounded-xl border p-0.5">
+        <div class="border-glass-border bg-card-item-bg inline-flex rounded-xl border p-0.5">
           <button
             onClick$={() => (currentTab.value = 'state')}
             class={{

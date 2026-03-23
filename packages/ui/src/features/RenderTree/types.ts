@@ -1,4 +1,4 @@
-import type { TreeNode } from '../../components/Tree/Tree';
+import type { TreeNode } from '../../components/Tree/type';
 import type { ParsedStructure } from '@devtools/kit';
 import type { QRL } from '@qwik.dev/core';
 // ============================================================================
@@ -99,8 +99,11 @@ export interface QRLInternalMethods {
   readonly $chunk$: string | null;
   readonly $symbol$: string;
   readonly $hash$: string;
-  $capture$: string[] | null;
-  $captureRef$: unknown[] | null;
+  $captures$: Readonly<unknown[]> | string | null;
+  dev?: QRLDev | null;
+  getSymbol(): string;
+  getHash(): string;
+  getCaptured(): unknown[] | null;
 }
 
 /**
@@ -149,6 +152,8 @@ export interface SimpleHookEntry {
 export interface ParsedHookEntry extends ParsedStructure {
   data: unknown;
 }
+
+export type HookDataEntry = SimpleHookEntry | ParsedHookEntry;
 
 // ============================================================================
 // Tree Building Types

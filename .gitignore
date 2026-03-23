@@ -65,3 +65,5 @@ testem.log
 Thumbs.db
 .vite-inspect
 .pnpm-store/*
+qwik/*
+.cursor/skills/*

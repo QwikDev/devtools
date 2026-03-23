@@ -1,14 +1,5 @@
-import type { TreeNode } from '../../components/Tree/Tree';
+import type { TreeNode, ElementType } from '../../components/Tree/type';
 import { isValue } from '../../utils/type';
-
-type ElementType =
-  | 'null'
-  | 'boolean'
-  | 'number'
-  | 'string'
-  | 'function'
-  | 'array'
-  | 'object';
 
 /**
  * Builder class for creating TreeNode structures from objects.

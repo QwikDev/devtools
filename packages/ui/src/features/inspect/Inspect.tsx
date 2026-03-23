@@ -1,19 +1,23 @@
 import { component$ } from '@qwik.dev/core';
-// import { State } from "../../types/state";
 import { inspectorLink } from './constant';
-// interface RoutesProps {
-//   state: State;
-// }
+import { setupIframeThemeSync } from './iframe-theme';
 
-//@ts-ignore
 export const Inspect = component$(() => {
   return (
-    <div class="h-full flex-1 overflow-hidden">
+    <div class="h-full w-full flex-1 overflow-hidden rounded-2xl border border-glass-border bg-card-item-bg">
       <iframe
         src={`${location.href}${inspectorLink}`}
         width={'100%'}
         height={'100%'}
         id="inspect_qwik"
+        class="rounded-xl w-full h-full"
+        onLoad$={(_, el) => {
+          try {
+            setupIframeThemeSync(el);
+          } catch (err) {
+            console.error('Failed to inject theme into inspect iframe:', err);
+          }
+        }}
       ></iframe>
     </div>
   );
