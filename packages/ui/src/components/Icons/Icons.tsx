@@ -215,6 +215,29 @@ export const IconClockOutline = component$((props: IconProps) => {
   );
 });
 
+export const IconChartBarOutline = component$((props: IconProps) => {
+  return (
+    <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })}>
+      {props.title ? <title>{props.title}</title> : null}
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M7.5 17.25v-7.5m4.5 7.5v-10.5m4.5 10.5v-4.5"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4.5 20.25h15"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M3.75 3.75h16.5v16.5H3.75z"
+      />
+    </svg>
+  );
+});
+
 export const IconXMark = component$((props: IconProps) => {
   return (
     <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })}>
@@ -228,3 +251,38 @@ export const IconXMark = component$((props: IconProps) => {
   );
 });
 
+export const IconArrowsPointingOut = component$((props: IconProps) => {
+  return (
+    <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })}>
+      {props.title ? <title>{props.title}</title> : null}
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M9 3H4.5v4.5M15 3h4.5v4.5M9 21H4.5v-4.5M15 21h4.5v-4.5"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M9 3 3 9m12-6 6 6M9 21l-6-6m12 6 6-6"
+      />
+    </svg>
+  );
+});
+
+export const IconArrowsPointingIn = component$((props: IconProps) => {
+  return (
+    <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })}>
+      {props.title ? <title>{props.title}</title> : null}
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M9 9H3.75V3.75M15 9h5.25V3.75M9 15H3.75v5.25M15 15h5.25v5.25"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m9 9-6-6m12 6 6-6m-12 12-6 6m12-6 6 6"
+      />
+    </svg>
+  );
+});

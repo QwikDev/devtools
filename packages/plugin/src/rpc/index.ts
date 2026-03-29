@@ -1,5 +1,6 @@
 import { ServerFunctions } from '@devtools/kit';
 import { getAssetsFunctions } from '../assets';
+import { getBuildAnalysisFunctions } from '../build-analysis';
 import { ServerContext } from '../types';
 import { getRouteFunctions } from '../routes';
 import { getNpmFunctions } from '../npm';
@@ -13,6 +14,7 @@ export function getServerFunctions(ctx: ServerContext): ServerFunctions {
     ...getComponentsFunctions(ctx),
     ...getRouteFunctions(ctx),
     ...getNpmFunctions(ctx),
+    ...getBuildAnalysisFunctions(ctx),
     ...getModulesContent(ctx),
   };
 }

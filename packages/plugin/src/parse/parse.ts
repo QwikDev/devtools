@@ -3,7 +3,8 @@
  * Transforms Qwik component code by injecting devtools hooks
  */
 
-import { parseProgram, findAllComponentBodyRangesFromProgram } from './traverse';
+import { parseProgram } from './traverse';
+import { findAllComponentBodyRangesFromProgram } from './componentBodies';
 import { injectInitHooks } from './initInjector';
 import { injectHookTrackers } from './hookTracker';
 
@@ -15,7 +16,10 @@ export type { InjectOptions } from './types';
  * Phase 1: Inject initialization hooks (collecthook setup + render stats)
  * Phase 2: Inject collecthook calls for individual hooks
  */
-export function parseQwikCode(code: string, options?: { path?: string}): string {
+export function parseQwikCode(
+  code: string,
+  options?: { path?: string },
+): string {
   const program = parseProgram(code);
   const componentBodies = findAllComponentBodyRangesFromProgram(program);
 

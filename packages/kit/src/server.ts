@@ -1,20 +1,17 @@
-import SuperJSON from 'superjson';
 import { ClientFunctions, ServerFunctions } from './types';
-import { createBirpc } from 'birpc';
 import { DEVTOOLS_VITE_MESSAGING_EVENT } from './constants';
 import { setViteServerRpc, getViteServerContext } from './context';
+import { createSerializedRpc } from './rpc-core';
 
 export function createServerRpc(functions: ServerFunctions) {
   const server = getViteServerContext();
 
-  const rpc = createBirpc<ClientFunctions, ServerFunctions>(functions, {
-    post: (data) =>
-      server.ws.send(DEVTOOLS_VITE_MESSAGING_EVENT, SuperJSON.stringify(data)),
-    on: (fn) =>
+  const rpc = createSerializedRpc<ClientFunctions, ServerFunctions>(functions, {
+    post: (data) => server.ws.send(DEVTOOLS_VITE_MESSAGING_EVENT, data),
+    on: (handler) =>
       server.ws.on(DEVTOOLS_VITE_MESSAGING_EVENT, (data: any) => {
-        fn(SuperJSON.parse(data));
+        handler(data);
       }),
-    timeout: 120_000,
   });
 
   setViteServerRpc(rpc);

@@ -1,0 +1,39 @@
+import { component$ } from '@qwik.dev/core';
+
+export type RenderTreeTabId = 'state' | 'code';
+
+interface RenderTreeTabsProps {
+  currentTab: RenderTreeTabId;
+  onTabChange$: (tab: RenderTreeTabId) => void;
+}
+
+export const RenderTreeTabs = component$<RenderTreeTabsProps>(
+  ({ currentTab, onTabChange$ }) => {
+    return (
+      <div class="border-b border-glass-border flex space-x-2 pb-1">
+        {(['state', 'code'] as const).map((tabId) => (
+          <button
+            key={tabId}
+            onClick$={() => onTabChange$(tabId)}
+            class={[
+              'rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200',
+              currentTab === tabId
+                ? 'text-primary bg-primary/10'
+                : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5',
+            ]}
+            style={
+              currentTab === tabId
+                ? {
+                    boxShadow:
+                      'inset 0 -2px 0 0 var(--color-primary)',
+                  }
+                : {}
+            }
+          >
+            {tabId === 'state' ? 'State' : 'Code'}
+          </button>
+        ))}
+      </div>
+    );
+  },
+);

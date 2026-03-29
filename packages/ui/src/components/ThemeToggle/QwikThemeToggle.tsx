@@ -1,7 +1,7 @@
 import { component$, event$, isServer } from '@qwik.dev/core';
 import { themeStorageKey } from '../router-head/theme-script';
 import { IconMoonOutline, IconSparkles, IconSunOutline } from '../Icons/Icons';
-import './themToggle.css'
+import './themeToggle.css';
 type ThemeName = 'dark' | 'light' | 'auto';
 
 export const getTheme = (): ThemeName => {
