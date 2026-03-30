@@ -1,5 +1,11 @@
 # @qwik.dev/devtools
 
+## 0.2.8
+
+### Patch Changes
+
+- a337ab5: refactor: Update iframe theme styles and improve Inspect iframe source handling
+
 ## 0.2.7
 
 ### Patch Changes
