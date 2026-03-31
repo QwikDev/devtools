@@ -59,6 +59,9 @@ importers:
       oxc-parser:
         specifier: ^0.120.0
         version: 0.120.0
+      rollup-plugin-visualizer:
+        specifier: ^6.0.3
+        version: 6.0.11(rolldown@1.0.0-rc.9)(rollup@4.59.0)
       superjson:
         specifier: ^2.2.6
         version: 2.2.6

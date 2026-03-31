@@ -12,6 +12,10 @@ type MinimalMiddlewareRes = {
   setHeader: (name: string, value: any) => void;
 };
 
+function normalizeAcceptHeader(raw: string | string[] | undefined): string {
+  return Array.isArray(raw) ? raw.join(',') : raw || '';
+}
+
 export function attachSsrPerfInjectorMiddleware(server: any) {
   server.middlewares.use(
     (
@@ -19,7 +23,7 @@ export function attachSsrPerfInjectorMiddleware(server: any) {
       res: MinimalMiddlewareRes,
       next: MiddlewareNext,
     ) => {
-      const accept = req.headers.accept || '';
+      const accept = normalizeAcceptHeader(req.headers.accept);
       if (!accept.includes('text/html')) return next();
 
       const store = getStoreForSSR() as Record<string, unknown>;

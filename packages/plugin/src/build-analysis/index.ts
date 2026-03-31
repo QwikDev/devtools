@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
+import { getServerRpcRequestContext } from '@devtools/kit';
 import type {
   BuildAnalysisRunResult,
   BuildAnalysisStatus,
@@ -11,6 +12,10 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import type { Plugin, ResolvedConfig, ViteDevServer } from 'vite';
 import type { ServerContext } from '../types';
 import { detectPackageManager } from '../npm';
+import {
+  getBuildAnalysisRpcGuardError,
+  isBuildAnalysisRpcAllowed,
+} from './security';
 
 const BUILD_ANALYSIS_VIEW_PATH = '/__qwik_devtools/build-analysis/report';
 const BUILD_ANALYSIS_DIR = path.join('.qwik-devtools', 'build-analysis');
@@ -261,6 +266,14 @@ export function getBuildAnalysisFunctions(
       };
     },
     async buildBuildAnalysisReport(): Promise<BuildAnalysisRunResult> {
+      const rpcClient = getServerRpcRequestContext()?.client;
+      if (!isBuildAnalysisRpcAllowed(rpcClient)) {
+        return {
+          success: false,
+          error: getBuildAnalysisRpcGuardError(),
+        };
+      }
+
       return runBuildScript(ctx.config.root);
     },
   };

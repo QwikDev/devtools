@@ -116,7 +116,9 @@ function appendWrappedExport(
   exportName: string,
   id: string,
 ): string {
+  const serializedExportName = JSON.stringify(exportName);
+  const serializedId = JSON.stringify(id);
   return `${code}
-export const ${exportName} = __qwik_wrap__(__original_${exportName}__, '${exportName}', '${id}');
+export const ${exportName} = __qwik_wrap__(__original_${exportName}__, ${serializedExportName}, ${serializedId});
 `;
 }

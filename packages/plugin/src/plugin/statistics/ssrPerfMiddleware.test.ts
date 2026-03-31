@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import {
+  attachSsrPerfInjectorMiddleware,
   collectSsrPreloadEntries,
   extractSsrPreloadEntriesFromHtml,
   injectSsrDevtoolsIntoHtml,
@@ -73,5 +74,78 @@ describe('ssr preload middleware helpers', () => {
     expect(nextHtml).toContain('qwik:ssr-preloads');
     expect(nextHtml).toContain('window.__QWIK_SSR_PRELOADS__');
     expect(nextHtml).toContain('/build/q-a.js');
+  });
+
+  test('normalizes array accept headers before checking for html requests', () => {
+    let middleware:
+      | ((
+          req: { headers: Record<string, string | string[] | undefined>; url?: string },
+          res: {
+            write: (...args: any[]) => any;
+            end: (...args: any[]) => any;
+            setHeader: (name: string, value: any) => void;
+          },
+          next: (err?: unknown) => void,
+        ) => void)
+      | undefined;
+
+    attachSsrPerfInjectorMiddleware({
+      middlewares: {
+        use(fn: typeof middleware) {
+          middleware = fn;
+        },
+      },
+    });
+
+    expect(middleware).toBeTypeOf('function');
+
+    const html = '<html><head></head><body></body></html>';
+    let written = '';
+    let ended = false;
+    const headers = new Map<string, number>();
+    const res = {
+      write(chunk: unknown) {
+        written += String(chunk);
+        return true;
+      },
+      end(chunk?: unknown) {
+        if (chunk) {
+          written += String(chunk);
+        }
+        ended = true;
+        return this;
+      },
+      setHeader(name: string, value: number) {
+        headers.set(name, value);
+      },
+    };
+    const processWithPerf = process as typeof process & {
+      __QWIK_SSR_PERF__?: unknown[];
+    };
+    processWithPerf.__QWIK_SSR_PERF__ = [{ component: 'App', phase: 'ssr', duration: 1 }];
+
+    try {
+      middleware!(
+        {
+          headers: {
+            accept: ['application/xhtml+xml', 'text/html'],
+          },
+          url: '/demo',
+        },
+        res,
+        () => {},
+      );
+
+      expect(ended).toBe(false);
+      res.end(html);
+    } finally {
+      delete processWithPerf.__QWIK_SSR_PERF__;
+    }
+
+    expect(headers.get('Content-Length')).toBeGreaterThan(0);
+    expect(written).toContain('qwik:ssr-perf');
+    expect(ended).toBe(true);
+    expect(written).toContain('<html><head>');
+    expect(written).toContain('<script>');
   });
 });
