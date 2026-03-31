@@ -13,8 +13,10 @@ export const BuildAnalysis = component$(() => {
   const isChecking = useSignal(true);
   const isBuilding = useSignal(false);
   const hasReport = useSignal(false);
+  const canTriggerBuild = useSignal(false);
   const reportPath = useSignal('');
   const buildCommand = useSignal<string | null>(null);
+  const buildTriggerHint = useSignal('');
   const errorMessage = useSignal('');
 
   const loadStatus = $(async () => {
@@ -26,8 +28,10 @@ export const BuildAnalysis = component$(() => {
       const status = await rpc.getBuildAnalysisStatus();
 
       hasReport.value = status.exists;
+      canTriggerBuild.value = status.canTriggerBuild;
       reportPath.value = status.reportPath;
       buildCommand.value = status.buildCommand;
+      buildTriggerHint.value = status.buildTriggerHint || '';
     } catch (error) {
       errorMessage.value =
         error instanceof Error ? error.message : 'Failed to load build analysis status.';
@@ -44,6 +48,12 @@ export const BuildAnalysis = component$(() => {
     if (!buildCommand.value) {
       errorMessage.value =
         'No build script found. Expected "build.client" or "build" in package.json.';
+      return;
+    }
+
+    if (!canTriggerBuild.value) {
+      errorMessage.value =
+        buildTriggerHint.value || 'Automatic rebuild is unavailable from this DevTools client.';
       return;
     }
 
@@ -96,6 +106,11 @@ export const BuildAnalysis = component$(() => {
               {buildCommand.value}
             </code>
           ) : null}
+          {buildTriggerHint.value ? (
+            <div class="rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+              {buildTriggerHint.value}
+            </div>
+          ) : null}
           {errorMessage.value ? (
             <div class="rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300">
               {errorMessage.value}
@@ -110,7 +125,17 @@ export const BuildAnalysis = component$(() => {
         </div>
       ) : hasReport.value ? (
         <>
-          <div class="flex items-center justify-end">
+          <div class="flex items-center justify-end gap-3">
+            {buildCommand.value && canTriggerBuild.value ? (
+              <button
+                type="button"
+                onClick$={buildReport}
+                disabled={isBuilding.value}
+                class="border-border bg-foreground/5 hover:bg-foreground/10 disabled:cursor-not-allowed disabled:opacity-50 rounded-xl border px-4 py-2 text-sm transition-colors"
+              >
+                {isBuilding.value ? 'Rebuilding...' : 'Rebuild Report'}
+              </button>
+            ) : null}
             <button
               type="button"
               onClick$={refreshFrame}
@@ -134,22 +159,24 @@ export const BuildAnalysis = component$(() => {
           <div class="flex max-w-3xl flex-col gap-4">
             <div class="text-base font-semibold">No build analysis report yet</div>
             <div class="text-muted-foreground text-sm leading-6">
-              The visualizer HTML file does not exist yet. You need to build the
-              current project first, and DevTools will ask for your confirmation
-              before running that build.
+              {canTriggerBuild.value
+                ? 'The visualizer HTML file does not exist yet. You need to build the current project first, and DevTools will ask for your confirmation before running that build.'
+                : 'The visualizer HTML file does not exist yet. Run the build command locally to generate it, or reconnect from localhost if you want DevTools to trigger it for you.'}
             </div>
             <code class="text-muted-foreground rounded-lg bg-foreground/5 px-3 py-2 text-xs">
               {reportPath.value}
             </code>
             <div>
-              <button
-                type="button"
-                onClick$={buildReport}
-                disabled={isBuilding.value || !buildCommand.value}
-                class="border-border bg-foreground/5 hover:bg-foreground/10 disabled:cursor-not-allowed disabled:opacity-50 rounded-xl border px-4 py-2 text-sm transition-colors"
-              >
-                {isBuilding.value ? 'Building...' : 'Build Report'}
-              </button>
+              {buildCommand.value && canTriggerBuild.value ? (
+                <button
+                  type="button"
+                  onClick$={buildReport}
+                  disabled={isBuilding.value}
+                  class="border-border bg-foreground/5 hover:bg-foreground/10 disabled:cursor-not-allowed disabled:opacity-50 rounded-xl border px-4 py-2 text-sm transition-colors"
+                >
+                  {isBuilding.value ? 'Building...' : 'Build Report'}
+                </button>
+              ) : null}
             </div>
           </div>
         </div>

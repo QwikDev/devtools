@@ -29,6 +29,8 @@ export interface BuildAnalysisStatus {
   exists: boolean;
   reportPath: string;
   buildCommand: string | null;
+  canTriggerBuild: boolean;
+  buildTriggerHint?: string;
 }
 
 export interface BuildAnalysisRunResult {

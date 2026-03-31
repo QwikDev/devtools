@@ -3,6 +3,8 @@ const TRUTHY_ENV_VALUES = new Set(['1', 'true', 'yes', 'on']);
 
 type RpcClientSocket = {
   remoteAddress?: string | null;
+  socket?: unknown;
+  _socket?: unknown;
 };
 
 type RpcClientLike = {
@@ -24,7 +26,41 @@ export function getRpcClientRemoteAddress(client: unknown): string | undefined {
   }
 
   const candidate = client as RpcClientLike;
-  return candidate.socket?.remoteAddress ?? candidate._socket?.remoteAddress ?? undefined;
+  return (
+    getSocketRemoteAddress(candidate.socket) ?? getSocketRemoteAddress(candidate._socket)
+  );
+}
+
+function getSocketRemoteAddress(socket: unknown): string | undefined {
+  if (!socket || typeof socket !== 'object') {
+    return undefined;
+  }
+
+  const queue: RpcClientSocket[] = [socket as RpcClientSocket];
+  const seen = new Set<object>();
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current || seen.has(current)) {
+      continue;
+    }
+
+    seen.add(current);
+
+    if (typeof current.remoteAddress === 'string' && current.remoteAddress.length > 0) {
+      return current.remoteAddress;
+    }
+
+    if (current.socket && typeof current.socket === 'object') {
+      queue.push(current.socket as RpcClientSocket);
+    }
+
+    if (current._socket && typeof current._socket === 'object') {
+      queue.push(current._socket as RpcClientSocket);
+    }
+  }
+
+  return undefined;
 }
 
 export function isLoopbackAddress(address: string | undefined): boolean {
@@ -49,4 +85,8 @@ export function isBuildAnalysisRpcAllowed(
 
 export function getBuildAnalysisRpcGuardError(): string {
   return `Refusing to run the project build from a non-local DevTools RPC client. Reconnect from localhost or set ${REMOTE_BUILD_ANALYSIS_ENV}=1 to opt in to remote build-analysis execution.`;
+}
+
+export function getBuildAnalysisRpcGuardHint(): string {
+  return `Automatic rebuild is unavailable from this DevTools client. Reconnect from localhost or set ${REMOTE_BUILD_ANALYSIS_ENV}=1 to opt in to remote build-analysis execution.`;
 }

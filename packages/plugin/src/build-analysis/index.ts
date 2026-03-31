@@ -14,6 +14,7 @@ import type { ServerContext } from '../types';
 import { detectPackageManager } from '../npm';
 import {
   getBuildAnalysisRpcGuardError,
+  getBuildAnalysisRpcGuardHint,
   isBuildAnalysisRpcAllowed,
 } from './security';
 
@@ -258,11 +259,16 @@ export function getBuildAnalysisFunctions(
     async getBuildAnalysisStatus(): Promise<BuildAnalysisStatus> {
       const reportPath = resolveBuildAnalysisHtmlPath(ctx.config.root);
       const { command } = await resolveBuildScript(ctx.config.root);
+      const rpcClient = getServerRpcRequestContext()?.client;
+      const canTriggerBuild = isBuildAnalysisRpcAllowed(rpcClient);
 
       return {
         exists: await fileExists(reportPath),
         reportPath,
         buildCommand: command,
+        canTriggerBuild,
+        buildTriggerHint:
+          command && !canTriggerBuild ? getBuildAnalysisRpcGuardHint() : undefined,
       };
     },
     async buildBuildAnalysisReport(): Promise<BuildAnalysisRunResult> {

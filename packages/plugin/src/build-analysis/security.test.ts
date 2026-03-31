@@ -13,6 +13,12 @@ describe('build analysis RPC security', () => {
     expect(isBuildAnalysisRpcAllowed({ socket: { remoteAddress: '::ffff:127.0.0.1' } }, {})).toBe(
       true,
     );
+    expect(
+      isBuildAnalysisRpcAllowed(
+        { socket: { _socket: { remoteAddress: '127.0.0.1' } } },
+        {},
+      ),
+    ).toBe(true);
   });
 
   test('rejects non-loopback websocket clients by default', () => {
@@ -39,6 +45,9 @@ describe('build analysis RPC security', () => {
     expect(getRpcClientRemoteAddress({ socket: { remoteAddress: '127.0.0.1' } })).toBe(
       '127.0.0.1',
     );
+    expect(
+      getRpcClientRemoteAddress({ socket: { _socket: { remoteAddress: '127.0.0.1' } } }),
+    ).toBe('127.0.0.1');
     expect(getRpcClientRemoteAddress({ _socket: { remoteAddress: '127.0.0.1' } })).toBe(
       '127.0.0.1',
     );
