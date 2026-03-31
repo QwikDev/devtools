@@ -10,6 +10,7 @@ export type DevtoolsTabId =
   | 'inspect'
   | 'codeBreak'
   | 'performance'
+  | 'preloads'
   | 'buildAnalysis';
 
 export interface DevtoolsPanelBounds {

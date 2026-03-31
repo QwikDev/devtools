@@ -8,11 +8,13 @@ import { DevtoolsContent } from './DevtoolsContent';
 import { loadDevtoolsData } from './rpc';
 import { createDevtoolsState, type DevtoolsState } from './state';
 import { DevtoolsSidebar } from './DevtoolsSidebar';
+import { ensurePreloadRuntime } from '../runtime/preloads';
 
 export const QwikDevtools = component$(() => {
   const state = useStore<DevtoolsState>(createDevtoolsState());
 
   useVisibleTask$(async () => {
+    ensurePreloadRuntime();
     await loadDevtoolsData(state);
   });
 

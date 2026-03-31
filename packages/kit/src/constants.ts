@@ -48,6 +48,7 @@ export const VIRTUAL_QWIK_DEVTOOLS_KEY = 'virtual-qwik-devtools.ts';
 export const INNER_USE_HOOK = 'useCollectHooks';
 
 export const QWIK_DEVTOOLS_GLOBAL_STATE = 'QWIK_DEVTOOLS_GLOBAL_STATE';
+export const QWIK_PRELOADS_UPDATE_EVENT = 'qwik:preloads-update';
 
 export const QRL_KEY = '$qrl$';
 export const COMPUTED_QRL_KEY = '$computeQrl$';

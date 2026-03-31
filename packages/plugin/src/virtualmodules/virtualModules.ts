@@ -27,7 +27,7 @@ export const VIRTUAL_MODULES: VirtualModuleConfig[] = [
     key: 'virtual:qwik-component-proxy',
     source: qwikComponentProxySource,
     hookName: '',
-  }
+  },
 ];
 
 // ============================================================================
@@ -97,4 +97,3 @@ export function transformRootFile(code: string): string {
 
   return code;
 }
-

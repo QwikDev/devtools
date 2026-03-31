@@ -1,5 +1,6 @@
 import type { JSXOutput } from '@qwik.dev/core';
 import {
+  IconArrowDownTray,
   IconBoltOutline,
   IconChartBarOutline,
   IconClockOutline,
@@ -58,6 +59,11 @@ export const devtoolsTabs: DevtoolsTabConfig[] = [
     id: 'performance',
     title: 'Performance',
     renderIcon: () => <IconClockOutline class="h-6 w-6" />,
+  },
+  {
+    id: 'preloads',
+    title: 'Preloads',
+    renderIcon: () => <IconArrowDownTray class="h-6 w-6" />,
   },
   {
     id: 'buildAnalysis',

@@ -56,7 +56,7 @@ export function attachSsrPerfInjectorMiddleware(server: any) {
               : Buffer.from(chunk as any).toString();
         }
 
-        const nextBody = injectSsrPerfIntoHtml(body, store, req.url);
+        const nextBody = injectSsrDevtoolsIntoHtml(body, store, req.url);
 
         try {
           res.setHeader('Content-Length', Buffer.byteLength(nextBody));
@@ -83,7 +83,93 @@ function getStoreForSSR(): AnyRecord {
     : (globalThis as AnyRecord);
 }
 
-function injectSsrPerfIntoHtml(
+type SsrPreloadSnapshotEntry = {
+  href: string;
+  normalizedHref?: string;
+  rel?: string;
+  as?: string;
+  resourceType?: string;
+  source?: string;
+  status?: string;
+  discoveredAt?: number;
+  requestedAt?: number;
+  completedAt?: number;
+  importDuration?: number;
+  loadDuration?: number;
+  qrlSymbol?: string;
+  qrlRequestedAt?: number;
+  loadMatchQuality?: 'best-effort' | 'none';
+  matchedBy?: string;
+  originKind?: string;
+  phase?: 'ssr';
+  error?: string;
+};
+
+export function extractSsrPreloadEntriesFromHtml(html: string): SsrPreloadSnapshotEntry[] {
+  const entries: SsrPreloadSnapshotEntry[] = [];
+  const linkRe = /<link\b([^>]*?)>/gi;
+  let linkMatch: RegExpExecArray | null;
+
+  while ((linkMatch = linkRe.exec(html)) !== null) {
+    const attrs = parseAttributes(linkMatch[1] || '');
+    const rel = String(attrs.rel || '').toLowerCase();
+    if (!['preload', 'modulepreload', 'prefetch'].includes(rel)) continue;
+
+    const href = String(attrs.href || '').trim();
+    if (!href) continue;
+
+    const asValue = String(attrs.as || '').trim();
+    entries.push({
+      href,
+      rel,
+      as: asValue,
+      resourceType: inferResourceType(rel, asValue, href),
+      source: 'initial-dom',
+      status: 'pending',
+      discoveredAt: 0,
+      phase: 'ssr',
+      loadMatchQuality: 'none',
+      matchedBy: 'none',
+    });
+  }
+
+  return entries;
+}
+
+export function collectSsrPreloadEntries(
+  html: string,
+  store: Record<string, unknown>,
+): SsrPreloadSnapshotEntry[] {
+  const htmlEntries = extractSsrPreloadEntriesFromHtml(html);
+  const rawStoreEntries = Array.isArray(store.__QWIK_SSR_PRELOADS__)
+    ? (store.__QWIK_SSR_PRELOADS__ as SsrPreloadSnapshotEntry[])
+    : [];
+
+  const merged = new Map<string, SsrPreloadSnapshotEntry>();
+  for (const entry of [...htmlEntries, ...rawStoreEntries]) {
+    const href = typeof entry.href === 'string' ? entry.href : '';
+    const normalizedHref =
+      typeof entry.normalizedHref === 'string' && entry.normalizedHref
+        ? entry.normalizedHref
+        : href;
+    const key = normalizedHref;
+    merged.set(key, {
+      source: 'initial-dom',
+      status: 'pending',
+      discoveredAt: 0,
+      phase: 'ssr',
+      loadMatchQuality: 'none',
+      matchedBy: 'none',
+      ...merged.get(key),
+      ...entry,
+      href,
+    });
+  }
+
+  return [...merged.values()];
+}
+
+export function injectSsrDevtoolsIntoHtml(
   html: string,
   store: Record<string, unknown>,
   url: string | undefined,
@@ -92,13 +178,24 @@ function injectSsrPerfIntoHtml(
     return html;
   }
 
-  const rawEntries = store.__QWIK_SSR_PERF__;
-  const entries = Array.isArray(rawEntries) ? rawEntries : [];
-  log('inject ssr perf %O', { url, total: entries.length });
+  const rawPerfEntries = store.__QWIK_SSR_PERF__;
+  const perfEntries = Array.isArray(rawPerfEntries) ? rawPerfEntries : [];
+  const preloadEntries = collectSsrPreloadEntries(html, store);
+  log('inject ssr devtools %O', {
+    url,
+    perfTotal: perfEntries.length,
+    preloadTotal: preloadEntries.length,
+  });
+
+  const scripts = [
+    perfEntries.length > 0 ? createSsrPerfInjectionScript(perfEntries) : '',
+    preloadEntries.length > 0 ? createSsrPreloadInjectionScript(preloadEntries) : '',
+  ].join('');
+  if (!scripts) return html;
 
   return html.replace(
     /<head(\s[^>]*)?>/i,
-    (match) => `${match}${createSsrPerfInjectionScript(entries)}`,
+    (match) => `${match}${scripts}`,
   );
 }
 
@@ -110,4 +207,36 @@ function createSsrPerfInjectionScript(entries: unknown[]): string {
   window.__QWIK_PERF__.ssr = ${serializedEntries};
   window.dispatchEvent(new CustomEvent('qwik:ssr-perf', { detail: ${serializedEntries} }));
 </script>`;
+}
+
+function createSsrPreloadInjectionScript(entries: SsrPreloadSnapshotEntry[]): string {
+  const serializedEntries = JSON.stringify(entries);
+  return `
+<script>
+  window.__QWIK_SSR_PRELOADS__ = ${serializedEntries};
+  window.dispatchEvent(new CustomEvent('qwik:ssr-preloads', { detail: { entries: ${serializedEntries} } }));
+</script>`;
+}
+
+function parseAttributes(raw: string): Record<string, string> {
+  const attrs: Record<string, string> = {};
+  const attrRe = /([^\s=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+  let attrMatch: RegExpExecArray | null;
+
+  while ((attrMatch = attrRe.exec(raw)) !== null) {
+    const [, key, dq, sq, bare] = attrMatch;
+    attrs[key.toLowerCase()] = dq || sq || bare || '';
+  }
+
+  return attrs;
+}
+
+function inferResourceType(rel: string, asValue: string, href: string) {
+  if (asValue) return asValue;
+  if (rel === 'modulepreload') return 'script';
+  const cleanHref = href.split('#')[0].split('?')[0];
+  const ext = cleanHref.includes('.') ? cleanHref.slice(cleanHref.lastIndexOf('.') + 1).toLowerCase() : '';
+  if (['js', 'mjs', 'cjs'].includes(ext)) return 'script';
+  if (ext === 'css') return 'style';
+  return 'other';
 }

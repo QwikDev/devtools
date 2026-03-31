@@ -238,6 +238,24 @@ export const IconChartBarOutline = component$((props: IconProps) => {
   );
 });
 
+export const IconArrowDownTray = component$((props: IconProps) => {
+  return (
+    <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })}>
+      {props.title ? <title>{props.title}</title> : null}
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 3v10.5m0 0 3.75-3.75M12 13.5 8.25 9.75"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M3.75 15.75v2.25A2.25 2.25 0 0 0 6 20.25h12a2.25 2.25 0 0 0 2.25-2.25v-2.25"
+      />
+    </svg>
+  );
+});
+
 export const IconXMark = component$((props: IconProps) => {
   return (
     <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })}>

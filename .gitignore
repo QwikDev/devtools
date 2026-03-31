@@ -67,5 +67,6 @@ Thumbs.db
 .pnpm-store/*
 qwik/*
 .cursor/skills/*
-**/build-analysis/**/*
 related-folder/**
+**/.qwik-devtools/
+**/.qwik-devtools/

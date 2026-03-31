@@ -9,6 +9,7 @@ import { Inspect } from '../features/Inspect/Inspect';
 import { Overview } from '../features/Overview/Overview';
 import { Packages } from '../features/Packages/Packages';
 import { Performance } from '../features/Performance/Performance';
+import { Preloads } from '../features/Preloads/Preloads';
 import { RenderTree } from '../features/RenderTree/RenderTree';
 import { Routes } from '../features/Routes/Routes';
 import type { DevtoolsState } from './state';
@@ -97,6 +98,13 @@ export const DevtoolsContent = component$<DevtoolsContentProps>(({ state }) => {
         <TabContent>
           <TabTitle title="Performance" q:slot="title" />
           <Performance q:slot="content" />
+        </TabContent>
+      );
+    case 'preloads':
+      return (
+        <TabContent>
+          <TabTitle title="Preloads" q:slot="title" />
+          <Preloads q:slot="content" />
         </TabContent>
       );
     case 'buildAnalysis':
