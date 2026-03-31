@@ -13,9 +13,9 @@ const GLASSMORPHISM_CSS = `
     --c-bg-base: transparent !important;
     --c-bg-nav: transparent !important;
     --c-bg-active: transparent !important;
-    --iframe-border: rgba(255, 255, 255, 0.08) !important;
-    --iframe-hover: rgba(255, 255, 255, 0.06) !important;
-    color-scheme: dark;
+    --iframe-border: rgba(0, 0, 0, 0.1) !important;
+    --iframe-hover: rgba(0, 0, 0, 0.04) !important;
+    color-scheme: light;
   }
   /* 仅针对主视图容器做透明处理，不再暴力让所有 div/section 变透明 */
   html, body, #app, main, header, nav, footer { background-color: transparent !important; }
