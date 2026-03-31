@@ -1,12 +1,12 @@
 import {
-  component$,
-  useVisibleTask$,
-  useComputed$,
   $,
+  Resource,
+  component$,
+  useComputed$,
+  useResource$,
   useSignal,
   useStyles$,
-  useResource$,
-  Resource,
+  useVisibleTask$,
 } from '@qwik.dev/core';
 import { Tree } from '../../components/Tree/Tree';
 import type { TreeNode } from '../../components/Tree/type';
@@ -17,7 +17,7 @@ import { removeNodeFromTree } from '../../components/Tree/vnode';
 import { isListen } from '../../utils/type';
 import debug from 'debug';
 import { getHookStore, QrlUtils, type HookType } from './formatTreeData';
-import type { QRLInternal } from './types';
+import type { CodeModule, HookFilterItem, ParsedHookEntry, QRLInternal } from './types';
 import { unwrapStore } from '@qwik.dev/core/internal';
 import {
   getViteClientRpc,
@@ -28,36 +28,23 @@ import {
 } from '@devtools/kit';
 import { getHighlighter } from '../../utils/shiki';
 import { getQwikState, returnQrlData } from './data';
-import { IconChevronUpMini } from '../../components/Icons/Icons';
-import type { ParsedHookEntry } from './types';
+import { HighlightedCodeList } from './components/HighlightedCodeList';
+import { HookFiltersCard } from './components/HookFiltersCard';
+import {
+  RenderTreeTabs,
+  type RenderTreeTabId,
+} from './components/RenderTreeTabs';
+import { StateTreeNodeLabel } from './components/StateTreeNodeLabel';
+import { filterHookTree } from './utils/filterHookTree';
+import { getCodeLanguage } from './utils/getCodeLanguage';
 
 const log = debug('qwik:devtools:renderTree');
 
-interface CodeModule {
-  pathId: string;
-  modules: { code: string } | null;
-  error?: string;
-}
-
-function getValueColorClass(node: TreeNode, valueText: string): string {
-  switch (node.elementType) {
-    case 'string':
-      return 'text-red-400';
-    case 'number':
-      return 'text-green-400';
-    case 'boolean':
-      return 'text-amber-400';
-    case 'function':
-      return 'text-purple-400';
-    case 'array':
-      return 'text-muted-foreground';
-    case 'object':
-      return /(Array\[|Object\s\{|Class\s\{)/.test(valueText)
-        ? 'text-muted-foreground'
-        : 'text-foreground';
-    default:
-      return 'text-foreground';
-  }
+function buildVisibleHookTree(
+  hookStore: ReturnType<typeof getHookStore>,
+  hookFilters: HookFilterItem[],
+) {
+  return filterHookTree(hookStore.buildTree(), hookFilters);
 }
 
 export const RenderTree = component$(() => {
@@ -91,13 +78,11 @@ export const RenderTree = component$(() => {
     }
     const highlighter = await getHighlighter();
     return codes.value.map((item) => {
-      let lang = 'tsx';
-      if (item.pathId.endsWith('.js')) lang = 'js';
-      if (item.pathId.endsWith('.ts')) lang = 'ts';
-      if (item.pathId.endsWith('.jsx')) lang = 'jsx';
-      if (item.pathId.endsWith('.tsx')) lang = 'tsx';
       return item?.modules?.code
-        ? highlighter.codeToHtml(item.modules.code, { lang, theme: 'nord' })
+        ? highlighter.codeToHtml(item.modules.code, {
+            lang: getCodeLanguage(item.pathId),
+            theme: 'nord',
+          })
         : '';
     });
   });
@@ -146,136 +131,66 @@ export const RenderTree = component$(() => {
     const res =
       (await rpc?.getModulesByPathIds(hookStore.value.findAllQrlPaths())) ?? [];
     log('getModulesByPathIds return: %O', res);
-    codes.value = res.filter(
-      (item: CodeModule) => item.modules
-    );
+    codes.value = res.filter((item: CodeModule) => item.modules);
     stateTree.value = hookStore.value.buildTree();
     hookFilters.value = hookStore.value.getFilterList();
   });
 
-  const currentTab = useSignal<'state' | 'code'>('state');
+  const currentTab = useSignal<RenderTreeTabId>('state');
+
+  const applyHookFilters = $(() => {
+    stateTree.value = buildVisibleHookTree(hookStore.value, hookFilters.value);
+  });
+
+  const handleSelectAll = $(() => {
+    hookFilters.value = hookFilters.value.map((item) => ({
+      ...item,
+      display: true,
+    }));
+    applyHookFilters();
+  });
+
+  const handleClear = $(() => {
+    hookFilters.value = hookFilters.value.map((item) => ({
+      ...item,
+      display: false,
+    }));
+    applyHookFilters();
+  });
+
+  const handleFilterChange = $((index: number, checked: boolean) => {
+    hookFilters.value = hookFilters.value.map((item, itemIndex) =>
+      itemIndex === index ? { ...item, display: checked } : item,
+    );
+    applyHookFilters();
+  });
 
   return (
     <div class="h-full w-full flex-1 overflow-hidden rounded-2xl border border-glass-border bg-card-item-bg">
       <div class="flex h-full w-full">
-        <div class="w-1/2 overflow-hidden p-3 custom-scrollbar" style={{ minWidth: '360px' }}>
+        <div
+          class="custom-scrollbar w-1/2 overflow-hidden p-3"
+          style={{ minWidth: '360px' }}
+        >
           <Tree data={data} onNodeClick={onNodeClick}></Tree>
         </div>
         <div class="border-l border-glass-border"></div>
         <div class="flex h-full min-h-0 w-1/2 flex-col overflow-hidden p-4">
-          <div class="">
-            <div class="border-b border-glass-border flex space-x-2 pb-1">
-              <button
-                onClick$={() => (currentTab.value = 'state')}
-                class={[
-                  'px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
-                  currentTab.value === 'state'
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
-                ]}
-                style={currentTab.value === 'state' ? { boxShadow: 'inset 0 -2px 0 0 var(--color-primary)' } : {}}
-              >
-                State
-              </button>
-              <button
-                onClick$={() => (currentTab.value = 'code')}
-                class={[
-                  'px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
-                  currentTab.value === 'code'
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
-                ]}
-                style={currentTab.value === 'code' ? { boxShadow: 'inset 0 -2px 0 0 var(--color-primary)' } : {}}
-              >
-                Code
-              </button>
-            </div>
-          </div>
+          <RenderTreeTabs
+            currentTab={currentTab.value}
+            onTabChange$={(tab) => (currentTab.value = tab)}
+          />
 
           {currentTab.value === 'state' && (
             <div class="mt-5 flex min-h-0 flex-1 flex-col">
-              <div class="rounded-xl border border-glass-border bg-card-item-bg">
-                <div class="border-b border-glass-border flex items-center justify-between px-2 py-2">
-                  <span class="text-muted-foreground text-xs font-medium">
-                    Hooks
-                  </span>
-                  <div class="flex items-center space-x-2">
-                    <button
-                      class="text-primary px-2 py-1 text-xs hover:underline"
-                      onClick$={$(() => {
-                        hookFilters.value = hookFilters.value.map((item) => {
-                          item.display = true;
-                          return item;
-                        });
-                        stateTree.value = hookStore.value.buildTree().filter((item) =>
-                          hookFilters.value.some(
-                            (hook) => hook.key === item?.label && hook.display,
-                          ),
-                        );
-                      })}
-                    >
-                      Select all
-                    </button>
-                    <button
-                      class="text-muted-foreground hover:text-foreground px-2 py-1 text-xs hover:underline"
-                      onClick$={$(() => {
-                        hookFilters.value = hookFilters.value.map((item) => {
-                          item.display = false;
-                          return item;
-                        });
-                        stateTree.value = hookStore.value.buildTree().filter((item) =>
-                          hookFilters.value.some(
-                            (hook) => hook.key === item?.label && hook.display,
-                          ),
-                        );
-                      })}
-                    >
-                      Clear
-                    </button>
-                    <button
-                      aria-label="toggle hooks"
-                      onClick$={$(() => (hooksOpen.value = !hooksOpen.value))}
-                      class="text-muted-foreground hover:text-foreground rounded p-1"
-                    >
-                      <IconChevronUpMini
-                        class={`h-4 w-4 transition-transform duration-200 ${
-                          hooksOpen.value ? 'rotate-180' : '-rotate-90'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                </div>
-                <div
-                  class="grid grid-cols-2 gap-x-6 gap-y-3 overflow-hidden px-3 py-2 text-sm sm:grid-cols-3 lg:grid-cols-4"
-                  style={{
-                    maxHeight: hooksOpen.value ? '800px' : '0px',
-                    opacity: hooksOpen.value ? '1' : '0',
-                    transition: 'max-height 200ms ease, opacity 200ms ease',
-                  }}
-                >
-                  {hookFilters.value.map((item, idx) => (
-                    <label key={idx} class="flex items-center gap-2 cursor-pointer">
-                      <input
-                        class="h-4 w-4 rounded focus:ring-0 cursor-pointer"
-                        style={{ accentColor: 'var(--color-primary-active)' }}
-                        type="checkbox"
-                        checked={item.display}
-                        onChange$={(ev: InputEvent) => {
-                          const target = ev.target as HTMLInputElement;
-                          hookFilters.value[idx].display = target.checked;
-                          stateTree.value = hookStore.value.buildTree().filter((item) =>
-                            hookFilters.value.some(
-                              (hook) =>
-                                hook.key === item?.label && hook.display,
-                            ),
-                          );
-                        }}
-                      />
-                      <span class="ml-2 select-none">{item.key}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+              <HookFiltersCard
+                filters={hookFilters.value}
+                isOpen={hooksOpen.value}
+                onSelectAll$={handleSelectAll}
+                onClear$={handleClear}
+                onToggleOpen$={$(() => (hooksOpen.value = !hooksOpen.value))}
+                onFilterChange$={handleFilterChange}
+              />
               <div class="mt-4 min-h-0 flex-1 overflow-y-auto p-2">
                 <Tree
                   data={stateTree}
@@ -284,26 +199,7 @@ export const RenderTree = component$(() => {
                   animationDuration={200}
                   isHover
                   renderNode={$((node: TreeNode) => {
-                    const label = node.label || node.name || '';
-                    const parts = label.split(':');
-                    if (node.children && parts.length === 1) {
-                      return (
-                        <span class="font-semibold text-pink-400">{label}</span>
-                      );
-                    }
-                    if (parts.length > 1) {
-                      const key = parts[0];
-                      const value = parts.slice(1).join(':').trim();
-                      const valueClass = getValueColorClass(node, value);
-                      return (
-                        <>
-                          <span class="text-blue-400">{key}</span>
-                          <span class="text-foreground/70"> : </span>
-                          <span class={valueClass}>{value}</span>
-                        </>
-                      );
-                    }
-                    return <span>{label}</span>;
+                    return <StateTreeNodeLabel node={node} />;
                   })}
                 ></Tree>
               </div>
@@ -320,21 +216,7 @@ export const RenderTree = component$(() => {
                   </div>
                 )}
                 onResolved={(highlighted) => (
-                  <>
-                    {codes.value.map((item, idx) => (
-                      <>
-                        <div class="border-glass-border bg-card-item-bg hover:bg-card-item-hover-bg mb-4 rounded-xl border p-4 transition-colors">
-                          <div class="text-primary mb-2 break-all text-base font-semibold">
-                            {item.pathId}
-                          </div>
-                          <pre
-                            class="overflow-hidden"
-                            dangerouslySetInnerHTML={highlighted[idx] || ''}
-                          />
-                        </div>
-                      </>
-                    ))}
-                  </>
+                  <HighlightedCodeList codes={codes.value} highlighted={highlighted} />
                 )}
               />
             </div>

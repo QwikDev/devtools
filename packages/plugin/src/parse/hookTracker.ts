@@ -20,6 +20,7 @@ import {
 } from './helpers';
 import { INNER_USE_HOOK } from '@devtools/kit';
 import type { InjectionTask } from './types';
+import { applySourceEdits } from './sourceEdits';
 
 // ============================================================================
 // Main Entry
@@ -55,7 +56,7 @@ export function injectHookTrackers(code: string): string {
     },
   });
 
-  return applyTasks(code, tasks);
+  return applySourceEdits(code, tasks);
 }
 
 // ============================================================================
@@ -84,7 +85,13 @@ function processVariableDeclarator(
   // Custom hook
   if (isCustomHook(normalizedName)) {
     if (hasCollecthookAfterByVariableId(code, declEnd, variableId)) return null;
-    const payload = buildCollecthookPayload(indent, variableId, 'customhook', 'VariableDeclarator', variableId);
+    const payload = buildCollecthookPayload(
+      indent,
+      variableId,
+      'customhook',
+      'VariableDeclarator',
+      variableId,
+    );
     return { kind: 'insert', pos: declEnd, text: '\n' + payload };
   }
 
@@ -92,7 +99,13 @@ function processVariableDeclarator(
   if (!isKnownHook(normalizedName)) return null;
   if (hasCollecthookAfterByVariableId(code, declEnd, variableId)) return null;
 
-  const payload = buildCollecthookPayload(indent, variableId, normalizedName, 'VariableDeclarator', variableId);
+  const payload = buildCollecthookPayload(
+    indent,
+    variableId,
+    normalizedName,
+    'VariableDeclarator',
+    variableId,
+  );
   return { kind: 'insert', pos: declEnd, text: '\n' + payload };
 }
 
@@ -123,8 +136,15 @@ function processExpressionStatement(
 
   // Known hook (expression form)
   if (isKnownHook(normalizedName)) {
-    if (hasCollecthookAfterByVariableName(code, stmtEnd, normalizedName)) return null;
-    const payload = buildCollecthookPayload(indent, normalizedName, normalizedName, 'expressionStatement', 'undefined');
+    if (hasCollecthookAfterByVariableName(code, stmtEnd, normalizedName))
+      return null;
+    const payload = buildCollecthookPayload(
+      indent,
+      normalizedName,
+      normalizedName,
+      'expressionStatement',
+      'undefined',
+    );
     return {
       task: { kind: 'insert', pos: stmtEnd, text: '\n' + payload },
       newIndex: currentIndex,
@@ -133,7 +153,13 @@ function processExpressionStatement(
 
   // Custom hook (expression form) - convert to variable declaration
   if (isCustomHook(normalizedName)) {
-    return convertToVariableDeclaration(code, stmtStart, stmtEnd, indent, currentIndex);
+    return convertToVariableDeclaration(
+      code,
+      stmtStart,
+      stmtEnd,
+      indent,
+      currentIndex,
+    );
   }
 
   return null;
@@ -152,10 +178,21 @@ function convertToVariableDeclaration(
   const callSource = code.slice(stmtStart, stmtEnd);
   const variableName = `_customhook_${currentIndex}`;
   const declLine = `${indent}let ${variableName} = ${trimStatementSemicolon(callSource)};\n`;
-  const payload = buildCollecthookPayload(indent, variableName, 'customhook', 'VariableDeclarator', variableName);
+  const payload = buildCollecthookPayload(
+    indent,
+    variableName,
+    'customhook',
+    'VariableDeclarator',
+    variableName,
+  );
 
   return {
-    task: { kind: 'replace', start: stmtStart, end: stmtEnd, text: declLine + payload },
+    task: {
+      kind: 'replace',
+      start: stmtStart,
+      end: stmtEnd,
+      text: declLine + payload,
+    },
     newIndex: currentIndex + 1,
   };
 }
@@ -171,32 +208,34 @@ interface HookInfo {
 }
 
 function extractHookInfo(node: any): HookInfo | null {
-  const init = node.init;
-  if (!isAstNodeLike(init) || init.type !== 'CallExpression') return null;
-
-  const callee = (init as any).callee;
-  if (!isAstNodeLike(callee) || callee.type !== 'Identifier') return null;
-
-  const hookName = normalizeHookName((callee as any).name as string);
-  const normalizedName = normalizeQrlHookName(hookName);
   const variableId = getVariableIdentifierName(node.id);
-
   if (!variableId) return null;
 
-  return { hookName, normalizedName, variableId };
+  const hookCall = extractHookCall(node.init);
+  if (!hookCall) return null;
+
+  return { ...hookCall, variableId };
 }
 
-function extractExpressionHookInfo(node: any): { hookName: string; normalizedName: string } | null {
-  const expr = node.expression;
-  if (!isAstNodeLike(expr) || expr.type !== 'CallExpression') return null;
+function extractExpressionHookInfo(
+  node: any,
+): { hookName: string; normalizedName: string } | null {
+  return extractHookCall(node.expression);
+}
 
-  const callee = (expr as any).callee;
+function extractHookCall(
+  node: unknown,
+): { hookName: string; normalizedName: string } | null {
+  if (!isAstNodeLike(node) || node.type !== 'CallExpression') return null;
+
+  const callee = (node as any).callee;
   if (!isAstNodeLike(callee) || callee.type !== 'Identifier') return null;
 
   const hookName = normalizeHookName((callee as any).name as string);
-  const normalizedName = normalizeQrlHookName(hookName);
-
-  return { hookName, normalizedName };
+  return {
+    hookName,
+    normalizedName: normalizeQrlHookName(hookName),
+  };
 }
 
 // ============================================================================
@@ -209,35 +248,12 @@ function getParentRange(parent: any): [number, number] | null {
   return [range[0], range[1]];
 }
 
-function getPositionInfo(code: string, range: [number, number]): { declStart: number; declEnd: number; indent: string } {
+function getPositionInfo(
+  code: string,
+  range: [number, number],
+): { declStart: number; declEnd: number; indent: string } {
   const [declStart, declEnd] = range;
   const lineStart = findLineStart(code, declStart);
   const indent = readIndent(code, lineStart);
   return { declStart, declEnd, indent };
 }
-
-// ============================================================================
-// Task Application
-// ============================================================================
-
-function applyTasks(code: string, tasks: InjectionTask[]): string {
-  if (tasks.length === 0) return code;
-
-  // Sort from last to first to keep positions stable
-  tasks.sort((a, b) => {
-    const aPos = a.kind === 'insert' ? a.pos : a.start;
-    const bPos = b.kind === 'insert' ? b.pos : b.start;
-    return bPos - aPos;
-  });
-
-  let result = code;
-  for (const task of tasks) {
-    if (task.kind === 'insert') {
-      result = result.slice(0, task.pos) + task.text + result.slice(task.pos);
-    } else {
-      result = result.slice(0, task.start) + task.text + result.slice(task.end);
-    }
-  }
-  return result;
-}
-

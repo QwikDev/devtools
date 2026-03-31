@@ -46,6 +46,82 @@ export interface QwikPerfStoreRemembered {
 
 }
 
+export type QwikPreloadStatus = 'pending' | 'loaded' | 'error' | 'unknown';
+export type QwikPreloadSource =
+  | 'initial-dom'
+  | 'mutation'
+  | 'performance'
+  | 'qrl-correlation';
+export type QwikPreloadOriginKind =
+  | 'current-project'
+  | 'vite-plugin-injected'
+  | 'node_modules'
+  | 'virtual-module'
+  | 'generated'
+  | 'external'
+  | 'unknown';
+export type QwikPreloadPhase = 'csr' | 'ssr' | 'unknown';
+export type QwikPreloadMatchMode =
+  | 'href'
+  | 'normalized-href'
+  | 'chunk-hash'
+  | 'resource-name'
+  | 'none';
+export type QwikPreloadLoadMatchQuality = 'best-effort' | 'none';
+
+export interface QwikPreloadQrlRequestRemembered {
+  symbol: string;
+  href?: string;
+  normalizedHref?: string;
+  requestedAt: number;
+  originKind?: QwikPreloadOriginKind;
+  phase?: QwikPreloadPhase;
+  matchedEntryId?: number;
+}
+
+export interface QwikPreloadEntryRemembered {
+  id: number;
+  href: string;
+  normalizedHref: string;
+  rel: string;
+  as: string;
+  resourceType: string;
+  status: QwikPreloadStatus;
+  source: QwikPreloadSource;
+  originKind: QwikPreloadOriginKind;
+  phase: QwikPreloadPhase;
+  discoveredAt: number;
+  requestedAt?: number;
+  completedAt?: number;
+  importDuration?: number;
+  loadDuration?: number;
+  duration?: number;
+  transferSize?: number;
+  decodedBodySize?: number;
+  initiatorType?: string;
+  qrlSymbol?: string;
+  qrlRequestedAt?: number;
+  qrlToLoadDuration?: number;
+  loadMatchQuality?: QwikPreloadLoadMatchQuality;
+  matchedBy: QwikPreloadMatchMode;
+  error?: string;
+}
+
+export type QwikSsrPreloadSnapshotRemembered =
+  Partial<QwikPreloadEntryRemembered> &
+  Pick<QwikPreloadEntryRemembered, 'href'>;
+
+export interface QwikPreloadStoreRemembered {
+  entries: QwikPreloadEntryRemembered[];
+  qrlRequests: QwikPreloadQrlRequestRemembered[];
+  startedAt: number;
+  clear: () => void;
+  _id: number;
+  _initialized: boolean;
+  _byHref: Record<string, number>;
+  _byId: Record<number, QwikPreloadEntryRemembered>;
+}
+
 export interface DevtoolsRenderStats {
   /**
    * In-memory performance store written by devtools instrumentation.
@@ -67,6 +143,8 @@ declare global {
      * Written by `@devtools/plugin` instrumentation.
      */
     __QWIK_PERF__?: QwikPerfStoreRemembered;
+    __QWIK_PRELOADS__?: QwikPreloadStoreRemembered;
+    __QWIK_SSR_PRELOADS__?: QwikSsrPreloadSnapshotRemembered[];
   }
 }
 
@@ -76,6 +154,7 @@ declare global {
   namespace NodeJS {
     interface Process {
       __QWIK_SSR_PERF__?: QwikPerfEntryRemembered[];
+      __QWIK_SSR_PRELOADS__?: QwikSsrPreloadSnapshotRemembered[];
       __QWIK_SSR_PERF_SET__?: Set<string>;
       __QWIK_SSR_PERF_ID__?: number;
       __QWIK_SSR_PERF_INDEX__?: Record<string, number>;

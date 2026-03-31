@@ -34,7 +34,7 @@ export const Overview = component$(({ state }: OverviewProps) => {
         </div>
 
         <div
-          onClick$={[$(() => pageJump('components')), stopPropagation]}
+          onClick$={[$(() => pageJump('renderTree')), stopPropagation]}
           class="border-border bg-card-item-bg hover:bg-card-item-hover-bg flex cursor-pointer items-center gap-5 rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5"
         >
           <div class="bg-foreground/5 border-border rounded-lg border p-3.5">

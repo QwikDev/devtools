@@ -3,10 +3,11 @@
  * Injects collecthook setup and render stats at the beginning of each component body
  */
 
-import { ComponentBodyRange } from './traverse';
+import type { ComponentBodyRange } from './componentBodies';
 import { readIndent } from './helpers';
 import { INNER_USE_HOOK } from '@devtools/kit';
-import type { InjectOptions, InitTask } from './types';
+import type { InjectOptions, InsertTask } from './types';
+import { applySourceEdits } from './sourceEdits';
 
 // ============================================================================
 // Main Entry
@@ -20,7 +21,7 @@ export function injectInitHooks(
   bodies: ComponentBodyRange[],
   options?: InjectOptions,
 ): string {
-  const tasks: InitTask[] = [];
+  const tasks: InsertTask[] = [];
 
   for (const body of bodies) {
     const task = createInitTask(code, body, options);
@@ -29,7 +30,7 @@ export function injectInitHooks(
     }
   }
 
-  return applyTasks(code, tasks);
+  return applySourceEdits(code, tasks);
 }
 
 // ============================================================================
@@ -43,7 +44,7 @@ function createInitTask(
   code: string,
   body: ComponentBodyRange,
   options?: InjectOptions,
-): InitTask | null {
+): InsertTask | null {
   const { insertPos, exportName } = body;
 
   // Skip if already has collecthook initialization
@@ -52,18 +53,17 @@ function createInitTask(
   }
 
   // Calculate insertion position
-  const { insertIndex, prefixNewline } = calculateInsertPosition(code, insertPos);
+  const { insertIndex, prefixNewline } = calculateInsertPosition(
+    code,
+    insertPos,
+  );
   const indent = readIndent(code, insertIndex);
 
   // Build initialization code
   const componentArg = buildComponentArg(options?.path, exportName);
   const initLine = `${prefixNewline}${indent}const collecthook = ${INNER_USE_HOOK}(${componentArg})\n`;
 
-  return {
-    start: insertIndex,
-    end: insertIndex,
-    text: initLine,
-  };
+  return { kind: 'insert', pos: insertIndex, text: initLine };
 }
 
 // ============================================================================
@@ -75,7 +75,10 @@ function hasExistingCollecthook(code: string, insertPos: number): boolean {
   return /const\s+collecthook\s*=\s*useCollectHooks\s*\(/.test(lookahead);
 }
 
-function calculateInsertPosition(code: string, insertPos: number): {
+function calculateInsertPosition(
+  code: string,
+  insertPos: number,
+): {
   insertIndex: number;
   prefixNewline: string;
 } {
@@ -95,14 +98,20 @@ function calculateInsertPosition(code: string, insertPos: number): {
 /**
  * Builds the component argument string for collecthook initialization
  */
-function buildComponentArg(path: string | undefined, exportName: string | undefined): string {
+function buildComponentArg(
+  path: string | undefined,
+  exportName: string | undefined,
+): string {
   const rawArg = String(path ?? '');
   const baseArg = rawArg.split('?')[0].split('#')[0];
   const suffix = buildComponentSuffix(baseArg, exportName);
   return JSON.stringify(`${baseArg}${suffix}`);
 }
 
-function buildComponentSuffix(baseArg: string, exportName: string | undefined): string {
+function buildComponentSuffix(
+  baseArg: string,
+  exportName: string | undefined,
+): string {
   if (exportName && typeof exportName === 'string') {
     return `_${exportName}`;
   }
@@ -117,20 +126,3 @@ function buildComponentSuffix(baseArg: string, exportName: string | undefined): 
   const name = file.replace(/\.[^.]+$/, '');
   return name ? `_${name.replace(/-/g, '_')}` : '';
 }
-
-
-// ============================================================================
-// Task Application
-// ============================================================================
-
-function applyTasks(code: string, tasks: InitTask[]): string {
-  // Sort from last to first to keep positions stable
-  tasks.sort((a, b) => b.start - a.start);
-
-  let result = code;
-  for (const task of tasks) {
-    result = result.slice(0, task.start) + task.text + result.slice(task.end);
-  }
-  return result;
-}
-

@@ -24,7 +24,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
     plugins: [qwikRouter(), qwikVite(), tsconfigPaths(), qwikDevtools()],
     build: {
       rollupOptions: {
-        external: ['path'],
+        external: ['path', '@qwik.dev/router/service-worker'],
       },
     },
     optimizeDeps: {

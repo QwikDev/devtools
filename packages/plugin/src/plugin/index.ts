@@ -1,5 +1,6 @@
 import { type Plugin } from 'vite';
 import VueInspector from 'vite-plugin-inspect';
+import { createBuildAnalysisPlugins } from '../build-analysis';
 import { devtoolsPlugin } from './devtools';
 import { statisticsPlugin } from './statistics';
 
@@ -14,6 +15,7 @@ export function qwikDevtools(): Plugin[] {
     devtoolsPlugin(),
     { ...VueInspector(), apply: 'serve' },
     statisticsPlugin(),
+    ...createBuildAnalysisPlugins(),
     // Add more plugins here as needed
   ];
 }

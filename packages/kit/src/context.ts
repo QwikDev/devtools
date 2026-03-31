@@ -1,4 +1,3 @@
-import { target } from './shared';
 import {
   ViteClientContext,
   CLIENT_CTX,
@@ -8,38 +7,23 @@ import {
   CLIENT_RPC,
 } from './globals';
 import { ServerRpc, ClientRpc } from './types';
+import { createGlobalAccessor } from './global-store';
 
-type GlobalTarget = Record<string, unknown>;
-const t = target as unknown as GlobalTarget;
+const clientContextAccessor =
+  createGlobalAccessor<ViteClientContext>(CLIENT_CTX);
+const serverContextAccessor =
+  createGlobalAccessor<ViteServerContext>(SERVER_CTX);
+const serverRpcAccessor = createGlobalAccessor<ServerRpc>(SERVER_RPC);
+const clientRpcAccessor = createGlobalAccessor<ClientRpc>(CLIENT_RPC);
 
-export function getViteClientContext(): ViteClientContext {
-  return t[CLIENT_CTX] as ViteClientContext;
-}
+export const getViteClientContext = clientContextAccessor.get;
+export const setViteClientContext = clientContextAccessor.set;
 
-export function setViteClientContext(ctx: ViteClientContext) {
-  t[CLIENT_CTX] = ctx;
-}
+export const getViteServerContext = serverContextAccessor.get;
+export const setViteServerContext = serverContextAccessor.set;
 
-export function getViteServerContext() {
-  return t[SERVER_CTX] as ViteServerContext;
-}
+export const getViteServerRpc = serverRpcAccessor.get;
+export const setViteServerRpc = serverRpcAccessor.set;
 
-export function setViteServerContext(ctx: ViteServerContext) {
-  t[SERVER_CTX] = ctx;
-}
-
-export function getViteServerRpc() {
-  return t[SERVER_RPC] as ServerRpc;
-}
-
-export function setViteServerRpc(rpc: ServerRpc) {
-  t[SERVER_RPC] = rpc;
-}
-
-export function getViteClientRpc() {
-  return t[CLIENT_RPC] as ClientRpc;
-}
-
-export function setViteClientRpc(rpc: ClientRpc) {
-  t[CLIENT_RPC] = rpc;
-}
+export const getViteClientRpc = clientRpcAccessor.get;
+export const setViteClientRpc = clientRpcAccessor.set;

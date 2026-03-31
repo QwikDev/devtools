@@ -1,5 +1,5 @@
 import { component$, useSignal, $, useTask$ } from '@qwik.dev/core';
-import type { State } from '../../types/state'; // Assuming State type is defined elsewhere
+import type { State } from '../../types/state';
 
 interface DevtoolsButtonProps {
   state: State;

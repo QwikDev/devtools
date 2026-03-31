@@ -4,7 +4,7 @@ import { HtmlParser } from './HtmlParser';
 
 type ParserTab = 'state' | 'html';
 
-export const CodeBreack = component$(() => {
+export const CodeBreak = component$(() => {
   useStyles$(`
   .code-output-container {
     overflow-x: auto;
@@ -24,7 +24,6 @@ export const CodeBreack = component$(() => {
 
   return (
     <div class="h-full space-y-6 overflow-hidden">
-      {/* Segmented Navigation */}
       <div class="flex justify-center">
         <div class="border-glass-border bg-card-item-bg inline-flex rounded-xl border p-0.5">
           <button
@@ -54,7 +53,6 @@ export const CodeBreack = component$(() => {
         </div>
       </div>
 
-      {/* Content */}
       {currentTab.value === 'state' && <StateParser />}
       {currentTab.value === 'html' && <HtmlParser />}
     </div>

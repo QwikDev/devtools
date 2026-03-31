@@ -155,6 +155,12 @@ export interface ParsedHookEntry extends ParsedStructure {
 
 export type HookDataEntry = SimpleHookEntry | ParsedHookEntry;
 
+export interface CodeModule {
+  pathId: string;
+  modules: { code: string } | null;
+  error?: string;
+}
+
 // ============================================================================
 // Tree Building Types
 // ============================================================================
