@@ -138,6 +138,14 @@ export const RenderTree = component$(() => {
 
   const currentTab = useSignal<RenderTreeTabId>('state');
 
+  const showStateTab = $(() => {
+    currentTab.value = 'state';
+  });
+
+  const showCodeTab = $(() => {
+    currentTab.value = 'code';
+  });
+
   const applyHookFilters = $(() => {
     stateTree.value = buildVisibleHookTree(hookStore.value, hookFilters.value);
   });
@@ -178,7 +186,8 @@ export const RenderTree = component$(() => {
         <div class="flex h-full min-h-0 w-1/2 flex-col overflow-hidden p-4">
           <RenderTreeTabs
             currentTab={currentTab.value}
-            onTabChange$={(tab) => (currentTab.value = tab)}
+            onStateClick$={showStateTab}
+            onCodeClick$={showCodeTab}
           />
 
           {currentTab.value === 'state' && (

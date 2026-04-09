@@ -25,10 +25,10 @@ export default component$(() => {
             href={`${import.meta.env.BASE_URL}manifest.json`}
           />
         )}
-        <RouterHead   />
+        <RouterHead />
       </head>
-      <body lang="en">
-        <RouterOutlet  />
+      <body class="playground-body" lang="en">
+        <RouterOutlet />
         {!isDev && <ServiceWorkerRegister />}
       </body>
     </QwikRouterProvider>
