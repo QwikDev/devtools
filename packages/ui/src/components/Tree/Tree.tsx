@@ -106,6 +106,8 @@ const TreeNodeComponent = component$<TreeNodeComponentProps>((props) => {
               }
             : { paddingLeft: `${props.level * props.gap}px` }
         }
+        data-node-id={props.node.id}
+        data-node-name={props.node.name || props.node.label || ''}
         onClick$={handleNodeClick}
       >
         <div class="inline-flex items-center px-2 py-1">
