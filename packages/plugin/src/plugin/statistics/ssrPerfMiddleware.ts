@@ -1,5 +1,7 @@
 import type { AnyRecord } from './constants';
 import { log } from './constants';
+import hookRuntime from '../../virtualmodules/hookRuntime';
+import { VNODE_BRIDGE_KEY } from '../../virtualmodules/vnodeBridge';
 
 type MiddlewareNext = (err?: unknown) => void;
 type MinimalMiddlewareReq = {
@@ -192,15 +194,20 @@ export function injectSsrDevtoolsIntoHtml(
   });
 
   const scripts = [
+    createHookInjectionScript(),
     perfEntries.length > 0 ? createSsrPerfInjectionScript(perfEntries) : '',
     preloadEntries.length > 0 ? createSsrPreloadInjectionScript(preloadEntries) : '',
   ].join('');
-  if (!scripts) return html;
 
   return html.replace(
     /<head(\s[^>]*)?>/i,
     (match) => `${match}${scripts}`,
   );
+}
+
+function createHookInjectionScript(): string {
+  return `\n<script type="module">${hookRuntime}</script>` +
+    `\n<script type="module" src="/${VNODE_BRIDGE_KEY}"></script>`;
 }
 
 function createSsrPerfInjectionScript(entries: unknown[]): string {

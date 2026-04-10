@@ -75,10 +75,21 @@ const __qwik_perf_commit_csr__ = (entry) => {
       perf._csrByViteId[entry.viteId] = perf.csr.length;
       perf.csr.push(next);
     }
-    return;
+  } else {
+    perf.csr.push(next);
   }
 
-  perf.csr.push(next);
+  // Notify devtools hook + extension
+  var renderEvent = {
+    component: (entry && entry.component) || 'unknown',
+    phase: 'csr',
+    duration: (entry && entry.duration) || 0,
+    timestamp: Date.now(),
+  };
+  if (window.__QWIK_DEVTOOLS_HOOK__ && window.__QWIK_DEVTOOLS_HOOK__._emitRender) {
+    window.__QWIK_DEVTOOLS_HOOK__._emitRender(renderEvent);
+  }
+  window.postMessage({ source: 'qwik-devtools', type: 'RENDER_EVENT', event: renderEvent }, '*');
 };
 
 // Force componentQrl entries to be treated as SSR records.
@@ -118,6 +129,18 @@ const __qwik_perf_commit_componentqrl__ = (entry) => {
     if (key) perf._ssrByComponent[key] = perf.ssr.length;
     perf.ssr.push({ id, ...next, ssrCount: 1 });
   }
+
+  // Notify devtools hook + extension (componentQrl runs on CSR too)
+  var renderEvent2 = {
+    component: (entry && entry.component) || 'unknown',
+    phase: 'csr',
+    duration: (entry && entry.duration) || 0,
+    timestamp: Date.now(),
+  };
+  if (window.__QWIK_DEVTOOLS_HOOK__ && window.__QWIK_DEVTOOLS_HOOK__._emitRender) {
+    window.__QWIK_DEVTOOLS_HOOK__._emitRender(renderEvent2);
+  }
+  window.postMessage({ source: 'qwik-devtools', type: 'RENDER_EVENT', event: renderEvent2 }, '*');
 };
 
 const __qwik_perf_commit__ = (entry) => {

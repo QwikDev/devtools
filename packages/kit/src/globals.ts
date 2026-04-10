@@ -1,5 +1,6 @@
 import { ViteDevServer } from 'vite';
 import { ClientRpc, ParsedStructure, ServerRpc } from './types';
+import type { QwikDevtoolsHook } from './hook-types';
 
 interface EventEmitter {
   on: (name: string, handler: (data: any) => void) => void;
@@ -145,6 +146,12 @@ declare global {
     __QWIK_PERF__?: QwikPerfStoreRemembered;
     __QWIK_PRELOADS__?: QwikPreloadStoreRemembered;
     __QWIK_SSR_PRELOADS__?: QwikSsrPreloadSnapshotRemembered[];
+    /**
+     * Runtime devtools hook installed by `@devtools/plugin` in dev mode.
+     * Provides structured signal/component/render inspection for the
+     * browser extension and in-app overlay.
+     */
+    __QWIK_DEVTOOLS_HOOK__?: QwikDevtoolsHook;
   }
 }
 
