@@ -17,6 +17,8 @@ export interface DevtoolsTabConfig {
   id: DevtoolsTabId;
   title: string;
   renderIcon: () => JSXOutput;
+  /** Tab requires the Vite plugin overlay and is not available in the extension. */
+  viteOnly?: boolean;
 }
 
 export const devtoolsTabs: DevtoolsTabConfig[] = [
@@ -29,6 +31,7 @@ export const devtoolsTabs: DevtoolsTabConfig[] = [
     id: 'packages',
     title: 'Packages',
     renderIcon: () => <IconCubeOutline class="h-6 w-6" />,
+    viteOnly: true,
   },
   {
     id: 'renderTree',
@@ -39,16 +42,19 @@ export const devtoolsTabs: DevtoolsTabConfig[] = [
     id: 'routes',
     title: 'Routes',
     renderIcon: () => <IconFolderTree class="h-6 w-6" />,
+    viteOnly: true,
   },
   {
     id: 'assets',
     title: 'Assets',
     renderIcon: () => <IconPhotoOutline class="h-6 w-6" />,
+    viteOnly: true,
   },
   {
     id: 'inspect',
     title: 'Inspect',
     renderIcon: () => <IconMegaphoneMini class="h-6 w-6" />,
+    viteOnly: true,
   },
   {
     id: 'codeBreak',
@@ -69,5 +75,6 @@ export const devtoolsTabs: DevtoolsTabConfig[] = [
     id: 'buildAnalysis',
     title: 'Build Analysis',
     renderIcon: () => <IconChartBarOutline class="h-6 w-6" />,
+    viteOnly: true,
   },
 ];

@@ -24,7 +24,10 @@ export default defineConfig(() => {
     build: {
       target: 'es2020',
       lib: {
-        entry: './src/index.ts',
+        entry: {
+          index: './src/index.ts',
+          'entry.extension': './src/entry.extension.tsx',
+        },
         formats: ['es'],
         fileName: (format, entryName) => `${entryName}.qwik.mjs`,
         cssFileName: 'styles',

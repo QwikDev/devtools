@@ -32,6 +32,8 @@ export interface DevtoolsState {
   isLoadingDependencies: boolean;
   panelBounds: DevtoolsPanelBounds;
   lastPanelBounds: DevtoolsPanelBounds | null;
+  /** Whether the Vite devtools plugin overlay is also active on the page. */
+  vitePluginDetected?: boolean;
 }
 
 export function createDevtoolsState(): DevtoolsState {

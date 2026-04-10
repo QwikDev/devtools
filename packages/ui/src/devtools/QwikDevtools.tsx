@@ -14,7 +14,9 @@ export const QwikDevtools = component$(() => {
   const state = useStore<DevtoolsState>(createDevtoolsState());
 
   useVisibleTask$(async () => {
-    ensurePreloadRuntime();
+    if (!window.__QWIK_DEVTOOLS_DATA_PROVIDER__) {
+      ensurePreloadRuntime();
+    }
     await loadDevtoolsData(state);
   });
 
