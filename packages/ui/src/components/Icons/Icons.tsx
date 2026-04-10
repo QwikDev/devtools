@@ -287,6 +287,66 @@ export const IconArrowsPointingOut = component$((props: IconProps) => {
   );
 });
 
+export const IconInfoCircle = component$((props: IconProps) => {
+  return (
+    <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })} stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      {props.title ? <title>{props.title}</title> : null}
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
+    </svg>
+  );
+});
+
+export const IconTarget = component$((props: IconProps) => {
+  return (
+    <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })} stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      {props.title ? <title>{props.title}</title> : null}
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+      <line x1="12" y1="2" x2="12" y2="6" />
+      <line x1="12" y1="18" x2="12" y2="22" />
+      <line x1="2" y1="12" x2="6" y2="12" />
+      <line x1="18" y1="12" x2="22" y2="12" />
+    </svg>
+  );
+});
+
+export const IconExpandShrink = component$<IconProps & { expanded?: boolean }>((props) => {
+  return (
+    <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })} stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      {props.title ? <title>{props.title}</title> : null}
+      {props.expanded ? (
+        <>
+          <polyline points="4 14 10 14 10 20" />
+          <polyline points="20 10 14 10 14 4" />
+          <line x1="14" y1="10" x2="21" y2="3" />
+          <line x1="3" y1="21" x2="10" y2="14" />
+        </>
+      ) : (
+        <>
+          <polyline points="15 3 21 3 21 9" />
+          <polyline points="9 21 3 21 3 15" />
+          <line x1="21" y1="3" x2="14" y2="10" />
+          <line x1="3" y1="21" x2="10" y2="14" />
+        </>
+      )}
+    </svg>
+  );
+});
+
+export const IconMonitor = component$((props: IconProps) => {
+  return (
+    <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      {props.title ? <title>{props.title}</title> : null}
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
+  );
+});
+
 export const IconArrowsPointingIn = component$((props: IconProps) => {
   return (
     <svg {...baseSvgProps({ ...props, viewBox: '0 0 24 24' })}>

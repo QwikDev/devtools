@@ -1,10 +1,12 @@
-import { component$ } from '@qwik.dev/core';
+import { component$, isBrowser } from '@qwik.dev/core';
 import type { AssetInfo } from '@devtools/kit';
+import { IconMonitor } from '../components/Icons/Icons';
 import { TabContent } from '../components/TabContent/TabContent';
 import { TabTitle } from '../components/TabTitle/TabTitle';
 import { Assets } from '../features/Assets/Assets';
 import { BuildAnalysis } from '../features/BuildAnalysis/BuildAnalysis';
 import { CodeBreak } from '../features/CodeBreak/CodeBreak';
+import { HookTree } from '../features/HookTree/HookTree';
 import { Inspect } from '../features/Inspect/Inspect';
 import { Overview } from '../features/Overview/Overview';
 import { Packages } from '../features/Packages/Packages';
@@ -28,7 +30,28 @@ function formatAssetSummary(assets: AssetInfo[]) {
   };
 }
 
+const ViteOnlyPlaceholder = component$<{ feature: string }>(({ feature }) => {
+  return (
+    <div class="flex h-full flex-col items-center justify-center gap-4 text-center px-8">
+      <div class="text-muted-foreground/40 text-4xl">
+        <IconMonitor class="h-12 w-12" />
+      </div>
+      <div class="text-muted-foreground text-sm">
+        <span class="font-semibold">{feature}</span> is only available in the in-app overlay.
+      </div>
+      <div class="text-muted-foreground/50 max-w-xs text-xs leading-relaxed">
+        This feature requires direct access to the Vite dev server.
+        Add{' '}
+        <code class="rounded bg-card-item-bg px-1.5 py-0.5 text-foreground/70">qwikDevtools()</code>{' '}
+        to your Vite config to use it in the overlay during development.
+      </div>
+    </div>
+  );
+});
+
 export const DevtoolsContent = component$<DevtoolsContentProps>(({ state }) => {
+  const isExtensionMode =
+    isBrowser && !!window.__QWIK_DEVTOOLS_DATA_PROVIDER__;
   const assetSummary = formatAssetSummary(state.assets);
 
   switch (state.activeTab) {
@@ -52,38 +75,63 @@ export const DevtoolsContent = component$<DevtoolsContentProps>(({ state }) => {
       return (
         <TabContent>
           <TabTitle title="Public Assets" q:slot="title" />
-          <div class="text-muted-foreground flex gap-4 text-sm">
-            <span>Total Size: {assetSummary.totalSizeInKb} KB</span>
-            <span>Count: {assetSummary.count}</span>
-          </div>
-          <Assets state={state} q:slot="content" />
+          {isExtensionMode ? (
+            <ViteOnlyPlaceholder feature="Assets" q:slot="content" />
+          ) : (
+            <>
+              <div class="text-muted-foreground flex gap-4 text-sm">
+                <span>Total Size: {assetSummary.totalSizeInKb} KB</span>
+                <span>Count: {assetSummary.count}</span>
+              </div>
+              <Assets state={state} q:slot="content" />
+            </>
+          )}
         </TabContent>
       );
     case 'packages':
       return (
         <TabContent>
           <TabTitle title="Project Dependencies" q:slot="title" />
-          <Packages state={state} q:slot="content" />
+          {isExtensionMode ? (
+            <ViteOnlyPlaceholder feature="Packages" q:slot="content" />
+          ) : (
+            <Packages state={state} q:slot="content" />
+          )}
         </TabContent>
       );
     case 'routes':
       return (
         <TabContent>
           <TabTitle title="Application Routes" q:slot="title" />
-          <Routes state={state} q:slot="content" />
+          {isExtensionMode ? (
+            <ViteOnlyPlaceholder feature="Routes" q:slot="content" />
+          ) : (
+            <Routes state={state} q:slot="content" />
+          )}
         </TabContent>
       );
     case 'inspect':
       return (
         <TabContent>
-          <Inspect q:slot="content" />
+          {isExtensionMode ? (
+            <ViteOnlyPlaceholder feature="Inspect" q:slot="content" />
+          ) : (
+            <Inspect q:slot="content" />
+          )}
         </TabContent>
       );
     case 'renderTree':
       return (
         <TabContent>
-          <TabTitle title="Render Tree" q:slot="title" />
-          <RenderTree q:slot="content" />
+          <TabTitle
+            title={isExtensionMode ? 'Component Tree' : 'Render Tree'}
+            q:slot="title"
+          />
+          {isExtensionMode ? (
+            <HookTree q:slot="content" />
+          ) : (
+            <RenderTree q:slot="content" />
+          )}
         </TabContent>
       );
     case 'codeBreak':
@@ -111,7 +159,11 @@ export const DevtoolsContent = component$<DevtoolsContentProps>(({ state }) => {
       return (
         <TabContent>
           <TabTitle title="Build Analysis" q:slot="title" />
-          <BuildAnalysis q:slot="content" />
+          {isExtensionMode ? (
+            <ViteOnlyPlaceholder feature="Build Analysis" q:slot="content" />
+          ) : (
+            <BuildAnalysis q:slot="content" />
+          )}
         </TabContent>
       );
     default:
