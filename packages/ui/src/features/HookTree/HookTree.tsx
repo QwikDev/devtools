@@ -420,7 +420,7 @@ export const HookTree = component$(() => {
     }
   });
 
-  // Handle double-click on a leaf value to start editing
+  // Click on a leaf value to start inline editing
   const onStateNodeClick = $(async (node: TreeNode) => {
     // Only allow editing leaf nodes that look like "let varName = : value"
     if (node.children && node.children.length > 0) return;
