@@ -55,7 +55,7 @@ let _nodeId = 0;
 export function resetNodeId(): void {
   _nodeId = 0;
 }
-function nextId(): string {
+export function nextId(): string {
   return `detail-${_nodeId++}`;
 }
 

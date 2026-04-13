@@ -5,7 +5,7 @@ import {
   useVisibleTask$,
 } from '@qwik.dev/core';
 import { Tree } from '../../components/Tree/Tree';
-import type { TreeNode, ElementType } from '../../components/Tree/type';
+import type { TreeNode } from '../../components/Tree/type';
 import {
   getPageDataSource,
   type ComponentDetailEntry,
@@ -15,6 +15,9 @@ import {
   treeIdFingerprint,
   findNodeById,
   findNodeByDomAttr,
+  getElementType,
+  resetNodeId,
+  nextId,
 } from './hookTreeHelpers';
 import {
   RenderTreeTabs,
@@ -29,22 +32,6 @@ const EXPAND_ANIMATION_DELAY_MS = 250;
 const HIGHLIGHT_FLASH_MS = 1500;
 const LOAD_RETRY_DELAY_MS = 300;
 const PAGE_CHANGE_SETTLE_MS = 500;
-let _nodeId = 0;
-function nextId(): string {
-  return `detail-${_nodeId++}`;
-}
-
-function getElementType(val: unknown): ElementType {
-  if (val === null) return 'null';
-  if (Array.isArray(val)) return 'array';
-  const t = typeof val;
-  if (t === 'boolean') return 'boolean';
-  if (t === 'number') return 'number';
-  if (t === 'string') return 'string';
-  if (t === 'function') return 'function';
-  if (t === 'object') return 'object';
-  return 'string';
-}
 
 function valueToTree(key: string, val: unknown, depth: number): TreeNode | null {
   if (depth > 8) return null;
@@ -108,7 +95,7 @@ function valueToTree(key: string, val: unknown, depth: number): TreeNode | null 
 }
 
 function buildDetailTree(entries: ComponentDetailEntry[]): TreeNode[] {
-  _nodeId = 0;
+  resetNodeId();
   const result: TreeNode[] = [];
 
   // Group by hookType
