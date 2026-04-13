@@ -93,7 +93,7 @@ const EVAL_INSTALL_BRIDGE = `(function() {
     hook.getNodeProps=function(nId){var en=_vnodeMap[nId];if(!en)return null;try{var p=en.container.getHostProp(en.vnode,QPROPS);if(!p)return null;var r={},ks=Object.keys(p);for(var i=0;i<ks.length;i++){var k=ks[i];if(k.startsWith('on:')||k.startsWith('on$:'))continue;try{r[k]=serializeProps(p[k],0)}catch(_){r[k]='[error]'}}return r}catch(_){return null}};
     var dt=null;function pushTree(){var t=getTree();if(!t)return;window.postMessage({source:'qwik-devtools',type:'COMPONENT_TREE_UPDATE',tree:t},'*')}
     var obs=new MutationObserver(function(){if(dt)clearTimeout(dt);dt=setTimeout(pushTree,100)});
-    obs.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['q:id','q:key',':=']});
+    obs.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['q:id','q:key',':']});
     pushTree();
     // Bridge render events to extension via postMessage
     if (typeof hook.onRender === 'function') {

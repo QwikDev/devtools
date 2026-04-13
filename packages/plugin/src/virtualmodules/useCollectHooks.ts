@@ -31,7 +31,7 @@ export const useCollectHooks = (src) => {
     const state = getOrCreateState(src)
     state.hooks = [...newHooks]
   }, { strategy: 'document-ready' })
-
+  
   return $((args) => {
     if (hooksList.value.has(args)) {
       return
@@ -39,6 +39,6 @@ export const useCollectHooks = (src) => {
     hooksList.value.add(args)
   })
 }
-`;
+`
 
-export default useCollectHooks;
+export default useCollectHooks

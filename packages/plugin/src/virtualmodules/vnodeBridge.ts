@@ -302,7 +302,7 @@ function setupBridge() {
     subtree: true,
     characterData: true,
     attributes: true,
-    attributeFilter: ['q:id', 'q:key', ':=']
+    attributeFilter: ['q:id', 'q:key', ':']
   });
 
   // Push initial tree

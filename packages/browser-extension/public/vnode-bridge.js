@@ -260,7 +260,7 @@ function setupBridge() {
   });
   observer.observe(document.documentElement, {
     childList: true, subtree: true, characterData: true,
-    attributes: true, attributeFilter: ['q:id', 'q:key', ':=']
+    attributes: true, attributeFilter: ['q:id', 'q:key', ':']
   });
   pushTree();
 }

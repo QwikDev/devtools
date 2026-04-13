@@ -69,7 +69,7 @@ export const Performance = component$(() => {
     renderEvents.value = [];
   });
 
-  const hasData = perf.value?.ssr?.length || perf.value?.csr?.length;
+  const hasData = (perf.value?.ssr?.length ?? 0) > 0 || (perf.value?.csr?.length ?? 0) > 0;
   const hasRenderEvents = renderEvents.value.length > 0;
 
   if (!hasData && !hasRenderEvents) {
