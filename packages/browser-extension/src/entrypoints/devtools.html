@@ -24,10 +24,20 @@
         );
       }
 
-      detectAndCreate();
+      // Retry detection: Qwik container may not exist yet (SSR hydration)
+      let attempts = 0;
+      function retryDetect() {
+        if (panelCreated || attempts >= 15) return;
+        attempts++;
+        detectAndCreate();
+        setTimeout(retryDetect, 1000);
+      }
+
+      retryDetect();
 
       chrome.devtools.network.onNavigated.addListener(() => {
-        setTimeout(detectAndCreate, 1000);
+        attempts = 0;
+        setTimeout(retryDetect, 500);
       });
     </script>
   </body>
