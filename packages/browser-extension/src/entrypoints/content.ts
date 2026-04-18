@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import { QWIK_ATTR, QWIK_CONTAINER_SELECTOR, V2_BINDING_ATTR } from '../lib/constants.js';
-import type { ExtensionMessage, QwikComponentNode, QwikContainerInfo } from '../lib/types.js';
+import type { ExtensionMessage, QwikContainerInfo } from '../lib/types.js';
 import { isExtensionMessage } from '../lib/types.js';
 
 export default defineContentScript({
@@ -301,16 +301,6 @@ export default defineContentScript({
         switch (msg.type) {
           case 'DETECT_QWIK':
             response = { type: 'QWIK_DETECTION_RESULT', payload: detectQwik() };
-            break;
-          case 'GET_COMPONENT_TREE': {
-            // Placeholder: full tree builder will be added in Phase 3
-            const tree: QwikComponentNode[] = [];
-            response = { type: 'COMPONENT_TREE_RESULT', payload: tree };
-            break;
-          }
-          case 'GET_ROUTES':
-            // Placeholder: route explorer will be added in Phase 3
-            response = { type: 'ROUTES_RESULT', payload: { activeRoute: null, preloadedModules: [], detectedRoutes: [] } };
             break;
           case 'START_INSPECT':
 

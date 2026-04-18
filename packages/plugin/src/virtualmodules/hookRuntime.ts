@@ -258,7 +258,7 @@ const __qwik_hook_init__ = () => {
     },
 
     onSignalUpdate(callback) {
-      // v1: no real-time signal tracking.
+      // Stub: push notifications not yet implemented.
       // Consumers should poll getSignalsSnapshot() and diff.
       return () => {};
     },

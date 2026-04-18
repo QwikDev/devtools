@@ -118,7 +118,7 @@ function isDevModeActive(): Promise<boolean> {
 /** Check whether the devtools hook is installed. */
 function isHookAvailable(): Promise<boolean> {
   return evalInPage<boolean>(
-    `!!(window.__QWIK_DEVTOOLS_HOOK__ && window.__QWIK_DEVTOOLS_HOOK__.version === 1)`,
+    `!!(window.__QWIK_DEVTOOLS_HOOK__)`,
   ).then((r) => r === true);
 }
 
@@ -126,26 +126,19 @@ function isHookAvailable(): Promise<boolean> {
 // Executed in the inspected page context via inspectedWindow.eval().
 // Must use ES5 syntax (no arrow functions, no const/let).
 
-/** Read component tree from the hook, with fallback to raw global. */
+/** Read component tree from the hook. */
 const EVAL_READ_COMPONENTS = `(function() {
   var hook = window.__QWIK_DEVTOOLS_HOOK__;
-  if (hook && hook.version === 1 && typeof hook.getComponentTreeSnapshot === 'function') {
+  if (hook && typeof hook.getComponentTreeSnapshot === 'function') {
     return hook.getComponentTreeSnapshot();
   }
-  var state = window.QWIK_DEVTOOLS_GLOBAL_STATE;
-  if (!state) return null;
-  return Object.keys(state).map(function(key) {
-    var lastSeg = key.split('/').pop() || key;
-    var underIdx = lastSeg.lastIndexOf('_');
-    var name = underIdx > 0 ? lastSeg.substring(underIdx + 1) : lastSeg;
-    return { path: key, name: name, file: key, signals: [], hooks: [] };
-  });
+  return null;
 })()`;
 
 /** Read signal values snapshot from the hook. */
 const EVAL_READ_SIGNALS = `(function() {
   var hook = window.__QWIK_DEVTOOLS_HOOK__;
-  if (hook && hook.version === 1 && typeof hook.getSignalsSnapshot === 'function') {
+  if (hook && typeof hook.getSignalsSnapshot === 'function') {
     return hook.getSignalsSnapshot();
   }
   return null;
