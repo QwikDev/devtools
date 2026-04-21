@@ -1,4 +1,4 @@
-import { component$, isBrowser } from '@qwik.dev/core';
+import { component$ } from '@qwik.dev/core';
 import { Tab } from '../components/Tab/Tab';
 import { QwikThemeToggle } from '../components/ThemeToggle/QwikThemeToggle';
 import type { DevtoolsState } from './state';
@@ -9,12 +9,10 @@ interface DevtoolsSidebarProps {
 }
 
 export const DevtoolsSidebar = component$<DevtoolsSidebarProps>(({ state }) => {
-  const isExtension = isBrowser && !!window.__QWIK_DEVTOOLS_DATA_PROVIDER__;
-
   return (
     <div class="glass-bg border-r border-glass-border shadow-r flex h-full w-16 flex-col items-center justify-start gap-3 p-3 md:w-20">
       {devtoolsTabs
-        .filter((tab) => !(isExtension && tab.viteOnly))
+        .filter((tab) => !(state.isExtension && tab.viteOnly))
         .map((tab) => (
           <Tab
             key={tab.id}

@@ -1,4 +1,4 @@
-import { component$, isBrowser } from '@qwik.dev/core';
+import { component$ } from '@qwik.dev/core';
 import type { AssetInfo } from '@devtools/kit';
 import { IconMonitor } from '../components/Icons/Icons';
 import { TabContent } from '../components/TabContent/TabContent';
@@ -50,8 +50,7 @@ const ViteOnlyPlaceholder = component$<{ feature: string }>(({ feature }) => {
 });
 
 export const DevtoolsContent = component$<DevtoolsContentProps>(({ state }) => {
-  const isExtensionMode =
-    isBrowser && !!window.__QWIK_DEVTOOLS_DATA_PROVIDER__;
+  const isExtensionMode = state.isExtension;
   const assetSummary = formatAssetSummary(state.assets);
 
   switch (state.activeTab) {

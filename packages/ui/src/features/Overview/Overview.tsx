@@ -1,4 +1,4 @@
-import { $, component$, isBrowser, sync$ } from '@qwik.dev/core';
+import { $, component$, sync$ } from '@qwik.dev/core';
 import {
   IconCubeOutline,
   IconFolderTree,
@@ -12,7 +12,7 @@ interface OverviewProps {
 }
 
 export const Overview = component$(({ state }: OverviewProps) => {
-  const isExtension = isBrowser && !!window.__QWIK_DEVTOOLS_DATA_PROVIDER__;
+  const isExtension = state.isExtension;
   const pageJump = $((pageName: TabName) => {
     state.activeTab = pageName;
   });

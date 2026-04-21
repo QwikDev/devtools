@@ -17,7 +17,7 @@ import { DevtoolsSidebar } from './DevtoolsSidebar';
  * It must be a separate element so descendant selectors match.
  */
 export const QwikDevtoolsExtension = component$(() => {
-  const state = useStore<DevtoolsState>(createDevtoolsState());
+  const state = useStore<DevtoolsState>(createDevtoolsState({ isExtension: true }));
 
   useVisibleTask$(async () => {
     await loadDevtoolsData(state);
