@@ -42,7 +42,15 @@ export function vnode_toObject(vnodeItem: _VNode | null): TreeNode[] | null {
 
   return buildTreeRecursive(vnodeItem, false);
 }
-const container = htmlContainer()!;
+
+let _container: ReturnType<typeof htmlContainer> | undefined;
+function getContainer() {
+  if (!_container) {
+    _container = htmlContainer();
+  }
+  return _container!;
+}
+
 function buildTreeRecursive(
   vnode: _VNode | null,
   materialize: boolean,
@@ -61,12 +69,12 @@ function buildTreeRecursive(
     // Determine if the node is a Fragment ('F') to be filtered out.
     const isFragment =
       isVirtual &&
-      typeof container.getHostProp(currentVNode, QRENDERFN) === 'function';
+      typeof getContainer().getHostProp(currentVNode, QRENDERFN) === 'function';
     if (isFragment) {
       const vnodeObject = initVnode({});
 
       _vnode_getAttrKeys(
-        container,
+        getContainer(),
         currentVNode as _ElementVNode | _VirtualVNode,
       ).forEach((key) => {
         // We skip the QTYPE prop as it's for internal use.
@@ -75,7 +83,7 @@ function buildTreeRecursive(
         // leaking non-serializable runtime VNode references.
         if (!ALLOWED_PROP_KEYS.has(key)) return;
 
-        const value: unknown = container.getHostProp(currentVNode!, key);
+        const value: unknown = getContainer().getHostProp(currentVNode!, key);
         vnodeObject.props![key] = value as TreeNodePropValue;
 
         // Special handling to set the label from the render function's symbol.

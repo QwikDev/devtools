@@ -52,7 +52,7 @@ export const HookFiltersCard = component$<HookFiltersCardProps>(
         </div>
 
         <div
-          class="grid grid-cols-2 gap-x-6 gap-y-3 overflow-hidden px-3 py-2 text-sm sm:grid-cols-3 lg:grid-cols-4"
+          class="grid grid-cols-2 gap-x-4 gap-y-3 overflow-hidden px-3 py-2 text-sm"
           style={{
             maxHeight: isOpen ? '800px' : '0px',
             opacity: isOpen ? '1' : '0',
@@ -60,18 +60,18 @@ export const HookFiltersCard = component$<HookFiltersCardProps>(
           }}
         >
           {filters.map((item, index) => (
-            <label key={item.key} class="flex cursor-pointer items-center gap-2">
+            <label key={item.key} class="flex min-w-0 cursor-pointer items-center gap-2">
               <input
                 type="checkbox"
                 checked={item.display}
-                class="h-4 w-4 cursor-pointer rounded focus:ring-0"
+                class="h-4 w-4 shrink-0 cursor-pointer rounded focus:ring-0"
                 style={{ accentColor: 'var(--color-primary-active)' }}
                 onChange$={(event: InputEvent) => {
                   const target = event.target as HTMLInputElement;
                   onFilterChange$(index, target.checked);
                 }}
               />
-              <span class="ml-2 select-none">{item.key}</span>
+              <span class="ml-2 select-none truncate" title={item.key}>{item.key}</span>
             </label>
           ))}
         </div>

@@ -32,9 +32,13 @@ export interface DevtoolsState {
   isLoadingDependencies: boolean;
   panelBounds: DevtoolsPanelBounds;
   lastPanelBounds: DevtoolsPanelBounds | null;
+  /** Whether the Vite devtools plugin overlay is also active on the page. */
+  vitePluginDetected?: boolean;
+  /** True when running inside the browser extension panel (no Vite server). */
+  isExtension: boolean;
 }
 
-export function createDevtoolsState(): DevtoolsState {
+export function createDevtoolsState(opts?: { isExtension?: boolean }): DevtoolsState {
   return {
     isOpen: false,
     isPanelFullscreen: false,
@@ -52,5 +56,6 @@ export function createDevtoolsState(): DevtoolsState {
       height: 0,
     },
     lastPanelBounds: null,
+    isExtension: opts?.isExtension ?? false,
   };
 }

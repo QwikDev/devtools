@@ -11,11 +11,18 @@ interface DevtoolsSidebarProps {
 export const DevtoolsSidebar = component$<DevtoolsSidebarProps>(({ state }) => {
   return (
     <div class="glass-bg border-r border-glass-border shadow-r flex h-full w-16 flex-col items-center justify-start gap-3 p-3 md:w-20">
-      {devtoolsTabs.map((tab) => (
-        <Tab key={tab.id} state={state} id={tab.id} title={tab.title}>
-          {tab.renderIcon()}
-        </Tab>
-      ))}
+      {devtoolsTabs
+        .filter((tab) => !(state.isExtension && tab.viteOnly))
+        .map((tab) => (
+          <Tab
+            key={tab.id}
+            state={state}
+            id={tab.id}
+            title={tab.title}
+          >
+            {tab.renderIcon()}
+          </Tab>
+        ))}
 
       <div class="mt-auto mb-2 opacity-80 transition-opacity hover:opacity-100">
         <QwikThemeToggle />

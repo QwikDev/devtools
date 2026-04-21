@@ -4,6 +4,10 @@
   "description": "Qwik devtools monorepo",
   "scripts": {
     "playground": "MODE=dev DEBUG=qwik:devtools:* pnpm --filter playground dev",
+    "ext:dev": "pnpm --filter @devtools/browser-extension dev",
+    "ext:dev:firefox": "pnpm --filter @devtools/browser-extension dev:firefox",
+    "ext:build": "pnpm --filter @devtools/browser-extension build",
+    "ext:build:firefox": "pnpm --filter @devtools/browser-extension build:firefox",
     "build": "tsx scripts/build-devtools.ts",
     "change": "changeset",
     "release": "changeset publish",

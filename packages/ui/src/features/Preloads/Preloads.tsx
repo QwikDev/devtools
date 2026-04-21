@@ -1,8 +1,7 @@
-import { QWIK_PRELOADS_UPDATE_EVENT, type QwikPreloadStoreRemembered } from '@devtools/kit';
+import { type QwikPreloadStoreRemembered } from '@devtools/kit';
 import {
   $,
   component$,
-  isBrowser,
   useComputed$,
   useSignal,
   useStore,
@@ -18,6 +17,7 @@ import {
   type PreloadSourceFilters,
   type PreloadViewFilters,
 } from './computePreloadViewModel';
+import { getPageDataSource } from '../../devtools/page-data-source';
 
 const DEFAULT_FILTERS = createDefaultPreloadFilters();
 type SourceFilterKey = keyof PreloadSourceFilters;
@@ -31,11 +31,6 @@ const FILTERS: { id: PreloadFilter; label: string }[] = [
   { id: 'qrl-correlated', label: 'QRL Matched' },
   { id: 'unmatched', label: 'Unmatched' },
 ];
-
-function getStore(): QwikPreloadStoreRemembered | null {
-  if (!isBrowser) return null;
-  return window.__QWIK_PRELOADS__ || null;
-}
 
 function formatRelativeMs(ms?: number): string {
   if (!Number.isFinite(ms)) return '-';
@@ -53,24 +48,30 @@ export const Preloads = component$(() => {
   const phaseFilters = useStore<PreloadViewFilters['phaseFilters']>({
     ...DEFAULT_FILTERS.phaseFilters,
   });
+  const store = useSignal<QwikPreloadStoreRemembered | null>(null);
 
-  useVisibleTask$(() => {
-    if (!isBrowser) return;
+  useVisibleTask$(async () => {
+    const source = getPageDataSource();
+    store.value = await source.readPreloadStore();
     version.value++;
 
     const refresh = () => {
-      version.value++;
+      // Re-read store on each update (handles both in-page and remote sources)
+      source.readPreloadStore().then((s) => {
+        store.value = s;
+        version.value++;
+      });
     };
 
-    window.addEventListener(QWIK_PRELOADS_UPDATE_EVENT, refresh);
+    const unsub = source.subscribePreloadUpdates(refresh);
     return () => {
-      window.removeEventListener(QWIK_PRELOADS_UPDATE_EVENT, refresh);
+      unsub?.();
     };
   });
 
   const vm = useComputed$(() => {
     version.value;
-    return computePreloadViewModel(getStore(), {
+    return computePreloadViewModel(store.value, {
       sourceFilters: { ...sourceFilters },
       phaseFilters: { ...phaseFilters },
     });
@@ -79,15 +80,16 @@ export const Preloads = component$(() => {
   const rows = useComputed$(() => filterPreloadRows(vm.value.rows, activeFilter.value));
   const runtimeState = useComputed$(() => {
     version.value;
-    const store = getStore();
     return {
-      initialized: !!store,
-      qrlRequests: store?.qrlRequests.length || 0,
+      initialized: !!store.value,
+      qrlRequests: store.value?.qrlRequests.length ?? 0,
     };
   });
 
-  const clear = $(() => {
-    getStore()?.clear();
+  const clear = $(async () => {
+    const source = getPageDataSource();
+    await source.clearPreloadStore();
+    store.value = await source.readPreloadStore();
     version.value++;
   });
 
