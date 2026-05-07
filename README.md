@@ -1,3 +1,5 @@
+# Please note that the QwikDev/devtools repository has been migrated into the [QwikDev/qwik](https://github.com/QwikDev/qwik) repository.
+
 # Qwik DevTools
 
 ![Qwik DevTools](https://raw.github.com/QwikDev/devtools/main/assets/screenshot.png)
