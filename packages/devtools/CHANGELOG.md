@@ -1,5 +1,21 @@
 # @qwik.dev/devtools
 
+## 0.3.0
+
+### Minor Changes
+
+- a748bb5: feat: add browser extension for Chrome and Firefox
+
+  New browser extension package that brings Qwik DevTools to the browser's DevTools panel. Features real-time component tree, state inspection, element picker, hover highlight, live render events, and SPA navigation support. Works standalone or alongside the Vite plugin overlay.
+
+### Patch Changes
+
+- ade318a: feat: add preload/build analysis tooling and richer devtools instrumentation
+
+  - Added new `Preloads` and `Build Analysis` panels, plus an improved `Inspect` view that resolves correctly from the app base URL on deep routes.
+  - Added runtime instrumentation for SSR/CSR performance and preload tracking, including SSR preload snapshots, QRL-to-resource correlation, and richer diagnostics surfaced in DevTools.
+  - Expanded the plugin and RPC layer to generate and serve build-analysis reports, expose the new preload/performance data to the UI, and add server-side guards around build-analysis execution.
+
 ## 0.2.8
 
 ### Patch Changes
